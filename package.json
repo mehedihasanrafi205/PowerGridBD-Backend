@@ -1,5 +1,5 @@
 {
-  "name": "powergridbd-backend",
+  "name": "PowerGridBD-Backend",
   "version": "0.0.1",
   "description": "Load Shedding & Power Outage Management System",
   "license": "ISC",
@@ -7,7 +7,10 @@
   "type": "module",
   "main": "server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/server.ts",
+    "build": "tsup",
+    "start": "node dist/server.js"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -18,6 +21,7 @@
     "@types/node": "^26.4.0",
     "@types/pg": "^8.23.1",
     "prisma": "^7.10.0",
+    "tsup": "^8.5.1",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   },

@@ -1,0 +1,29 @@
+model User {
+  id    String @id @default(uuid())
+  name  String
+  email String
+
+  googleId      String?      @unique
+  authProvider  AuthProvider @default(CREDENTIAL)
+  emailVerified Boolean      @default(false)
+
+  password String
+
+  needPasswordChange Boolean    @default(false)
+  role               UserRole   @default(CUSTOMER)
+  status             UserStatus @default(ACTIVE)
+  phone              String?
+  address            String?
+
+  isDeleted Boolean   @default(false)
+  deletedAt DateTime?
+
+  imageUrl      String @default("")
+  imagePublicId String @default("")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([email])
+  @@map("users")
+}

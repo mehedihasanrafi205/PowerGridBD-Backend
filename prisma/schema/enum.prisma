@@ -1,0 +1,17 @@
+enum UserRole {
+  CUSTOMER
+  TECHNICIAN
+  POWER_OPERATOR
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+  DELETED
+}
+
+enum AuthProvider {
+  GOOGLE
+  CREDENTIAL
+}

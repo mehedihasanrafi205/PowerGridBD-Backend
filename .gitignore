@@ -5,3 +5,5 @@ dist
 .agents
 .claude
 .windsurf
+.vercel
+.env
