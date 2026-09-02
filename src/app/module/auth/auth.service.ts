@@ -312,7 +312,7 @@ const refreshToken = async (token: string) => {
   };
 };
 
-export const googleLogin = async (payload: IGoogleLoginPayload) => {
+const googleLogin = async (payload: IGoogleLoginPayload) => {
   let googleIdTokenPayload: TokenPayload | null | undefined = null;
   try {
     const ticket = await googleClient.verifyIdToken({
