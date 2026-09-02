@@ -26,4 +26,11 @@ router.get(
   outageController.getAllOutageReports,
 );
 
+router.patch(
+  "/:id/status",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  validateRequest(outageValidation.updateOutageStatusValidationSchema),
+  outageController.updateOutageStatus,
+);
+
 export const OutageRoutes = router;

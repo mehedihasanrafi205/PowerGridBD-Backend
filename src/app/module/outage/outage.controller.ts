@@ -10,8 +10,11 @@ const createOutageReport = catchAsync(async (req: Request, res: Response) => {
   if (!req.user) {
     throw new AppError(httpStatus.UNAUTHORIZED, "You are not logged in");
   }
-  const result = await outageService.createOutageReport(req.user.userId, req.body);
-  
+  const result = await outageService.createOutageReport(
+    req.user.userId,
+    req.body,
+  );
+
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
@@ -34,7 +37,21 @@ const getAllOutageReports = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateOutageStatus = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
+  
+  const result = await outageService.updateOutageStatus(id, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Outage report status updated successfully",
+    data: result,
+  });
+});
+
 export const outageController = {
   createOutageReport,
   getAllOutageReports,
+  updateOutageStatus,
 };
