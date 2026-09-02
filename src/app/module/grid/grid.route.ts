@@ -8,7 +8,6 @@ import { validateRequest } from "../../middleware/validateRequest";
 
 const router = Router();
 
-
 router.post(
   "/zones",
   auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
@@ -16,11 +15,33 @@ router.post(
   gridController.createZone,
 );
 
-
 router.get(
   "/zones",
-  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR, UserRole.TECHNICIAN, UserRole.CUSTOMER),
+  auth(
+    UserRole.ADMIN,
+    UserRole.POWER_OPERATOR,
+    UserRole.TECHNICIAN,
+    UserRole.CUSTOMER,
+  ),
   gridController.getAllZones,
+);
+
+router.post(
+  "/substations",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  validateRequest(gridValidation.createSubstationValidationSchema),
+  gridController.createSubstation,
+);
+
+router.get(
+  "/substations",
+  auth(
+    UserRole.ADMIN,
+    UserRole.POWER_OPERATOR,
+    UserRole.TECHNICIAN,
+    UserRole.CUSTOMER,
+  ),
+  gridController.getAllSubstations,
 );
 
 export const GridRoutes = router;

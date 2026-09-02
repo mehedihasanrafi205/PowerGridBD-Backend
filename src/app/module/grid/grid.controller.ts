@@ -24,7 +24,29 @@ const getAllZones = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const createSubstation = catchAsync(async (req: Request, res: Response) => {
+  const result = await gridService.createSubstation(req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Substation created successfully",
+    data: result,
+  });
+});
+
+const getAllSubstations = catchAsync(async (req: Request, res: Response) => {
+  const result = await gridService.getAllSubstations();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Substations retrieved successfully",
+    data: result,
+  });
+});
+
 export const gridController = {
   createZone,
   getAllZones,
+  createSubstation, 
+  getAllSubstations,
 };

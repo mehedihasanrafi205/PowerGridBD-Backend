@@ -36,7 +36,40 @@ const getAllZones = async () => {
   return zones;
 };
 
+const createSubstation = async (payload: { name: string; zoneId: string }) => {
+  const isZoneExist = await prisma.zone.findUnique({
+    where: { id: payload.zoneId },
+  });
+
+  if (!isZoneExist) {
+    throw new AppError(httpStatus.NOT_FOUND, "Zone not found");
+  }
+
+  const substation = await prisma.substation.create({
+    data: payload,
+    include: {
+      zone: true,
+    },
+  });
+
+  return substation;
+};
+
+const getAllSubstations = async () => {
+  const substations = await prisma.substation.findMany({
+    include: {
+      zone: true,
+      feeders: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return substations;
+};
+
 export const gridService = {
   createZone,
   getAllZones,
+  createSubstation,
+  getAllSubstations,
 };
