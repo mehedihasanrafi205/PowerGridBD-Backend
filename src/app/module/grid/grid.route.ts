@@ -44,4 +44,22 @@ router.get(
   gridController.getAllSubstations,
 );
 
+router.post(
+  "/feeders",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  validateRequest(gridValidation.createFeederValidationSchema),
+  gridController.createFeeder,
+);
+
+router.get(
+  "/feeders",
+  auth(
+    UserRole.ADMIN,
+    UserRole.POWER_OPERATOR,
+    UserRole.TECHNICIAN,
+    UserRole.CUSTOMER,
+  ),
+  gridController.getAllFeeders,
+);
+
 export const GridRoutes = router;

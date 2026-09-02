@@ -67,9 +67,49 @@ const getAllSubstations = async () => {
   return substations;
 };
 
+const createFeeder = async (payload: {
+  name: string;
+  substationId: string;
+}) => {
+  const isSubstationExist = await prisma.substation.findUnique({
+    where: { id: payload.substationId },
+  });
+
+  if (!isSubstationExist) {
+    throw new AppError(httpStatus.NOT_FOUND, "Substation not found");
+  }
+
+  const feeder = await prisma.feeder.create({
+    data: payload,
+    include: {
+      substation: {
+        include: {
+          zone: true,
+        },
+      },
+    },
+  });
+
+  return feeder;
+};
+
+const getAllFeeders = async () => {
+  const feeders = await prisma.feeder.findMany({
+    include: {
+      substation: true,
+      areas: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return feeders;
+};
+
 export const gridService = {
   createZone,
   getAllZones,
   createSubstation,
   getAllSubstations,
+  createFeeder,
+  getAllFeeders,
 };
