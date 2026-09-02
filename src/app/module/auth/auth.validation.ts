@@ -1,53 +1,58 @@
 import { z } from "zod";
 
-export const registerValidation = z.object({
-	body: z.object({
-		name: z.string({ required_error: "Name is required" }).min(1),
-		email: z.string({ required_error: "Email is required" }).email(),
-		password: z
-			.string({ required_error: "Password is required" })
-			.min(6, "Password must be at least 6 characters"),
-	}),
+const CustomerRegistrationZodSchema = z.object({
+  name: z
+    .string({ message: "Name must be a string" })
+    .min(3, "Name must be at least 3 characters long")
+    .max(50, "Name must be less than 50 characters long"),
+  email: z.string().email("Invalid email address"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters long")
+    .regex(/[a-z]/, "Password must contain at least 1 lowercase letter")
+    .regex(/[A-Z]/, "Password must contain at least 1 uppercase letter")
+    .regex(/[0-9]/, "Password must contain at least 1 number")
+    .regex(/[^A-Za-z0-9]/, "Password must contain at least 1 special character"),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  areaId: z.string().optional(),
 });
 
-export const verifyEmailValidation = z.object({
-	body: z.object({
-		email: z.string().email(),
-		otp: z.string().length(6),
-	}),
+const EmailVerifyZodSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  otp: z.string({ message: "OTP is required" }).length(6, "OTP must be 6 digits long"),
 });
 
-export const loginValidation = z.object({
-	body: z.object({
-		email: z.string().email(),
-		password: z.string().min(1),
-	}),
+const LoginZodSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(1, "Password is required"),
 });
 
-export const googleLoginValidation = z.object({
-	body: z.object({
-		idToken: z.string().min(1),
-	}),
+const GoogleLoginZodSchema = z.object({
+  idToken: z.string().min(1, "Google ID token is required"),
 });
 
-export const refreshTokenValidation = z.object({
-	cookies: z
-		.object({
-			refreshToken: z.string().optional(),
-		})
-		.optional(),
+const ForgotPasswordZodSchema = z.object({
+  email: z.string().email("Invalid email address"),
 });
 
-export const forgotPasswordValidation = z.object({
-	body: z.object({
-		email: z.string().email(),
-	}),
+const ResetPasswordZodSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  newPassword: z
+    .string()
+    .min(8, "Password must be at least 8 characters long")
+    .regex(/[a-z]/, "Password must contain at least 1 lowercase letter")
+    .regex(/[A-Z]/, "Password must contain at least 1 uppercase letter")
+    .regex(/[0-9]/, "Password must contain at least 1 number")
+    .regex(/[^A-Za-z0-9]/, "Password must contain at least 1 special character"),
+  otp: z.string({ message: "OTP is required" }).length(6, "OTP must be 6 digits long"),
 });
 
-export const resetPasswordValidation = z.object({
-	body: z.object({
-		email: z.string().email(),
-		otp: z.string().length(6),
-		newPassword: z.string().min(6),
-	}),
-});
+export const authValidation = {
+  CustomerRegistrationZodSchema,
+  EmailVerifyZodSchema,
+  LoginZodSchema,
+  GoogleLoginZodSchema,
+  ForgotPasswordZodSchema,
+  ResetPasswordZodSchema,
+};

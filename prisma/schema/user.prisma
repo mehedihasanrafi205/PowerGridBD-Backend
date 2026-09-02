@@ -4,16 +4,18 @@ model User {
   email String
 
   googleId      String?      @unique
-authProvider  AuthProvider @default(CREDENTIAL)
-emailVerified Boolean      @default(false)
+  authProvider  AuthProvider @default(CREDENTIAL)
+  emailVerified Boolean      @default(false)
 
-password String?
+  password String?
 
   needPasswordChange Boolean    @default(false)
   role               UserRole   @default(CUSTOMER)
   status             UserStatus @default(ACTIVE)
   phone              String?
   address            String?
+
+  areaId        String?
 
   isDeleted Boolean   @default(false)
   deletedAt DateTime?

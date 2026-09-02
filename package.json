@@ -11,10 +11,10 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsup",
     "start": "node dist/server.js",
-    "lint:check": "biome check src",
-    "lint:fix": "biome check --write src",
-    "format:check": "biome format src",
-    "format:fix": "biome format --write src"
+    "format:check": "npx @biomejs/biome format ./src",
+    "format:fix": "npx @biomejs/biome format --write ./src",
+    "lint:check": "npx @biomejs/biome lint ./src",
+    "lint:fix": "npx @biomejs/biome lint --write ./src"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.11",
@@ -27,6 +27,7 @@
     "@types/multer": "^2.2.0",
     "@types/node": "^26.4.0",
     "@types/nodemailer": "^8.0.1",
+    "@types/pdfkit": "^0.17.6",
     "@types/pg": "^8.23.1",
     "prisma": "^7.10.0",
     "tsup": "^8.5.1",
@@ -40,6 +41,7 @@
     "cloudinary": "^2.11.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
+    "date-fns": "^4.4.0",
     "dotenv": "^17.4.2",
     "ejs": "^6.0.1",
     "express": "^5.2.1",

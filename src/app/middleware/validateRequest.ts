@@ -1,26 +1,24 @@
-import type { NextFunction, Request, Response } from "express";
-import httpStatus from "http-status";
-import type { AnyZodObject, ZodEffects } from "zod";
-import { AppError } from "../utils/AppError";
+import z from "zod";
 import { catchAsync } from "../utils/catchAsync";
+import { NextFunction, Request, Response } from "express";
+import httpStatus from "http-status";
+import { AppError } from "../utils/AppError";
 
-export const validateRequest = (schema: AnyZodObject | ZodEffects<AnyZodObject>) =>
-	catchAsync(async (req: Request, _res: Response, next: NextFunction) => {
-		const result = schema.safeParse({
-			body: req.body,
-			query: req.query,
-			params: req.params,
-			cookies: req.cookies,
-		});
+export const validateRequest = (zodSchema: z.ZodObject) => {
+  return catchAsync((req: Request, res: Response, next: NextFunction) => {
+    const payload = req.body ?? {};
 
-		if (!result.success) {
-			const firstIssue = result.error.issues[0];
-			const message = firstIssue
-				? `${firstIssue.path.join(".")} ${firstIssue.message}`
-				: "Validation failed";
-			throw new AppError(httpStatus.BAD_REQUEST, message);
-		}
+    const result = zodSchema.safeParse(payload);
 
-		Object.assign(req, result.data);
-		next();
-	});
+    if (!result.success) {
+      console.log(result.error);
+      console.log(result.error.issues);
+
+      throw new AppError(httpStatus.BAD_REQUEST,result.error.issues[0].message);
+    }
+
+    req.body = result.data;
+
+    next();
+  });
+};
