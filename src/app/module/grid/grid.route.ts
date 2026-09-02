@@ -25,6 +25,11 @@ router.get(
   ),
   gridController.getAllZones,
 );
+router.delete(
+  "/zones/:id",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  gridController.deleteZone,
+);
 
 router.patch(
   "/zones/:id",
@@ -51,6 +56,18 @@ router.get(
   gridController.getAllSubstations,
 );
 
+router.patch(
+  "/substations/:id",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  validateRequest(gridValidation.updateSubstationValidationSchema),
+  gridController.updateSubstation,
+);
+router.delete(
+  "/substations/:id",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  gridController.deleteSubstation,
+);
+
 router.post(
   "/feeders",
   auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
@@ -68,22 +85,44 @@ router.get(
   ),
   gridController.getAllFeeders,
 );
-
-(router.post(
+router.patch(
+  "/feeders/:id",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  validateRequest(gridValidation.updateFeederValidationSchema),
+  gridController.updateFeeder,
+);
+router.delete(
+  "/feeders/:id",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  gridController.deleteFeeder,
+);
+router.post(
   "/areas",
   auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
   validateRequest(gridValidation.createAreaValidationSchema),
   gridController.createArea,
-),
-  router.get(
-    "/areas",
-    auth(
-      UserRole.ADMIN,
-      UserRole.POWER_OPERATOR,
-      UserRole.TECHNICIAN,
-      UserRole.CUSTOMER,
-    ),
-    gridController.getAllAreas,
-  ));
+);
+router.get(
+  "/areas",
+  auth(
+    UserRole.ADMIN,
+    UserRole.POWER_OPERATOR,
+    UserRole.TECHNICIAN,
+    UserRole.CUSTOMER,
+  ),
+  gridController.getAllAreas,
+);
+
+router.patch(
+  "/areas/:id",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  validateRequest(gridValidation.updateAreaValidationSchema),
+  gridController.updateArea,
+);
+router.delete(
+  "/areas/:id",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  gridController.deleteArea,
+);
 
 export const GridRoutes = router;

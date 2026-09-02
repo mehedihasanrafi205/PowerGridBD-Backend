@@ -34,6 +34,17 @@ const updateZone = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteZone = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params as { id: string };
+  const result = await gridService.deleteZone(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Zone deleted successfully",
+    data: result,
+  });
+});
+
 const createSubstation = catchAsync(async (req: Request, res: Response) => {
   const result = await gridService.createSubstation(req.body);
   sendResponse(res, {
@@ -50,6 +61,27 @@ const getAllSubstations = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Substations retrieved successfully",
+    data: result,
+  });
+});
+const updateSubstation = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
+  const result = await gridService.updateSubstation(id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Substation updated successfully",
+    data: result,
+  });
+});
+
+const deleteSubstation = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
+  const result = await gridService.deleteSubstation(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Substation deleted successfully",
     data: result,
   });
 });
@@ -74,6 +106,28 @@ const getAllFeeders = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateFeeder = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
+  const result = await gridService.updateFeeder(id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Feeder updated successfully",
+    data: result,
+  });
+});
+
+const deleteFeeder = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
+  const result = await gridService.deleteFeeder(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Feeder deleted successfully",
+    data: result,
+  });
+});
+
 const createArea = catchAsync(async (req: Request, res: Response) => {
   const result = await gridService.createArea(req.body);
   sendResponse(res, {
@@ -94,14 +148,43 @@ const getAllAreas = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateArea = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
+  const result = await gridService.updateArea(id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Area updated successfully",
+    data: result,
+  });
+});
+
+const deleteArea = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
+  const result = await gridService.deleteArea(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Area deleted successfully",
+    data: result,
+  });
+});
+
 export const gridController = {
   createZone,
   getAllZones,
   updateZone,
+  deleteZone,
   createSubstation,
   getAllSubstations,
+  updateSubstation,
+  deleteSubstation,
   createFeeder,
   getAllFeeders,
+  updateFeeder,
+  deleteFeeder,
   createArea,
   getAllAreas,
+  updateArea,
+  deleteArea,
 };

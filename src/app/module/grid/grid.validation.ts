@@ -14,10 +14,19 @@ const createSubstationValidationSchema = z.object({
   name: z.string("Substation name is required"),
   zoneId: z.string("Zone ID is required"),
 });
+const updateSubstationValidationSchema = z.object({
+  name: z.string().optional(),
+  zoneId: z.string().optional(),
+});
 
 const createFeederValidationSchema = z.object({
   name: z.string("Feeder name is required"),
   substationId: z.string("Substation ID is required"),
+});
+
+const updateFeederValidationSchema = z.object({
+  name: z.string().optional(),
+  substationId: z.string().optional(),
 });
 
 const createAreaValidationSchema = z.object({
@@ -25,10 +34,18 @@ const createAreaValidationSchema = z.object({
   feederId: z.string("Feeder ID is required"),
 });
 
+const updateAreaValidationSchema = z.object({
+  name: z.string().optional(),
+  feederId: z.string().optional(),
+});
+
 export const gridValidation = {
   createZoneValidationSchema,
   updateZoneValidationSchema,
   createSubstationValidationSchema,
+  updateSubstationValidationSchema,
   createFeederValidationSchema,
-  createAreaValidationSchema
+  updateFeederValidationSchema,
+  createAreaValidationSchema,
+  updateAreaValidationSchema,
 };
