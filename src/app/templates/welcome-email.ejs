@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to PowerGridBD</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0f172a;
+      color: #cbd5e1;
+      margin: 0;
+      padding: 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid #334155;
+    }
+    .email-header {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      padding: 30px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .email-header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .email-body {
+      padding: 35px 30px;
+    }
+    .welcome-text {
+      font-size: 18px;
+      color: #f8fafc;
+      margin-bottom: 20px;
+    }
+    .description {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #94a3b8;
+      margin-bottom: 25px;
+    }
+    .info-box {
+      background: #0f172a;
+      border-left: 4px solid #0ea5e9;
+      padding: 15px 20px;
+      border-radius: 6px;
+      margin-bottom: 25px;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+    .email-footer {
+      background: #0f172a;
+      padding: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+      border-top: 1px solid #334155;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-header">
+      <h1>⚡ Welcome to PowerGridBD!</h1>
+    </div>
+    <div class="email-body">
+      <p class="welcome-text">Hello, <strong><%= name %></strong>!</p>
+      <p class="description">
+        Your account has been successfully created. We are thrilled to have you on board with PowerGridBD. You can now access our portal to stay updated with real-time grid statuses, load shedding schedules, and outage reports.
+      </p>
+
+      <div class="info-box">
+        <strong>Registered Email:</strong> <%= email %>
+      </div>
+
+      <p class="description">
+        If you have any questions or need assistance, feel free to reach out to our support team.
+      </p>
+    </div>
+    <div class="email-footer">
+      <p>&copy; <%= year %> PowerGridBD. All rights reserved.</p>
+      <p>Load Shedding & Power Outage Management System, Bangladesh.</p>
+    </div>
+  </div>
+</body>
+</html>

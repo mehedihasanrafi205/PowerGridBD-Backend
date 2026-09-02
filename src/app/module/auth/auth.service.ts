@@ -138,6 +138,26 @@ const verifyCustomerEmail = async (payload: IVerifyEmailPayload) => {
 
   await redisClient.del(registrationDataKey);
 
+  const templatePath = path.join(
+    process.cwd(),
+    "src/app/templates/welcome-email.ejs",
+  );
+
+  const templateData = {
+    name: createdUser.name,
+    email: createdUser.email,
+    year: new Date().getFullYear(),
+  };
+
+  const html = await ejs.renderFile(templatePath, templateData);
+
+  await transporter.sendMail({
+    from: config.email_sender,
+    to: createdUser.email,
+    subject: "Welcome to PowerGridBD - Account Created Successfully",
+    html,
+  });
+
   const jwtPayload = {
     userId: createdUser.id,
     name: createdUser.name,
@@ -292,7 +312,7 @@ const refreshToken = async (token: string) => {
   };
 };
 
-const googleLogin = async (payload: IGoogleLoginPayload) => {
+export const googleLogin = async (payload: IGoogleLoginPayload) => {
   let googleIdTokenPayload: TokenPayload | null | undefined = null;
   try {
     const ticket = await googleClient.verifyIdToken({
@@ -332,6 +352,33 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
         emailVerified: true,
       },
     });
+
+    try {
+      const templatePath = path.join(
+        process.cwd(),
+        "src/app/templates/welcome-email.ejs",
+      );
+
+      const templateData = {
+        name: user.name,
+        email: user.email,
+        year: new Date().getFullYear(),
+      };
+
+      const html = await ejs.renderFile(templatePath, templateData);
+
+      await transporter.sendMail({
+        from: config.email_sender,
+        to: user.email,
+        subject: "Welcome to PowerGridBD - Account Created Successfully",
+        html,
+      });
+    } catch (emailError) {
+      console.error(
+        "Failed to send welcome email via Google login:",
+        emailError,
+      );
+    }
   }
 
   if (user.status === UserStatus.BLOCKED || user.isDeleted) {
