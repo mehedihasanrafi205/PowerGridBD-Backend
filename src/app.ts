@@ -8,6 +8,7 @@ import { notFound } from "./app/middleware/notFound";
 import { AuthRoutes } from "./app/module/auth/auth.route";
 import { requestLogger } from "./app/middleware/requestLogger";
 import { UserRoutes } from "./app/module/user/user.route";
+import { GridRoutes } from "./app/module/grid/grid.route";
 
 const app: Application = express();
 
@@ -29,6 +30,7 @@ app.use(cookieParser());
 
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/user", UserRoutes);
+app.use("/api/v1/grid", GridRoutes);
 
 // Basic route
 app.get("/", async (req: Request, res: Response) => {
