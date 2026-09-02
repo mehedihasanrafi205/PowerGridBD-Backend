@@ -18,6 +18,12 @@ export default {
   tester_admin_name: process.env.TESTER_ADMIN_NAME!,
   tester_admin_email: process.env.TESTER_ADMIN_EMAIL!,
   tester_admin_password: process.env.TESTER_ADMIN_PASSWORD!,
+  tester_power_operator_name: process.env.TESTER_POWER_OPERATOR_NAME!,
+  tester_power_operator_email: process.env.TESTER_POWER_OPERATOR_EMAIL!,
+  tester_power_operator_password: process.env.TESTER_POWER_OPERATOR_PASSWORD!,
+  tester_technician_name: process.env.TESTER_TECHNICIAN_NAME!,
+  tester_technician_email: process.env.TESTER_TECHNICIAN_EMAIL!,
+  tester_technician_password: process.env.TESTER_TECHNICIAN_PASSWORD!,
   redis_user: process.env.REDIS_USER!,
   redis_password: process.env.REDIS_PASSWORD!,
   redis_host: process.env.REDIS_HOST!,
@@ -28,5 +34,4 @@ export default {
   cloudinary_cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
   cloudinary_api_key: process.env.CLOUDINARY_API_KEY!,
   cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET!,
-
 };

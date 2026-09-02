@@ -20,14 +20,14 @@ import type {
   IResetPasswordPayload,
   IVerifyEmailPayload,
 } from "./auth.interface";
-import { redisClient } from "../../middleware/redis";
-import { transporter } from "../../middleware/nodemailer";
+import { redisClient } from "../../lib/redis";
+import { transporter } from "../../lib/nodemailer";
 import {
   AuthProvider,
   UserRole,
   UserStatus,
 } from "../../../generated/prisma/enums";
-import { googleClient } from "../../middleware/googleAuth";
+import { googleClient } from "../../lib/googleAuth";
 
 const registerCustomer = async (payload: IRegisterCustomerPayload) => {
   const { name, password, phone, address, areaId } = payload;
