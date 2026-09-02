@@ -20,9 +20,15 @@ const createFeederValidationSchema = z.object({
   substationId: z.string("Substation ID is required"),
 });
 
+const createAreaValidationSchema = z.object({
+  name: z.string("Area name is required"),
+  feederId: z.string("Feeder ID is required"),
+});
+
 export const gridValidation = {
   createZoneValidationSchema,
   updateZoneValidationSchema,
   createSubstationValidationSchema,
   createFeederValidationSchema,
+  createAreaValidationSchema
 };

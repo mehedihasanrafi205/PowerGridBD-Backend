@@ -26,6 +26,13 @@ router.get(
   gridController.getAllZones,
 );
 
+router.patch(
+  "/zones/:id",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  validateRequest(gridValidation.updateZoneValidationSchema),
+  gridController.updateZone,
+);
+
 router.post(
   "/substations",
   auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
@@ -61,5 +68,22 @@ router.get(
   ),
   gridController.getAllFeeders,
 );
+
+(router.post(
+  "/areas",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  validateRequest(gridValidation.createAreaValidationSchema),
+  gridController.createArea,
+),
+  router.get(
+    "/areas",
+    auth(
+      UserRole.ADMIN,
+      UserRole.POWER_OPERATOR,
+      UserRole.TECHNICIAN,
+      UserRole.CUSTOMER,
+    ),
+    gridController.getAllAreas,
+  ));
 
 export const GridRoutes = router;

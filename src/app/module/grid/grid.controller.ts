@@ -23,6 +23,16 @@ const getAllZones = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const updateZone = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
+  const result = await gridService.updateZone(id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Zone updated successfully",
+    data: result,
+  });
+});
 
 const createSubstation = catchAsync(async (req: Request, res: Response) => {
   const result = await gridService.createSubstation(req.body);
@@ -64,11 +74,34 @@ const getAllFeeders = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const createArea = catchAsync(async (req: Request, res: Response) => {
+  const result = await gridService.createArea(req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Area created successfully",
+    data: result,
+  });
+});
+
+const getAllAreas = catchAsync(async (req: Request, res: Response) => {
+  const result = await gridService.getAllAreas();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Areas retrieved successfully",
+    data: result,
+  });
+});
+
 export const gridController = {
   createZone,
   getAllZones,
+  updateZone,
   createSubstation,
   getAllSubstations,
   createFeeder,
   getAllFeeders,
+  createArea,
+  getAllAreas,
 };

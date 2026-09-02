@@ -35,6 +35,22 @@ const getAllZones = async () => {
 
   return zones;
 };
+const updateZone = async (id: string, payload: { name?: string; description?: string }) => {
+  const isZoneExist = await prisma.zone.findUnique({
+    where: { id },
+  });
+
+  if (!isZoneExist) {
+    throw new AppError(httpStatus.NOT_FOUND, "Zone not found");
+  }
+
+  const updatedZone = await prisma.zone.update({
+    where: { id },
+    data: payload,
+  });
+
+  return updatedZone;
+};
 
 const createSubstation = async (payload: { name: string; zoneId: string }) => {
   const isZoneExist = await prisma.zone.findUnique({
@@ -96,7 +112,11 @@ const createFeeder = async (payload: {
 const getAllFeeders = async () => {
   const feeders = await prisma.feeder.findMany({
     include: {
-      substation: true,
+      substation: {
+        include: {
+          zone: true,
+        },
+      },
       areas: true,
     },
     orderBy: { createdAt: "desc" },
@@ -105,11 +125,52 @@ const getAllFeeders = async () => {
   return feeders;
 };
 
+const createArea = async (payload: { name: string; feederId: string }) => {
+  const isFeederExist = await prisma.feeder.findUnique({
+    where: { id: payload.feederId },
+  });
+
+  if (!isFeederExist) {
+    throw new AppError(httpStatus.NOT_FOUND, "Feeder not found");
+  }
+
+  const area = await prisma.area.create({
+    data: payload,
+    include: {
+      feeder: {
+        include: {
+          substation: {
+            include: {
+              zone: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return area;
+};
+
+const getAllAreas = async () => {
+  const areas = await prisma.area.findMany({
+    include: {
+      feeder: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return areas;
+};
+
 export const gridService = {
   createZone,
   getAllZones,
+  updateZone,
   createSubstation,
   getAllSubstations,
   createFeeder,
   getAllFeeders,
+  createArea,
+  getAllAreas,
 };
