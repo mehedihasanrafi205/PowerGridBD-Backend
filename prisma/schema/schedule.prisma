@@ -1,0 +1,19 @@
+model Schedule {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  reason      String
+
+  feederId String?
+  feeder   Feeder? @relation(fields: [feederId], references: [id], onDelete: Cascade)
+
+  areaId String?
+  area   Area?   @relation(fields: [areaId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("schedules")
+}

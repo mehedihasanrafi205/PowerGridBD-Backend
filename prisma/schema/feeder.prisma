@@ -1,0 +1,13 @@
+model Feeder {
+  id           String     @id @default(uuid())
+  name         String // যেমন: Feeder-04 (Power Line)
+  substationId String
+  substation   Substation @relation(fields: [substationId], references: [id], onDelete: Cascade)
+  areas        Area[]
+  schedules    Schedule[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("feeders")
+}

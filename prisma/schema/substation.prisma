@@ -1,0 +1,12 @@
+model Substation {
+  id      String   @id @default(uuid())
+  name    String
+  zoneId  String
+  zone    Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  feeders Feeder[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("substations")
+}

@@ -1,0 +1,14 @@
+model Area {
+  id            String         @id @default(uuid())
+  name          String
+  feederId      String
+  feeder        Feeder         @relation(fields: [feederId], references: [id], onDelete: Cascade)
+  users         User[]
+  outageReports OutageReport[]
+  schedules     Schedule[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("areas")
+}

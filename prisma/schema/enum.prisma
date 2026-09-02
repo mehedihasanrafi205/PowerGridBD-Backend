@@ -11,6 +11,21 @@ enum UserStatus {
   DELETED
 }
 
+enum OutageStatus {
+  PENDING
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
 enum AuthProvider {
   GOOGLE
   CREDENTIAL

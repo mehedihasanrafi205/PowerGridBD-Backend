@@ -31,8 +31,8 @@ export * from "./enums"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more Areas
+ * const areas = await prisma.area.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -42,7 +42,42 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 /**
+ * Model Area
+ * 
+ */
+export type Area = Prisma.AreaModel
+/**
+ * Model Feeder
+ * 
+ */
+export type Feeder = Prisma.FeederModel
+/**
+ * Model OutageReport
+ * 
+ */
+export type OutageReport = Prisma.OutageReportModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
+ * Model Schedule
+ * 
+ */
+export type Schedule = Prisma.ScheduleModel
+/**
+ * Model Substation
+ * 
+ */
+export type Substation = Prisma.SubstationModel
+/**
  * Model User
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Zone
+ * 
+ */
+export type Zone = Prisma.ZoneModel

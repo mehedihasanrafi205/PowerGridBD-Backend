@@ -8,5 +8,12 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/Area'
+export type * from './models/Feeder'
+export type * from './models/OutageReport'
+export type * from './models/Payment'
+export type * from './models/Schedule'
+export type * from './models/Substation'
 export type * from './models/User'
+export type * from './models/Zone'
 export type * from './commonInputTypes'

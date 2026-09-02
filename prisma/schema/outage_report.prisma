@@ -1,0 +1,23 @@
+model OutageReport {
+  id          String       @id @default(uuid())
+  description String
+  status      OutageStatus @default(PENDING)
+  reportedAt  DateTime     @default(now())
+  resolvedAt  DateTime?
+
+  customerId String
+  customer   User   @relation("CustomerReports", fields: [customerId], references: [id], onDelete: Cascade)
+
+  areaId String
+  area   Area   @relation(fields: [areaId], references: [id], onDelete: Cascade)
+
+  technicianId String?
+  technician   User?   @relation("AssignedTechnician", fields: [technicianId], references: [id], onDelete: SetNull)
+
+  payments Payment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("outage_reports")
+}

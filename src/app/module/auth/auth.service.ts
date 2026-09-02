@@ -6,10 +6,8 @@ import httpStatus from "http-status";
 import type { JwtPayload, SignOptions } from "jsonwebtoken";
 import type { TokenPayload } from "google-auth-library";
 
-
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
-
 
 import { jwtUtils } from "../../utils/jwt";
 import { AppError } from "../../utils/AppError";
@@ -24,7 +22,11 @@ import type {
 } from "./auth.interface";
 import { redisClient } from "../../middleware/redis";
 import { transporter } from "../../middleware/nodemailer";
-import { AuthProvider, UserRole, UserStatus } from "../../../generated/prisma/enums";
+import {
+  AuthProvider,
+  UserRole,
+  UserStatus,
+} from "../../../generated/prisma/enums";
 import { googleClient } from "../../middleware/googleAuth";
 
 const registerCustomer = async (payload: IRegisterCustomerPayload) => {
@@ -36,10 +38,16 @@ const registerCustomer = async (payload: IRegisterCustomerPayload) => {
   });
 
   if (isUserExists) {
-    throw new AppError(httpStatus.CONFLICT, "User with this email already exists");
+    throw new AppError(
+      httpStatus.CONFLICT,
+      "User with this email already exists",
+    );
   }
 
-  const hashedPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds));
+  const hashedPassword = await bcrypt.hash(
+    password,
+    Number(config.bcrypt_salt_rounds),
+  );
 
   const otpKey = `customer-registration-otp:${email}`;
   const otpValue = crypto.randomInt(100000, 1000000).toString();
@@ -63,7 +71,10 @@ const registerCustomer = async (payload: IRegisterCustomerPayload) => {
     expiration: { type: "EX", value: expirationSeconds },
   });
 
-  const templatePath = path.join(process.cwd(), "src/app/templates/registration-user-otp.ejs");
+  const templatePath = path.join(
+    process.cwd(),
+    "src/app/templates/registration-user-otp.ejs",
+  );
   const templateData = {
     name,
     email,
@@ -102,7 +113,10 @@ const verifyCustomerEmail = async (payload: IVerifyEmailPayload) => {
   const redisData = await redisClient.get(registrationDataKey);
 
   if (!redisData) {
-    throw new AppError(httpStatus.NOT_FOUND, "Registration data not found or expired");
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "Registration data not found or expired",
+    );
   }
 
   const customerPayload: IRegisterCustomerPayload = JSON.parse(redisData);
@@ -177,7 +191,10 @@ const loginUser = async (payload: ILoginUserPayload) => {
     );
   }
 
-  const isPasswordMatched = await bcrypt.compare(password, user.password as string);
+  const isPasswordMatched = await bcrypt.compare(
+    password,
+    user.password as string,
+  );
 
   if (!isPasswordMatched) {
     throw new AppError(httpStatus.UNAUTHORIZED, "Invalid credentials");
@@ -223,12 +240,17 @@ const getMe = async (user: IRequestUser) => {
 };
 
 const refreshToken = async (token: string) => {
-  const verifiedRefreshToken = jwtUtils.verifyToken(token, config.jwt_refresh_secret);
+  const verifiedRefreshToken = jwtUtils.verifyToken(
+    token,
+    config.jwt_refresh_secret,
+  );
 
   if (!verifiedRefreshToken.success || !verifiedRefreshToken.data) {
     throw new AppError(
       httpStatus.UNAUTHORIZED,
-      config.node_env === "development" ? verifiedRefreshToken.error : "Invalid refresh token",
+      config.node_env === "development"
+        ? verifiedRefreshToken.error
+        : "Invalid refresh token",
     );
   }
 
@@ -239,7 +261,10 @@ const refreshToken = async (token: string) => {
   });
 
   if (!user || user.isDeleted || user.status !== UserStatus.ACTIVE) {
-    throw new AppError(httpStatus.UNAUTHORIZED, "User is inactive or not found");
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      "User is inactive or not found",
+    );
   }
 
   const jwtPayload = {
@@ -279,11 +304,17 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
     if (config.node_env === "development") {
       console.error("Google ID token verification failed", error);
     }
-    throw new AppError(httpStatus.UNAUTHORIZED, "Invalid or expired Google ID Token");
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      "Invalid or expired Google ID Token",
+    );
   }
 
   if (!googleIdTokenPayload?.email || !googleIdTokenPayload?.name) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Invalid Google account information");
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Invalid Google account information",
+    );
   }
 
   let user = await prisma.user.findUnique({
@@ -345,8 +376,16 @@ const forgotPassword = async (payload: IForgotPasswordPayload) => {
     expiration: { type: "EX", value: expirationSeconds },
   });
 
-  const templatePath = path.join(process.cwd(), "src/app/templates/forgot-password.ejs");
-  const templateData = { name: user.name, otp, expirationMinutes: 5, year: new Date().getFullYear() };
+  const templatePath = path.join(
+    process.cwd(),
+    "src/app/templates/forgot-password.ejs",
+  );
+  const templateData = {
+    name: user.name,
+    otp,
+    expirationMinutes: 5,
+    year: new Date().getFullYear(),
+  };
   const html = await ejs.renderFile(templatePath, templateData);
 
   await transporter.sendMail({
@@ -372,7 +411,10 @@ const resetPassword = async (payload: IResetPasswordPayload) => {
     throw new AppError(httpStatus.UNAUTHORIZED, "Invalid or expired OTP");
   }
 
-  const hashedPassword = await bcrypt.hash(newPassword, Number(config.bcrypt_salt_rounds));
+  const hashedPassword = await bcrypt.hash(
+    newPassword,
+    Number(config.bcrypt_salt_rounds),
+  );
 
   await prisma.user.update({
     where: { email },

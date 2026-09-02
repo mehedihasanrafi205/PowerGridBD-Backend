@@ -18,7 +18,42 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
+ * Model Area
+ * 
+ */
+export type Area = Prisma.AreaModel
+/**
+ * Model Feeder
+ * 
+ */
+export type Feeder = Prisma.FeederModel
+/**
+ * Model OutageReport
+ * 
+ */
+export type OutageReport = Prisma.OutageReportModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
+ * Model Schedule
+ * 
+ */
+export type Schedule = Prisma.ScheduleModel
+/**
+ * Model Substation
+ * 
+ */
+export type Substation = Prisma.SubstationModel
+/**
  * Model User
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Zone
+ * 
+ */
+export type Zone = Prisma.ZoneModel
