@@ -30,3 +30,16 @@ enum AuthProvider {
   GOOGLE
   CREDENTIAL
 }
+
+enum ScheduleType {
+  MAINTENANCE
+  LOAD_SHEDDING
+  EMERGENCY_REPAIR
+}
+
+enum ScheduleStatus {
+  SCHEDULED
+  ONGOING
+  COMPLETED
+  CANCELLED
+}

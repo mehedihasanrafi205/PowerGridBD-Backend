@@ -10,6 +10,7 @@ import { requestLogger } from "./app/middleware/requestLogger";
 import { UserRoutes } from "./app/module/user/user.route";
 import { GridRoutes } from "./app/module/grid/grid.route";
 import { OutageRoutes } from "./app/module/outage/outage.route";
+import { ScheduleRoutes } from "./app/module/schedule/schedule.route";
 
 const app: Application = express();
 
@@ -33,6 +34,7 @@ app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/user", UserRoutes);
 app.use("/api/v1/grid", GridRoutes);
 app.use("/api/v1/outage", OutageRoutes);
+app.use("/api/v1/schedule", ScheduleRoutes);
 
 // Basic route
 app.get("/", async (req: Request, res: Response) => {

@@ -18,6 +18,8 @@ model User {
   areaId String?
   area   Area?   @relation(fields: [areaId], references: [id], onDelete: SetNull)
 
+  createdSchedules Schedule[] @relation("ScheduleCreator")
+
   isDeleted Boolean   @default(false)
   deletedAt DateTime?
 

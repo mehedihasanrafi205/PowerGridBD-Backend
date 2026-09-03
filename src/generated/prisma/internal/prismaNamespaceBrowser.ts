@@ -138,8 +138,11 @@ export const ScheduleScalarFieldEnum = {
   startTime: 'startTime',
   endTime: 'endTime',
   reason: 'reason',
+  type: 'type',
+  status: 'status',
   feederId: 'feederId',
   areaId: 'areaId',
+  createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

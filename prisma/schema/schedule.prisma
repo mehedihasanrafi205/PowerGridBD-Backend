@@ -1,10 +1,12 @@
 model Schedule {
-  id          String   @id @default(uuid())
+  id          String         @id @default(uuid())
   title       String
   description String?
   startTime   DateTime
   endTime     DateTime
   reason      String
+  type        ScheduleType   @default(LOAD_SHEDDING)
+  status      ScheduleStatus @default(SCHEDULED)     
 
   feederId String?
   feeder   Feeder? @relation(fields: [feederId], references: [id], onDelete: Cascade)
@@ -12,8 +14,12 @@ model Schedule {
   areaId String?
   area   Area?   @relation(fields: [areaId], references: [id], onDelete: Cascade)
 
+  createdById String?
+  createdBy   User?   @relation("ScheduleCreator", fields: [createdById], references: [id], onDelete: SetNull) 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("schedules")
+@@map("schedules")
 }
+

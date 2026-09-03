@@ -55,3 +55,22 @@ export const AuthProvider = {
 } as const
 
 export type AuthProvider = (typeof AuthProvider)[keyof typeof AuthProvider]
+
+
+export const ScheduleType = {
+  MAINTENANCE: 'MAINTENANCE',
+  LOAD_SHEDDING: 'LOAD_SHEDDING',
+  EMERGENCY_REPAIR: 'EMERGENCY_REPAIR'
+} as const
+
+export type ScheduleType = (typeof ScheduleType)[keyof typeof ScheduleType]
+
+
+export const ScheduleStatus = {
+  SCHEDULED: 'SCHEDULED',
+  ONGOING: 'ONGOING',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type ScheduleStatus = (typeof ScheduleStatus)[keyof typeof ScheduleStatus]
