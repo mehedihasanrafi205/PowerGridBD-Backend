@@ -75,7 +75,12 @@ const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
 const updateUserRole = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params as { id: string };
   const { role } = req.body;
-  const result = await userService.updateUserRole(id, role, req.user?.userId);
+  const result = await userService.updateUserRole(
+    id,
+    role,
+    req.user?.userId,
+    req.user?.role,
+  );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

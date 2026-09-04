@@ -46,10 +46,10 @@ router.patch(
   userController.updateUserStatus,
 );
 
-// 4. Update user role
+// 4. Update user role (Admin: any role; Power Operator: technician grant/revoke only)
 router.patch(
   "/:id/role",
-  auth(UserRole.ADMIN),
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
   validateRequest(userValidation.updateRoleValidationSchema),
   userController.updateUserRole,
 );

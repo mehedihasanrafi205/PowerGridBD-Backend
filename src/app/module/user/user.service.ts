@@ -224,10 +224,29 @@ const updateUserStatus = async (
 };
 
 
-const updateUserRole = async (id: string, role: UserRole, actorId?: string) => {
+const updateUserRole = async (
+  id: string,
+  role: UserRole,
+  actorId?: string,
+  actorRole?: UserRole,
+) => {
   const user = await prisma.user.findUnique({ where: { id } });
   if (!user || user.isDeleted) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  // Operators manage field crews only: they may grant TECHNICIAN to
+  // customers and revoke it back to CUSTOMER — nothing else.
+  if (actorRole === UserRole.POWER_OPERATOR) {
+    const isGrant = user.role === UserRole.CUSTOMER && role === UserRole.TECHNICIAN;
+    const isRevoke =
+      user.role === UserRole.TECHNICIAN && role === UserRole.CUSTOMER;
+    if (!isGrant && !isRevoke) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "Power operators may only grant or revoke the technician role",
+      );
+    }
   }
 
   if (user.role === role) {
