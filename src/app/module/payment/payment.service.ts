@@ -57,7 +57,13 @@ const initiatePayment = async (
   }
 
   const tranId = generateTranId();
-  const backendUrl = config.bak_url;
+  const backendUrl = config.bak_url || config.frontend_url;
+  if (!backendUrl) {
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "APP_URL or FRONTEND_URL must be set in environment variables",
+    );
+  }
   const payment = await prisma.payment.create({
     data: {
       amount: payload.amount,
