@@ -1,0 +1,1081 @@
+{
+  "info": {
+    "_postman_id": "fdea4322-c45d-4964-96d7-6b05f14955b5",
+    "name": "PowerGrid BD",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "45887971",
+    "description": "PowerGridBD Backend API — 50 endpoints across Auth, User, Grid, Schedule, Outage, and Payment modules."
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rahim Uddin\",\n  \"email\": \"rahim@example.com\",\n  \"password\": \"P@ssw0rd123\",\n  \"phone\": \"01712345678\",\n  \"address\": \"123 Mirpur Road, Dhaka\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rahim@example.com\",\n  \"otp\": \"482916\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/verify-email",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "verify-email"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Customer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rahim@example.com\",\n  \"password\": \"P@ssw0rd123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@powergrid.bd\",\n  \"password\": \"Admin@12345\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Power Operator)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"operator@powergrid.bd\",\n  \"password\": \"Operator@123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Technician)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"technician@powergrid.bd\",\n  \"password\": \"Tech@12345\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/refresh-token",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "refresh-token"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Google OAuth Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idToken\": \"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...your_google_id_token\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/google",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "google"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rahim@example.com\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "forgot-password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rahim@example.com\",\n  \"otp\": \"482916\",\n  \"newPassword\": \"NewP@ssw0rd1\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "reset-password"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Upload Profile Image",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "profileImage",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/profile-image",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "profile-image"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rahim Uddin\",\n  \"phone\": \"01712345678\",\n  \"address\": \"456 Gulshan Avenue, Dhaka 1212\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User By ID (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "{{user_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Status (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"BLOCKED\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/{{user_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "{{user_id}}", "status"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Role (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"TECHNICIAN\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/{{user_id}}/role",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "{{user_id}}", "role"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Soft Delete User (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/user/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "user", "{{user_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Grid",
+      "item": [
+        {
+          "name": "Zones",
+          "item": [
+            {
+              "name": "Create Zone",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Dhaka North Zone\",\n  \"description\": \"Power distribution zone covering Mirpur, Uttara, and surrounding areas\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/zones",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "zones"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Zones",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/zones",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "zones"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Zone",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Dhaka North Zone (Updated)\",\n  \"description\": \"Expanded power distribution zone covering Mirpur, Uttara, Banani, and surrounding areas\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/zones/{{zone_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "zones", "{{zone_id}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Zone",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/zones/{{zone_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "zones", "{{zone_id}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Substations",
+          "item": [
+            {
+              "name": "Create Substation",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Mirpur-10 Grid Substation\",\n  \"zoneId\": \"{{zone_id}}\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/substations",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "substations"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Substations",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/substations",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "substations"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Substation",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Mirpur-10 Substation (Renovated)\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/substations/{{substation_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "substations", "{{substation_id}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Substation",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/substations/{{substation_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "substations", "{{substation_id}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Feeders",
+          "item": [
+            {
+              "name": "Create Feeder",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Feeder-01 (Mirpur 10)\",\n  \"substationId\": \"{{substation_id}}\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/feeders",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "feeders"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Feeders",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/feeders",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "feeders"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Feeder",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Feeder-01 (Mirpur 10 - Upgraded)\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/feeders/{{feeder_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "feeders", "{{feeder_id}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Feeder",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/feeders/{{feeder_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "feeders", "{{feeder_id}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Areas",
+          "item": [
+            {
+              "name": "Create Area",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Mirpur-10 Block A\",\n  \"feederId\": \"{{feeder_id}}\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/areas",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "areas"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Areas",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/areas",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "areas"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Area",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Mirpur-10 Block A (Extended)\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/areas/{{area_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "areas", "{{area_id}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Area",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/grid/areas/{{area_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "grid", "areas", "{{area_id}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Schedule",
+      "item": [
+        {
+          "name": "Create Schedule",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Planned Maintenance - Mirpur Feeder\",\n  \"description\": \"Scheduled maintenance work on the Mirpur-10 feeder line. Expected power interruption for the duration.\",\n  \"startTime\": \"2026-09-05T08:00:00.000Z\",\n  \"endTime\": \"2026-09-05T14:00:00.000Z\",\n  \"reason\": \"Routine transformer oil replacement and line inspection\",\n  \"type\": \"MAINTENANCE\",\n  \"feederId\": \"{{feeder_id}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/schedule",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "schedule"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Load Shedding Schedule",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Load Shedding - Uttara Zone\",\n  \"description\": \"Rotating load shedding due to national grid demand surge.\",\n  \"startTime\": \"2026-09-05T18:00:00.000Z\",\n  \"endTime\": \"2026-09-05T22:00:00.000Z\",\n  \"reason\": \"Peak demand period — load shedding per DESCO directive\",\n  \"type\": \"LOAD_SHEDDING\",\n  \"areaId\": \"{{area_id}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/schedule",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "schedule"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Schedules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/schedule",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "schedule"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Schedule By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/schedule/{{schedule_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "schedule", "{{schedule_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Schedule Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ONGOING\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/schedule/{{schedule_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "schedule", "{{schedule_id}}", "status"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Schedule",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/schedule/{{schedule_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "schedule", "{{schedule_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Outage",
+      "item": [
+        {
+          "name": "Create Outage Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"No power in my area since 6 AM. Multiple households affected on Road 10, Block C.\",\n  \"areaId\": \"{{area_id}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/outage",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "outage"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Outage Reports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/outage",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "outage"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Outage Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/outage/{{outage_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "outage", "{{outage_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Technician",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"technicianId\": \"{{technician_id}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/outage/{{outage_id}}/assign",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "outage", "{{outage_id}}", "assign"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Outage Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"IN_PROGRESS\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/outage/{{outage_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "outage", "{{outage_id}}", "status"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Outage Report",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/outage/{{outage_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "outage", "{{outage_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payment",
+      "item": [
+        {
+          "name": "Initiate Priority Restoration Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 500,\n  \"currency\": \"BDT\",\n  \"outageReportId\": \"{{outage_id}}\",\n  \"paymentType\": \"PRIORITY_RESTORATION\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/payment",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payment"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Initiate SLA Subscription Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 3000,\n  \"currency\": \"BDT\",\n  \"paymentType\": \"SLA_SUBSCRIPTION\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/payment",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payment"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "IPN Callback (SSLCommerz)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "status", "value": "VALID" },
+                { "key": "tran_date", "value": "2026-09-04 15:30:00" },
+                { "key": "tran_id", "value": "PAYMENT_TXN_ID_HERE" },
+                { "key": "val_id", "value": "VAL_ID_FROM_SSLCOMMERZ" },
+                { "key": "amount", "value": "500.00" },
+                { "key": "store_amount", "value": "487.50" },
+                { "key": "currency_type", "value": "BDT" },
+                { "key": "currency_amount", "value": "500.00" },
+                { "key": "bank_tran_id", "value": "BANK TranID123" },
+                { "key": "card_type", "value": "VISA" },
+                { "key": "card_no", "value": "4XXXXX-XXXX-1234" },
+                { "key": "risk_level", "value": "0" },
+                { "key": "risk_title", "value": "Safe" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/payment/ipn",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payment", "ipn"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success Callback",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "val_id", "value": "VAL_ID_FROM_SSLCOMMERZ" },
+                { "key": "tran_id", "value": "PAYMENT_TXN_ID_HERE" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/payment/success",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payment", "success"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Fail Callback",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "tran_id", "value": "PAYMENT_TXN_ID_HERE" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/payment/fail",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payment", "fail"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Callback",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "tran_id", "value": "PAYMENT_TXN_ID_HERE" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/payment/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payment", "cancel"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment By Transaction ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/payment/transaction/{{tran_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payment", "transaction", "{{tran_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/payment/my-payments?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payment", "my-payments"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Refund",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentId\": \"{{payment_id}}\",\n  \"refundAmount\": 500,\n  \"refundRemarks\": \"Customer requested refund due to unresolved outage\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/payment/refund",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "payment", "refund"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000" },
+    { "key": "user_id", "value": "" },
+    { "key": "zone_id", "value": "" },
+    { "key": "substation_id", "value": "" },
+    { "key": "feeder_id", "value": "" },
+    { "key": "area_id", "value": "" },
+    { "key": "schedule_id", "value": "" },
+    { "key": "outage_id", "value": "" },
+    { "key": "technician_id", "value": "" },
+    { "key": "tran_id", "value": "" },
+    { "key": "payment_id", "value": "" }
+  ]
+}
