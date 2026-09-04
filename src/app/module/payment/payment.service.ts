@@ -4,6 +4,7 @@ import { prisma } from "../../lib/prisma";
 import {
   initiatePayment as sslInitiatePayment,
   validateOrder as sslValidateOrder,
+  queryByTranId as sslQueryByTranId,
   refundTransaction as sslRefund,
   type SSLCommerzValidationResponse,
 } from "../../lib/sslcommerz";
@@ -165,24 +166,7 @@ const handleIPN = async (ipnData: IIPNPayload) => {
   });
 
   if (newStatus === PaymentStatus.COMPLETED) {
-    if (payment.type === PaymentType.PRIORITY_RESTORATION && payment.outageReportId) {
-      await prisma.outageReport.update({
-        where: { id: payment.outageReportId },
-        data: { isPriority: true },
-      });
-    }
-
-    if (payment.type === PaymentType.SLA_SUBSCRIPTION) {
-      const expiryDate = new Date();
-      expiryDate.setDate(expiryDate.getDate() + 30);
-      await prisma.user.update({
-        where: { id: payment.userId },
-        data: {
-          slaActive: true,
-          slaExpiryDate: expiryDate,
-        },
-      });
-    }
+    await applyCompletedSideEffects(payment);
   }
 
   return updatedPayment;
@@ -192,6 +176,125 @@ const validateTransaction = async (
   valId: string,
 ): Promise<SSLCommerzValidationResponse> => {
   return sslValidateOrder(valId);
+};
+
+async function applyCompletedSideEffects(payment: {
+  id: string;
+  type: PaymentType;
+  outageReportId: string | null;
+  userId: string;
+  amount: number;
+}) {
+  if (payment.type === PaymentType.PRIORITY_RESTORATION && payment.outageReportId) {
+    await prisma.outageReport.update({
+      where: { id: payment.outageReportId },
+      data: { isPriority: true },
+    });
+  }
+
+  if (payment.type === PaymentType.SLA_SUBSCRIPTION) {
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 30);
+    await prisma.user.update({
+      where: { id: payment.userId },
+      data: {
+        slaActive: true,
+        slaExpiryDate: expiryDate,
+      },
+    });
+  }
+}
+
+const confirmPaymentByTransactionId = async (tranId: string) => {
+  const payment = await prisma.payment.findUnique({
+    where: { transactionId: tranId },
+  });
+
+  if (!payment) {
+    throw new AppError(httpStatus.NOT_FOUND, "Payment not found");
+  }
+
+  if (payment.status !== PaymentStatus.PENDING) {
+    return payment;
+  }
+
+  const queryResult = await sslQueryByTranId(tranId);
+
+  const statusStr = (queryResult.status ?? "").toUpperCase();
+  if (statusStr !== "VALID" && statusStr !== "VALIDATED") {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `SSLCommerz transaction not valid: ${statusStr}`,
+    );
+  }
+
+  if (
+    queryResult.amount !== undefined &&
+    Number(queryResult.amount) !== payment.amount
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Payment amount mismatch — possible tampering detected",
+    );
+  }
+
+  const updatedPayment = await prisma.payment.update({
+    where: { id: payment.id },
+    data: {
+      status: PaymentStatus.COMPLETED,
+      paymentDetails: {
+        ...((payment.paymentDetails as Record<string, unknown>) ?? {}),
+        validation: {
+          status: queryResult.status,
+          bank_tran_id: queryResult.bank_tran_id,
+          risk_level: queryResult.risk_level,
+          risk_title: queryResult.risk_title,
+          confirmedVia: "success_callback",
+          confirmedAt: new Date().toISOString(),
+        },
+      },
+    },
+    include: {
+      user: { select: { id: true, name: true, email: true } },
+      outageReport: true,
+    },
+  });
+
+  await applyCompletedSideEffects(payment);
+
+  return updatedPayment;
+};
+
+const handleCallbackStatus = async (
+  tranId: string,
+  callbackType: "FAILED" | "CANCELLED",
+) => {
+  const payment = await prisma.payment.findUnique({
+    where: { transactionId: tranId },
+  });
+
+  if (!payment) {
+    throw new AppError(httpStatus.NOT_FOUND, "Payment not found");
+  }
+
+  if (payment.status !== PaymentStatus.PENDING) {
+    return payment;
+  }
+
+  const updatedPayment = await prisma.payment.update({
+    where: { id: payment.id },
+    data: {
+      status: PaymentStatus.FAILED,
+      paymentDetails: {
+        ...((payment.paymentDetails as Record<string, unknown>) ?? {}),
+        [callbackType === "FAILED" ? "failCallback" : "cancelCallback"]: true,
+        [callbackType === "FAILED" ? "failedAt" : "cancelledAt"]:
+          new Date().toISOString(),
+      },
+    },
+  });
+
+  return updatedPayment;
 };
 
 const getPaymentByTransactionId = async (tranId: string) => {
@@ -344,6 +447,8 @@ export const paymentService = {
   initiatePayment,
   handleIPN,
   validateTransaction,
+  confirmPaymentByTransactionId,
+  handleCallbackStatus,
   getPaymentByTransactionId,
   getUserPayments,
   initiateRefund,
