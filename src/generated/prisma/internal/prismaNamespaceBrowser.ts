@@ -220,6 +220,7 @@ export const UserScalarFieldEnum = {
   imagePublicId: 'imagePublicId',
   slaActive: 'slaActive',
   slaExpiryDate: 'slaExpiryDate',
+  slaWarningSentAt: 'slaWarningSentAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

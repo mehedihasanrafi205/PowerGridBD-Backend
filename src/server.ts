@@ -3,6 +3,7 @@ import config from "./app/config";
 import { prisma } from "./app/lib/prisma";
 import { transporter } from "./app/lib/nodemailer";
 import { redisClient } from "./app/lib/redis";
+import { startCronJobs } from "./app/lib/cron";
 import {
   seedPowerOperator,
   seedSuperAdmin,
@@ -52,8 +53,10 @@ const main = async () => {
     await seedPowerOperator();
     await seedTechnician();
 
+    // 4. Start scheduled jobs (SLA warnings/expiry, unverified application purge)
+    startCronJobs();
 
-    // 4. Start Express Server
+    // 5. Start Express Server
     app.listen(PORT, () => {
       const duration = Date.now() - startTime;
       console.log(`\n--------------------------------------------------`);

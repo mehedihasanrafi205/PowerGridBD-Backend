@@ -12,6 +12,7 @@ import {
 import config from "../../config";
 import { AppError } from "../../utils/AppError";
 import httpStatus from "http-status";
+import { sendTemplatedEmail } from "../../utils/notify";
 import type { IIPNPayload, IPaymentInitPayload } from "./payment.interface";
 
 function generateTranId(): string {
@@ -203,6 +204,8 @@ const handleIPN = async (ipnData: IIPNPayload) => {
       return completed;
     });
 
+    await notifyPaymentCompleted(payment);
+
     return completedPayment;
   }
 
@@ -268,11 +271,60 @@ async function applyCompletedSideEffects(
   }
 }
 
+function paymentPurpose(type: PaymentType): string {
+  return type === PaymentType.PRIORITY_RESTORATION
+    ? "Priority Restoration Pass"
+    : "SLA Subscription";
+}
+
+async function notifyPaymentCompleted(payment: {
+  userId: string;
+  transactionId: string;
+  amount: number;
+  type: PaymentType;
+}) {
+  const user = await prisma.user.findUnique({
+    where: { id: payment.userId },
+    select: { name: true, email: true, slaExpiryDate: true },
+  });
+  if (!user) return;
+
+  await sendTemplatedEmail(
+    user.email,
+    "Payment Receipt - PowerGridBD",
+    "payment-receipt.ejs",
+    {
+      name: user.name,
+      success: true,
+      amount: payment.amount,
+      transactionId: payment.transactionId,
+      purpose: paymentPurpose(payment.type),
+    },
+  );
+
+  if (
+    payment.type === PaymentType.SLA_SUBSCRIPTION &&
+    user.slaExpiryDate
+  ) {
+    await sendTemplatedEmail(
+      user.email,
+      "SLA Subscription Activated - PowerGridBD",
+      "sla-status.ejs",
+      {
+        name: user.name,
+        kind: "activated",
+        expiryDate: user.slaExpiryDate.toLocaleString(),
+      },
+    );
+  }
+}
+
 async function markPaymentCompleted(
   payment: {
     id: string;
     amount: number;
     type: PaymentType;
+    transactionId: string;
     outageReportId: string | null;
     userId: string;
     paymentDetails: unknown;
@@ -324,6 +376,8 @@ async function markPaymentCompleted(
 
     return completed;
   });
+
+  await notifyPaymentCompleted(payment);
 
   return updatedPayment;
 }
@@ -451,6 +505,25 @@ const handleCallbackStatus = async (
       } as any,
     },
   });
+
+  const payer = await prisma.user.findUnique({
+    where: { id: payment.userId },
+    select: { name: true, email: true },
+  });
+  if (payer) {
+    await sendTemplatedEmail(
+      payer.email,
+      "Payment Not Completed - PowerGridBD",
+      "payment-receipt.ejs",
+      {
+        name: payer.name,
+        success: false,
+        amount: payment.amount,
+        transactionId: payment.transactionId,
+        purpose: paymentPurpose(payment.type),
+      },
+    );
+  }
 
   return updatedPayment;
 };
@@ -628,6 +701,19 @@ const initiateRefund = async (
 
     return refunded;
   });
+
+  await sendTemplatedEmail(
+    updatedPayment.user.email,
+    "Refund Issued - PowerGridBD",
+    "payment-refund.ejs",
+    {
+      name: updatedPayment.user.name,
+      refundAmount,
+      transactionId: updatedPayment.transactionId,
+      refundTransId,
+      remarks: refundRemarks,
+    },
+  );
 
   return updatedPayment;
 };

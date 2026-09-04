@@ -44,6 +44,7 @@ export type UserMinAggregateOutputType = {
   imagePublicId: string | null
   slaActive: boolean | null
   slaExpiryDate: Date | null
+  slaWarningSentAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +69,7 @@ export type UserMaxAggregateOutputType = {
   imagePublicId: string | null
   slaActive: boolean | null
   slaExpiryDate: Date | null
+  slaWarningSentAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -92,6 +94,7 @@ export type UserCountAggregateOutputType = {
   imagePublicId: number
   slaActive: number
   slaExpiryDate: number
+  slaWarningSentAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -118,6 +121,7 @@ export type UserMinAggregateInputType = {
   imagePublicId?: true
   slaActive?: true
   slaExpiryDate?: true
+  slaWarningSentAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -142,6 +146,7 @@ export type UserMaxAggregateInputType = {
   imagePublicId?: true
   slaActive?: true
   slaExpiryDate?: true
+  slaWarningSentAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -166,6 +171,7 @@ export type UserCountAggregateInputType = {
   imagePublicId?: true
   slaActive?: true
   slaExpiryDate?: true
+  slaWarningSentAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -263,6 +269,7 @@ export type UserGroupByOutputType = {
   imagePublicId: string
   slaActive: boolean
   slaExpiryDate: Date | null
+  slaWarningSentAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -308,6 +315,7 @@ export type UserWhereInput = {
   imagePublicId?: Prisma.StringFilter<"User"> | string
   slaActive?: Prisma.BoolFilter<"User"> | boolean
   slaExpiryDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  slaWarningSentAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   area?: Prisma.XOR<Prisma.AreaNullableScalarRelationFilter, Prisma.AreaWhereInput> | null
@@ -339,6 +347,7 @@ export type UserOrderByWithRelationInput = {
   imagePublicId?: Prisma.SortOrder
   slaActive?: Prisma.SortOrder
   slaExpiryDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  slaWarningSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   area?: Prisma.AreaOrderByWithRelationInput
@@ -373,6 +382,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   imagePublicId?: Prisma.StringFilter<"User"> | string
   slaActive?: Prisma.BoolFilter<"User"> | boolean
   slaExpiryDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  slaWarningSentAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   area?: Prisma.XOR<Prisma.AreaNullableScalarRelationFilter, Prisma.AreaWhereInput> | null
@@ -404,6 +414,7 @@ export type UserOrderByWithAggregationInput = {
   imagePublicId?: Prisma.SortOrder
   slaActive?: Prisma.SortOrder
   slaExpiryDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  slaWarningSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -434,6 +445,7 @@ export type UserScalarWhereWithAggregatesInput = {
   imagePublicId?: Prisma.StringWithAggregatesFilter<"User"> | string
   slaActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   slaExpiryDate?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  slaWarningSentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -457,6 +469,7 @@ export type UserCreateInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   area?: Prisma.AreaCreateNestedOneWithoutUsersInput
@@ -488,6 +501,7 @@ export type UserUncheckedCreateInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutCreatedByInput
@@ -517,6 +531,7 @@ export type UserUpdateInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   area?: Prisma.AreaUpdateOneWithoutUsersNestedInput
@@ -548,6 +563,7 @@ export type UserUncheckedUpdateInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -578,6 +594,7 @@ export type UserCreateManyInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -601,6 +618,7 @@ export type UserUpdateManyMutationInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -625,6 +643,7 @@ export type UserUncheckedUpdateManyInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -669,6 +688,7 @@ export type UserCountOrderByAggregateInput = {
   imagePublicId?: Prisma.SortOrder
   slaActive?: Prisma.SortOrder
   slaExpiryDate?: Prisma.SortOrder
+  slaWarningSentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -693,6 +713,7 @@ export type UserMaxOrderByAggregateInput = {
   imagePublicId?: Prisma.SortOrder
   slaActive?: Prisma.SortOrder
   slaExpiryDate?: Prisma.SortOrder
+  slaWarningSentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -717,6 +738,7 @@ export type UserMinOrderByAggregateInput = {
   imagePublicId?: Prisma.SortOrder
   slaActive?: Prisma.SortOrder
   slaExpiryDate?: Prisma.SortOrder
+  slaWarningSentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -886,6 +908,7 @@ export type UserCreateWithoutAreaInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdSchedules?: Prisma.ScheduleCreateNestedManyWithoutCreatedByInput
@@ -915,6 +938,7 @@ export type UserUncheckedCreateWithoutAreaInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutCreatedByInput
@@ -974,6 +998,7 @@ export type UserScalarWhereInput = {
   imagePublicId?: Prisma.StringFilter<"User"> | string
   slaActive?: Prisma.BoolFilter<"User"> | boolean
   slaExpiryDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  slaWarningSentAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
@@ -997,6 +1022,7 @@ export type UserCreateWithoutAuditLogsInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   area?: Prisma.AreaCreateNestedOneWithoutUsersInput
@@ -1027,6 +1053,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1071,6 +1098,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   area?: Prisma.AreaUpdateOneWithoutUsersNestedInput
@@ -1101,6 +1129,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1129,6 +1158,7 @@ export type UserCreateWithoutOutageReportsInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   area?: Prisma.AreaCreateNestedOneWithoutUsersInput
@@ -1159,6 +1189,7 @@ export type UserUncheckedCreateWithoutOutageReportsInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1192,6 +1223,7 @@ export type UserCreateWithoutAssignedTasksInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   area?: Prisma.AreaCreateNestedOneWithoutUsersInput
@@ -1222,6 +1254,7 @@ export type UserUncheckedCreateWithoutAssignedTasksInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1266,6 +1299,7 @@ export type UserUpdateWithoutOutageReportsInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   area?: Prisma.AreaUpdateOneWithoutUsersNestedInput
@@ -1296,6 +1330,7 @@ export type UserUncheckedUpdateWithoutOutageReportsInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1335,6 +1370,7 @@ export type UserUpdateWithoutAssignedTasksInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   area?: Prisma.AreaUpdateOneWithoutUsersNestedInput
@@ -1365,6 +1401,7 @@ export type UserUncheckedUpdateWithoutAssignedTasksInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1393,6 +1430,7 @@ export type UserCreateWithoutPaymentsInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   area?: Prisma.AreaCreateNestedOneWithoutUsersInput
@@ -1423,6 +1461,7 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1467,6 +1506,7 @@ export type UserUpdateWithoutPaymentsInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   area?: Prisma.AreaUpdateOneWithoutUsersNestedInput
@@ -1497,6 +1537,7 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1525,6 +1566,7 @@ export type UserCreateWithoutCreatedSchedulesInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   area?: Prisma.AreaCreateNestedOneWithoutUsersInput
@@ -1555,6 +1597,7 @@ export type UserUncheckedCreateWithoutCreatedSchedulesInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outageReports?: Prisma.OutageReportUncheckedCreateNestedManyWithoutCustomerInput
@@ -1599,6 +1642,7 @@ export type UserUpdateWithoutCreatedSchedulesInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   area?: Prisma.AreaUpdateOneWithoutUsersNestedInput
@@ -1629,6 +1673,7 @@ export type UserUncheckedUpdateWithoutCreatedSchedulesInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outageReports?: Prisma.OutageReportUncheckedUpdateManyWithoutCustomerNestedInput
@@ -1657,6 +1702,7 @@ export type UserCreateWithoutTechnicianApplicationInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   area?: Prisma.AreaCreateNestedOneWithoutUsersInput
@@ -1687,6 +1733,7 @@ export type UserUncheckedCreateWithoutTechnicianApplicationInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   createdSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutCreatedByInput
@@ -1731,6 +1778,7 @@ export type UserUpdateWithoutTechnicianApplicationInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   area?: Prisma.AreaUpdateOneWithoutUsersNestedInput
@@ -1761,6 +1809,7 @@ export type UserUncheckedUpdateWithoutTechnicianApplicationInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1789,6 +1838,7 @@ export type UserCreateManyAreaInput = {
   imagePublicId?: string
   slaActive?: boolean
   slaExpiryDate?: Date | string | null
+  slaWarningSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1812,6 +1862,7 @@ export type UserUpdateWithoutAreaInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdSchedules?: Prisma.ScheduleUpdateManyWithoutCreatedByNestedInput
@@ -1841,6 +1892,7 @@ export type UserUncheckedUpdateWithoutAreaInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1870,6 +1922,7 @@ export type UserUncheckedUpdateManyWithoutAreaInput = {
   imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  slaWarningSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1961,6 +2014,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   imagePublicId?: boolean
   slaActive?: boolean
   slaExpiryDate?: boolean
+  slaWarningSentAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   area?: boolean | Prisma.User$areaArgs<ExtArgs>
@@ -1993,6 +2047,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   imagePublicId?: boolean
   slaActive?: boolean
   slaExpiryDate?: boolean
+  slaWarningSentAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   area?: boolean | Prisma.User$areaArgs<ExtArgs>
@@ -2018,6 +2073,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   imagePublicId?: boolean
   slaActive?: boolean
   slaExpiryDate?: boolean
+  slaWarningSentAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   area?: boolean | Prisma.User$areaArgs<ExtArgs>
@@ -2043,11 +2099,12 @@ export type UserSelectScalar = {
   imagePublicId?: boolean
   slaActive?: boolean
   slaExpiryDate?: boolean
+  slaWarningSentAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "googleId" | "authProvider" | "emailVerified" | "password" | "needPasswordChange" | "role" | "status" | "phone" | "address" | "areaId" | "isDeleted" | "deletedAt" | "imageUrl" | "imagePublicId" | "slaActive" | "slaExpiryDate" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "googleId" | "authProvider" | "emailVerified" | "password" | "needPasswordChange" | "role" | "status" | "phone" | "address" | "areaId" | "isDeleted" | "deletedAt" | "imageUrl" | "imagePublicId" | "slaActive" | "slaExpiryDate" | "slaWarningSentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   area?: boolean | Prisma.User$areaArgs<ExtArgs>
   createdSchedules?: boolean | Prisma.User$createdSchedulesArgs<ExtArgs>
@@ -2096,6 +2153,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     imagePublicId: string
     slaActive: boolean
     slaExpiryDate: Date | null
+    slaWarningSentAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -2547,6 +2605,7 @@ export interface UserFieldRefs {
   readonly imagePublicId: Prisma.FieldRef<"User", 'String'>
   readonly slaActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly slaExpiryDate: Prisma.FieldRef<"User", 'DateTime'>
+  readonly slaWarningSentAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
