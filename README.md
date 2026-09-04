@@ -92,6 +92,7 @@ Entry flow: `src/server.ts` (connects PostgreSQL → connects Redis → verifies
 | schedule | `/api/v1/schedule` | Create and manage load-shedding schedules |
 | payment | `/api/v1/payment` | Initiate, IPN, success/fail/cancel callbacks, lookup, my-payments, refund |
 | analytics | `/api/v1/analytics` | Operational, performance, geographical, financial, trends, summaries, audit logs |
+| application | `/api/v1/applications` | Technician onboarding: public apply, email-OTP verify, admin/operator review |
 
 Shared code: `src/app/config` (central env access), `src/app/lib` (prisma, redis, cloudinary, multer, nodemailer, googleAuth, sslcommerz), `src/app/middleware` (checkAuth, validateRequest, globalErrorHandler, notFound, requestLogger), `src/app/utils` (AppError, catchAsync, jwt, sendResponse, seed, pagination, audit), `src/app/interfaces` (`IQuery`, pagination meta/result types), `src/app/templates` (EJS emails).
 
@@ -108,9 +109,11 @@ Shared code: `src/app/config` (central env access), `src/app/lib` (prisma, redis
 | Role | Typical capabilities |
 |---|---|
 | `CUSTOMER` | Report outages, buy priority/SLA, view own reports & payments & summary |
-| `TECHNICIAN` | View/update assigned outages, view technician summary |
-| `POWER_OPERATOR` | Grid CRUD, assign technicians, manage schedules, view analytics |
+| `TECHNICIAN` | View/update assigned outages, view technician summary. Obtained via the application flow (`POST /applications` → email verify → admin/operator approval) or direct grant |
+| `POWER_OPERATOR` | Grid CRUD, assign technicians, manage schedules, view analytics, review technician applications, grant/revoke only the `TECHNICIAN` role |
 | `ADMIN` | Everything + user management, audit logs |
+
+`POWER_OPERATOR` is never publicly obtainable — seeded at boot and granted by admins only. All notification emails (role changes, outage lifecycle, payment receipts, schedule notices) are best-effort and never block the request.
 
 ---
 
@@ -224,6 +227,17 @@ Writes: 🟣🟡 · Reads: 🟤. Resources: `/zones`, `/substations`, `/feeders`
 ### Analytics — `/analytics`
 
 See [📊 Analytics & Audit](#-analytics--audit). Operator/admin endpoints plus `GET /my-summary` (🔵) and `GET /technician-summary` (🟠).
+
+### Applications — `/applications`
+
+| Method | Path | Access | Description |
+|---|---|---|---|
+| POST | `/` | 🟢 | Apply as technician (name, email, phone, experience…) |
+| POST | `/verify-email` | 🟢 | Verify application OTP (1-hour TTL) |
+| POST | `/resend-otp` | 🟢 | Resend verification OTP |
+| GET | `/my?email=` | 🟢 | Check own application status |
+| GET | `/` | 🟣🟡 | List applications (paginated, filter by `status`) |
+| PATCH | `/:id/review` | 🟣🟡 | Approve (creates `TECHNICIAN` user, emails temp password) or reject (reason required) |
 
 ---
 
@@ -398,7 +412,7 @@ Sanity-check changes with `npx tsc --noEmit` (the **real** typecheck — `tsup` 
 │       ├── interfaces/    # shared IQuery + pagination types
 │       ├── lib/           # prisma, redis, cloudinary, multer, nodemailer, googleAuth, sslcommerz
 │       ├── middleware/    # checkAuth, validateRequest, globalErrorHandler, notFound, requestLogger
-│       ├── module/        # auth, user, grid, outage, schedule, payment, analytics
+│       ├── module/        # auth, user, grid, outage, schedule, payment, analytics, application
 │       │   └── <feature>/ # *.route / *.controller / *.service / *.interface / *.validation
 │       ├── templates/     # EJS email templates
 │       └── utils/         # AppError, catchAsync, jwt, sendResponse, seed, pagination, audit
