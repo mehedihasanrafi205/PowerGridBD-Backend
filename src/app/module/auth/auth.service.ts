@@ -22,6 +22,7 @@ import type {
 } from "./auth.interface";
 import { redisClient } from "../../lib/redis";
 import { transporter } from "../../lib/nodemailer";
+import { sendTemplatedEmail } from "../../utils/notify";
 import {
   AuthProvider,
   UserRole,
@@ -480,6 +481,13 @@ const resetPassword = async (payload: IResetPasswordPayload) => {
   });
 
   await redisClient.del(key);
+
+  await sendTemplatedEmail(
+    email,
+    "Password Changed Successfully - PowerGridBD",
+    "reset-password-success.ejs",
+    { name: user.name },
+  );
 };
 
 export const AuthService = {

@@ -7,6 +7,7 @@ import { UserRole, UserStatus } from "../../../generated/prisma/enums";
 import type { IQuery } from "../../interfaces";
 import { calculatePagination, buildMeta } from "../../utils/pagination";
 import { logAudit } from "../../utils/audit";
+import { sendTemplatedEmail } from "../../utils/notify";
 
 const uploadProfileImage = async (buffer: Buffer, userId: string) => {
   const currentUser = await prisma.user.findUnique({
@@ -220,6 +221,13 @@ const updateUserStatus = async (
     metadata: { from: user.status, to: status },
   });
 
+  await sendTemplatedEmail(
+    user.email,
+    "Account Status Updated - PowerGridBD",
+    "account-status.ejs",
+    { name: user.name, status },
+  );
+
   return updatedUser;
 };
 
@@ -278,6 +286,13 @@ const updateUserRole = async (
     metadata: { from: user.role, to: role },
   });
 
+  await sendTemplatedEmail(
+    user.email,
+    "Account Role Updated - PowerGridBD",
+    "role-assigned.ejs",
+    { name: user.name, previousRole: user.role, newRole: role },
+  );
+
   return updatedUser;
 };
 
@@ -304,6 +319,13 @@ const softDeleteUser = async (id: string, actorId?: string) => {
     entityId: id,
     actorId,
   });
+
+  await sendTemplatedEmail(
+    user.email,
+    "Account Status Updated - PowerGridBD",
+    "account-status.ejs",
+    { name: user.name, status: UserStatus.BLOCKED },
+  );
 
   return deletedUser;
 };
