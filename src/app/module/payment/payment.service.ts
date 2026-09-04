@@ -158,6 +158,54 @@ const handleIPN = async (ipnData: IIPNPayload) => {
       newStatus = PaymentStatus.PENDING;
   }
 
+  if (newStatus === PaymentStatus.COMPLETED) {
+    const completedPayment = await prisma.$transaction(async (tx) => {
+      const completed = await tx.payment.update({
+        where: { id: payment.id },
+        data: {
+          status: newStatus,
+          paymentDetails: {
+            ...((payment.paymentDetails as Record<string, unknown>) ?? {}),
+            ipn: ipnData as Record<string, unknown>,
+            validation: {
+              status: validation.status,
+              bank_tran_id: validation.bank_tran_id,
+              risk_level: validation.risk_level,
+              risk_title: validation.risk_title,
+              confirmedVia: "ipn",
+              confirmedAt: new Date().toISOString(),
+            },
+          } as any,
+        },
+        include: {
+          user: { select: { id: true, name: true, email: true } },
+          outageReport: true,
+        },
+      });
+
+      await applyCompletedSideEffects(payment, tx);
+
+      await tx.auditLog.create({
+        data: {
+          action: "PAYMENT_COMPLETED",
+          entity: "Payment",
+          entityId: payment.id,
+          actorId: payment.userId,
+          metadata: {
+            transactionId: payment.transactionId,
+            amount: payment.amount,
+            type: payment.type,
+            confirmedVia: "ipn",
+          } as any,
+        },
+      });
+
+      return completed;
+    });
+
+    return completedPayment;
+  }
+
   const updatedPayment = await prisma.payment.update({
     where: { id: payment.id },
     data: {
@@ -179,10 +227,6 @@ const handleIPN = async (ipnData: IIPNPayload) => {
     },
   });
 
-  if (newStatus === PaymentStatus.COMPLETED) {
-    await applyCompletedSideEffects(payment);
-  }
-
   return updatedPayment;
 };
 
@@ -192,15 +236,20 @@ const validateTransaction = async (
   return sslValidateOrder(valId);
 };
 
-async function applyCompletedSideEffects(payment: {
-  id: string;
-  type: PaymentType;
-  outageReportId: string | null;
-  userId: string;
-  amount: number;
-}) {
+type SideEffectDb = Pick<typeof prisma, "outageReport" | "user">;
+
+async function applyCompletedSideEffects(
+  payment: {
+    id: string;
+    type: PaymentType;
+    outageReportId: string | null;
+    userId: string;
+    amount: number;
+  },
+  db: SideEffectDb = prisma,
+) {
   if (payment.type === PaymentType.PRIORITY_RESTORATION && payment.outageReportId) {
-    await prisma.outageReport.update({
+    await db.outageReport.update({
       where: { id: payment.outageReportId },
       data: { isPriority: true },
     });
@@ -209,7 +258,7 @@ async function applyCompletedSideEffects(payment: {
   if (payment.type === PaymentType.SLA_SUBSCRIPTION) {
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 30);
-    await prisma.user.update({
+    await db.user.update({
       where: { id: payment.userId },
       data: {
         slaActive: true,
@@ -233,29 +282,48 @@ async function markPaymentCompleted(
 ) {
   const details = (payment.paymentDetails as Record<string, unknown>) ?? {};
 
-  const updatedPayment = await prisma.payment.update({
-    where: { id: payment.id },
-    data: {
-      status: PaymentStatus.COMPLETED,
-      paymentDetails: {
-        ...details,
-        validation: {
-          status: validation.status,
-          bank_tran_id: validation.bank_tran_id,
-          risk_level: validation.risk_level,
-          risk_title: validation.risk_title,
-          confirmedVia,
-          confirmedAt: new Date().toISOString(),
-        },
-      } as any,
-    },
-    include: {
-      user: { select: { id: true, name: true, email: true } },
-      outageReport: true,
-    },
-  });
+  const updatedPayment = await prisma.$transaction(async (tx) => {
+    const completed = await tx.payment.update({
+      where: { id: payment.id },
+      data: {
+        status: PaymentStatus.COMPLETED,
+        paymentDetails: {
+          ...details,
+          validation: {
+            status: validation.status,
+            bank_tran_id: validation.bank_tran_id,
+            risk_level: validation.risk_level,
+            risk_title: validation.risk_title,
+            confirmedVia,
+            confirmedAt: new Date().toISOString(),
+          },
+        } as any,
+      },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        outageReport: true,
+      },
+    });
 
-  await applyCompletedSideEffects(payment);
+    await applyCompletedSideEffects(payment, tx);
+
+    await tx.auditLog.create({
+      data: {
+        action: "PAYMENT_COMPLETED",
+        entity: "Payment",
+        entityId: payment.id,
+        actorId: payment.userId,
+        metadata: {
+          transactionId: completed.transactionId,
+          amount: completed.amount,
+          type: completed.type,
+          confirmedVia,
+        } as any,
+      },
+    });
+
+    return completed;
+  });
 
   return updatedPayment;
 }
@@ -403,28 +471,41 @@ const getPaymentByTransactionId = async (tranId: string) => {
   return payment;
 };
 
-const getUserPayments = async (userId: string, page = 1, limit = 10) => {
-  const skip = (page - 1) * limit;
+const getUserPayments = async (
+  userId: string,
+  page = 1,
+  limit = 10,
+  filters: { status?: PaymentStatus; type?: PaymentType } = {},
+) => {
+  const pageNumber = Number(page) > 0 ? Math.floor(Number(page)) : 1;
+  const limitNumber =
+    Number(limit) > 0 ? Math.min(Math.floor(Number(limit)), 100) : 10;
+  const skip = (pageNumber - 1) * limitNumber;
+
+  const where: { userId: string; status?: PaymentStatus; type?: PaymentType } =
+    { userId };
+  if (filters.status) where.status = filters.status;
+  if (filters.type) where.type = filters.type;
 
   const [payments, total] = await Promise.all([
     prisma.payment.findMany({
-      where: { userId },
+      where,
       include: {
         outageReport: { select: { id: true, description: true, status: true } },
       },
       orderBy: { createdAt: "desc" },
       skip,
-      take: limit,
+      take: limitNumber,
     }),
-    prisma.payment.count({ where: { userId } }),
+    prisma.payment.count({ where }),
   ]);
 
   return {
     meta: {
-      page,
-      limit,
+      page: pageNumber,
+      limit: limitNumber,
       total,
-      totalPages: Math.ceil(total / limit),
+      totalPages: Math.ceil(total / limitNumber) || 0,
     },
     data: payments,
   };
@@ -492,43 +573,61 @@ const initiateRefund = async (
     refeId: paymentId,
   });
 
-  const updatedPayment = await prisma.payment.update({
-    where: { id: paymentId },
-    data: {
-      status: PaymentStatus.REFUNDED,
-      paymentDetails: {
-        ...paymentDetails,
-        refund: {
+  const updatedPayment = await prisma.$transaction(async (tx) => {
+    const refunded = await tx.payment.update({
+      where: { id: paymentId },
+      data: {
+        status: PaymentStatus.REFUNDED,
+        paymentDetails: {
+          ...paymentDetails,
+          refund: {
+            refund_trans_id: refundResult.refund_trans_id,
+            refund_amount: refundResult.refund_amount,
+            bank_tran_id: refundResult.bank_tran_id,
+            remarks: refundRemarks,
+            refundedAt: new Date().toISOString(),
+          },
+        } as any,
+      },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        outageReport: true,
+      },
+    });
+
+    if (payment.type === PaymentType.PRIORITY_RESTORATION && payment.outageReportId) {
+      await tx.outageReport.update({
+        where: { id: payment.outageReportId },
+        data: { isPriority: false },
+      });
+    }
+
+    if (payment.type === PaymentType.SLA_SUBSCRIPTION) {
+      await tx.user.update({
+        where: { id: payment.userId },
+        data: {
+          slaActive: false,
+          slaExpiryDate: null,
+        },
+      });
+    }
+
+    await tx.auditLog.create({
+      data: {
+        action: "PAYMENT_REFUNDED",
+        entity: "Payment",
+        entityId: paymentId,
+        actorId: userId,
+        metadata: {
           refund_trans_id: refundResult.refund_trans_id,
           refund_amount: refundResult.refund_amount,
-          bank_tran_id: refundResult.bank_tran_id,
           remarks: refundRemarks,
-          refundedAt: new Date().toISOString(),
-        },
+        } as any,
       },
-    },
-    include: {
-      user: { select: { id: true, name: true, email: true } },
-      outageReport: true,
-    },
+    });
+
+    return refunded;
   });
-
-  if (payment.type === PaymentType.PRIORITY_RESTORATION && payment.outageReportId) {
-    await prisma.outageReport.update({
-      where: { id: payment.outageReportId },
-      data: { isPriority: false },
-    });
-  }
-
-  if (payment.type === PaymentType.SLA_SUBSCRIPTION) {
-    await prisma.user.update({
-      where: { id: payment.userId },
-      data: {
-        slaActive: false,
-        slaExpiryDate: null,
-      },
-    });
-  }
 
   return updatedPayment;
 };

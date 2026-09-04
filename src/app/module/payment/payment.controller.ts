@@ -5,6 +5,10 @@ import { sendResponse } from "../../utils/sendResponse";
 import { AppError } from "../../utils/AppError";
 import { paymentService } from "./payment.service";
 import config from "../../config";
+import type {
+  PaymentStatus,
+  PaymentType,
+} from "../../../generated/prisma/enums";
 
 const initiatePayment = catchAsync(async (req: Request, res: Response) => {
   if (!req.user) {
@@ -119,6 +123,10 @@ const getUserPayments = catchAsync(async (req: Request, res: Response) => {
     req.user.userId,
     page,
     limit,
+    {
+      status: req.query.status as PaymentStatus | undefined,
+      type: req.query.type as PaymentType | undefined,
+    },
   );
 
   sendResponse(res, {
