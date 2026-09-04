@@ -14,11 +14,16 @@ model OutageReport {
 
   technicianId String?
   technician   User?   @relation("AssignedTechnician", fields: [technicianId], references: [id], onDelete: SetNull)
+  assignedAt   DateTime?
 
   payments Payment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([status, reportedAt])
+  @@index([customerId])
+  @@index([areaId])
+  @@index([technicianId])
   @@map("outage_reports")
 }

@@ -315,6 +315,7 @@ export type UserWhereInput = {
   outageReports?: Prisma.OutageReportListRelationFilter
   assignedTasks?: Prisma.OutageReportListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -344,6 +345,7 @@ export type UserOrderByWithRelationInput = {
   outageReports?: Prisma.OutageReportOrderByRelationAggregateInput
   assignedTasks?: Prisma.OutageReportOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
+  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -376,6 +378,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   outageReports?: Prisma.OutageReportListRelationFilter
   assignedTasks?: Prisma.OutageReportListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
 }, "id" | "googleId" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -458,6 +461,7 @@ export type UserCreateInput = {
   outageReports?: Prisma.OutageReportCreateNestedManyWithoutCustomerInput
   assignedTasks?: Prisma.OutageReportCreateNestedManyWithoutTechnicianInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -486,6 +490,7 @@ export type UserUncheckedCreateInput = {
   outageReports?: Prisma.OutageReportUncheckedCreateNestedManyWithoutCustomerInput
   assignedTasks?: Prisma.OutageReportUncheckedCreateNestedManyWithoutTechnicianInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserUpdateInput = {
@@ -514,6 +519,7 @@ export type UserUpdateInput = {
   outageReports?: Prisma.OutageReportUpdateManyWithoutCustomerNestedInput
   assignedTasks?: Prisma.OutageReportUpdateManyWithoutTechnicianNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -542,6 +548,7 @@ export type UserUncheckedUpdateInput = {
   outageReports?: Prisma.OutageReportUncheckedUpdateManyWithoutCustomerNestedInput
   assignedTasks?: Prisma.OutageReportUncheckedUpdateManyWithoutTechnicianNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -625,14 +632,14 @@ export type UserOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type UserScalarRelationFilter = {
-  is?: Prisma.UserWhereInput
-  isNot?: Prisma.UserWhereInput
-}
-
 export type UserNullableScalarRelationFilter = {
   is?: Prisma.UserWhereInput | null
   isNot?: Prisma.UserWhereInput | null
+}
+
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -749,6 +756,22 @@ export type UserUncheckedUpdateManyWithoutAreaNestedInput = {
   deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
+export type UserCreateNestedOneWithoutAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuditLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuditLogsInput
+  upsert?: Prisma.UserUpsertWithoutAuditLogsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.UserUpdateWithoutAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
+}
+
 export type UserCreateNestedOneWithoutOutageReportsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutOutageReportsInput, Prisma.UserUncheckedCreateWithoutOutageReportsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutOutageReportsInput
@@ -846,6 +869,7 @@ export type UserCreateWithoutAreaInput = {
   outageReports?: Prisma.OutageReportCreateNestedManyWithoutCustomerInput
   assignedTasks?: Prisma.OutageReportCreateNestedManyWithoutTechnicianInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutAreaInput = {
@@ -873,6 +897,7 @@ export type UserUncheckedCreateWithoutAreaInput = {
   outageReports?: Prisma.OutageReportUncheckedCreateNestedManyWithoutCustomerInput
   assignedTasks?: Prisma.OutageReportUncheckedCreateNestedManyWithoutTechnicianInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutAreaInput = {
@@ -928,6 +953,134 @@ export type UserScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
 
+export type UserCreateWithoutAuditLogsInput = {
+  id?: string
+  name: string
+  email: string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider
+  emailVerified?: boolean
+  password?: string | null
+  needPasswordChange?: boolean
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  phone?: string | null
+  address?: string | null
+  isDeleted?: boolean
+  deletedAt?: Date | string | null
+  imageUrl?: string
+  imagePublicId?: string
+  slaActive?: boolean
+  slaExpiryDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  area?: Prisma.AreaCreateNestedOneWithoutUsersInput
+  createdSchedules?: Prisma.ScheduleCreateNestedManyWithoutCreatedByInput
+  outageReports?: Prisma.OutageReportCreateNestedManyWithoutCustomerInput
+  assignedTasks?: Prisma.OutageReportCreateNestedManyWithoutTechnicianInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAuditLogsInput = {
+  id?: string
+  name: string
+  email: string
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider
+  emailVerified?: boolean
+  password?: string | null
+  needPasswordChange?: boolean
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  phone?: string | null
+  address?: string | null
+  areaId?: string | null
+  isDeleted?: boolean
+  deletedAt?: Date | string | null
+  imageUrl?: string
+  imagePublicId?: string
+  slaActive?: boolean
+  slaExpiryDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+  outageReports?: Prisma.OutageReportUncheckedCreateNestedManyWithoutCustomerInput
+  assignedTasks?: Prisma.OutageReportUncheckedCreateNestedManyWithoutTechnicianInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAuditLogsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>
+}
+
+export type UserUpsertWithoutAuditLogsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAuditLogsInput, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAuditLogsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAuditLogsInput, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
+}
+
+export type UserUpdateWithoutAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  needPasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
+  slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  area?: Prisma.AreaUpdateOneWithoutUsersNestedInput
+  createdSchedules?: Prisma.ScheduleUpdateManyWithoutCreatedByNestedInput
+  outageReports?: Prisma.OutageReportUpdateManyWithoutCustomerNestedInput
+  assignedTasks?: Prisma.OutageReportUpdateManyWithoutTechnicianNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  needPasswordChange?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  areaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  imageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  imagePublicId?: Prisma.StringFieldUpdateOperationsInput | string
+  slaActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slaExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+  outageReports?: Prisma.OutageReportUncheckedUpdateManyWithoutCustomerNestedInput
+  assignedTasks?: Prisma.OutageReportUncheckedUpdateManyWithoutTechnicianNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutOutageReportsInput = {
   id?: string
   name: string
@@ -953,6 +1106,7 @@ export type UserCreateWithoutOutageReportsInput = {
   createdSchedules?: Prisma.ScheduleCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.OutageReportCreateNestedManyWithoutTechnicianInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutOutageReportsInput = {
@@ -980,6 +1134,7 @@ export type UserUncheckedCreateWithoutOutageReportsInput = {
   createdSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutCreatedByInput
   assignedTasks?: Prisma.OutageReportUncheckedCreateNestedManyWithoutTechnicianInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutOutageReportsInput = {
@@ -1012,6 +1167,7 @@ export type UserCreateWithoutAssignedTasksInput = {
   createdSchedules?: Prisma.ScheduleCreateNestedManyWithoutCreatedByInput
   outageReports?: Prisma.OutageReportCreateNestedManyWithoutCustomerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutAssignedTasksInput = {
@@ -1039,6 +1195,7 @@ export type UserUncheckedCreateWithoutAssignedTasksInput = {
   createdSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutCreatedByInput
   outageReports?: Prisma.OutageReportUncheckedCreateNestedManyWithoutCustomerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutAssignedTasksInput = {
@@ -1082,6 +1239,7 @@ export type UserUpdateWithoutOutageReportsInput = {
   createdSchedules?: Prisma.ScheduleUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.OutageReportUpdateManyWithoutTechnicianNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOutageReportsInput = {
@@ -1109,6 +1267,7 @@ export type UserUncheckedUpdateWithoutOutageReportsInput = {
   createdSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
   assignedTasks?: Prisma.OutageReportUncheckedUpdateManyWithoutTechnicianNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserUpsertWithoutAssignedTasksInput = {
@@ -1147,6 +1306,7 @@ export type UserUpdateWithoutAssignedTasksInput = {
   createdSchedules?: Prisma.ScheduleUpdateManyWithoutCreatedByNestedInput
   outageReports?: Prisma.OutageReportUpdateManyWithoutCustomerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedTasksInput = {
@@ -1174,6 +1334,7 @@ export type UserUncheckedUpdateWithoutAssignedTasksInput = {
   createdSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
   outageReports?: Prisma.OutageReportUncheckedUpdateManyWithoutCustomerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
@@ -1201,6 +1362,7 @@ export type UserCreateWithoutPaymentsInput = {
   createdSchedules?: Prisma.ScheduleCreateNestedManyWithoutCreatedByInput
   outageReports?: Prisma.OutageReportCreateNestedManyWithoutCustomerInput
   assignedTasks?: Prisma.OutageReportCreateNestedManyWithoutTechnicianInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -1228,6 +1390,7 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   createdSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutCreatedByInput
   outageReports?: Prisma.OutageReportUncheckedCreateNestedManyWithoutCustomerInput
   assignedTasks?: Prisma.OutageReportUncheckedCreateNestedManyWithoutTechnicianInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -1271,6 +1434,7 @@ export type UserUpdateWithoutPaymentsInput = {
   createdSchedules?: Prisma.ScheduleUpdateManyWithoutCreatedByNestedInput
   outageReports?: Prisma.OutageReportUpdateManyWithoutCustomerNestedInput
   assignedTasks?: Prisma.OutageReportUpdateManyWithoutTechnicianNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -1298,6 +1462,7 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   createdSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
   outageReports?: Prisma.OutageReportUncheckedUpdateManyWithoutCustomerNestedInput
   assignedTasks?: Prisma.OutageReportUncheckedUpdateManyWithoutTechnicianNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserCreateWithoutCreatedSchedulesInput = {
@@ -1325,6 +1490,7 @@ export type UserCreateWithoutCreatedSchedulesInput = {
   outageReports?: Prisma.OutageReportCreateNestedManyWithoutCustomerInput
   assignedTasks?: Prisma.OutageReportCreateNestedManyWithoutTechnicianInput
   payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
 }
 
 export type UserUncheckedCreateWithoutCreatedSchedulesInput = {
@@ -1352,6 +1518,7 @@ export type UserUncheckedCreateWithoutCreatedSchedulesInput = {
   outageReports?: Prisma.OutageReportUncheckedCreateNestedManyWithoutCustomerInput
   assignedTasks?: Prisma.OutageReportUncheckedCreateNestedManyWithoutTechnicianInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
 }
 
 export type UserCreateOrConnectWithoutCreatedSchedulesInput = {
@@ -1395,6 +1562,7 @@ export type UserUpdateWithoutCreatedSchedulesInput = {
   outageReports?: Prisma.OutageReportUpdateManyWithoutCustomerNestedInput
   assignedTasks?: Prisma.OutageReportUpdateManyWithoutTechnicianNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedSchedulesInput = {
@@ -1422,6 +1590,7 @@ export type UserUncheckedUpdateWithoutCreatedSchedulesInput = {
   outageReports?: Prisma.OutageReportUncheckedUpdateManyWithoutCustomerNestedInput
   assignedTasks?: Prisma.OutageReportUncheckedUpdateManyWithoutTechnicianNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserCreateManyAreaInput = {
@@ -1472,6 +1641,7 @@ export type UserUpdateWithoutAreaInput = {
   outageReports?: Prisma.OutageReportUpdateManyWithoutCustomerNestedInput
   assignedTasks?: Prisma.OutageReportUpdateManyWithoutTechnicianNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAreaInput = {
@@ -1499,6 +1669,7 @@ export type UserUncheckedUpdateWithoutAreaInput = {
   outageReports?: Prisma.OutageReportUncheckedUpdateManyWithoutCustomerNestedInput
   assignedTasks?: Prisma.OutageReportUncheckedUpdateManyWithoutTechnicianNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutAreaInput = {
@@ -1534,6 +1705,7 @@ export type UserCountOutputType = {
   outageReports: number
   assignedTasks: number
   payments: number
+  auditLogs: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1541,6 +1713,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   outageReports?: boolean | UserCountOutputTypeCountOutageReportsArgs
   assignedTasks?: boolean | UserCountOutputTypeCountAssignedTasksArgs
   payments?: boolean | UserCountOutputTypeCountPaymentsArgs
+  auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
 }
 
 /**
@@ -1581,6 +1754,13 @@ export type UserCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.PaymentWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1609,6 +1789,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   outageReports?: boolean | Prisma.User$outageReportsArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.User$assignedTasksArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1693,6 +1874,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   outageReports?: boolean | Prisma.User$outageReportsArgs<ExtArgs>
   assignedTasks?: boolean | Prisma.User$assignedTasksArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1710,6 +1892,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     outageReports: Prisma.$OutageReportPayload<ExtArgs>[]
     assignedTasks: Prisma.$OutageReportPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
+    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2132,6 +2315,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   outageReports<T extends Prisma.User$outageReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$outageReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OutageReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignedTasks<T extends Prisma.User$assignedTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OutageReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.User$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2695,6 +2879,30 @@ export type User$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+}
+
+/**
+ * User.auditLogs
+ */
+export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
 }
 
 /**

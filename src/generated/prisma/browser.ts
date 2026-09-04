@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type Area = Prisma.AreaModel
 /**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel
+/**
  * Model Feeder
  * 
  */

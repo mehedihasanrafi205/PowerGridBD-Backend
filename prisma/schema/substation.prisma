@@ -8,5 +8,7 @@ model Substation {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([name, zoneId])
+  @@index([zoneId])
   @@map("substations")
 }

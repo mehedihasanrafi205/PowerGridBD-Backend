@@ -202,6 +202,7 @@ export type AreaOrderByWithRelationInput = {
 
 export type AreaWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  name_feederId?: Prisma.AreaNameFeederIdCompoundUniqueInput
   AND?: Prisma.AreaWhereInput | Prisma.AreaWhereInput[]
   OR?: Prisma.AreaWhereInput[]
   NOT?: Prisma.AreaWhereInput | Prisma.AreaWhereInput[]
@@ -213,7 +214,7 @@ export type AreaWhereUniqueInput = Prisma.AtLeast<{
   users?: Prisma.UserListRelationFilter
   outageReports?: Prisma.OutageReportListRelationFilter
   schedules?: Prisma.ScheduleListRelationFilter
-}, "id">
+}, "id" | "name_feederId">
 
 export type AreaOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -302,6 +303,11 @@ export type AreaUncheckedUpdateManyInput = {
   feederId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AreaNameFeederIdCompoundUniqueInput = {
+  name: string
+  feederId: string
 }
 
 export type AreaCountOrderByAggregateInput = {

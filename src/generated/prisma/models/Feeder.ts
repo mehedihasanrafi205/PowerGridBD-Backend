@@ -200,6 +200,7 @@ export type FeederOrderByWithRelationInput = {
 
 export type FeederWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  name_substationId?: Prisma.FeederNameSubstationIdCompoundUniqueInput
   AND?: Prisma.FeederWhereInput | Prisma.FeederWhereInput[]
   OR?: Prisma.FeederWhereInput[]
   NOT?: Prisma.FeederWhereInput | Prisma.FeederWhereInput[]
@@ -210,7 +211,7 @@ export type FeederWhereUniqueInput = Prisma.AtLeast<{
   substation?: Prisma.XOR<Prisma.SubstationScalarRelationFilter, Prisma.SubstationWhereInput>
   areas?: Prisma.AreaListRelationFilter
   schedules?: Prisma.ScheduleListRelationFilter
-}, "id">
+}, "id" | "name_substationId">
 
 export type FeederOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -300,6 +301,11 @@ export type FeederUncheckedUpdateManyInput = {
 export type FeederScalarRelationFilter = {
   is?: Prisma.FeederWhereInput
   isNot?: Prisma.FeederWhereInput
+}
+
+export type FeederNameSubstationIdCompoundUniqueInput = {
+  name: string
+  substationId: string
 }
 
 export type FeederCountOrderByAggregateInput = {

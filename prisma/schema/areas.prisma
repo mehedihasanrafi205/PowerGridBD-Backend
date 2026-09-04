@@ -10,5 +10,7 @@ model Area {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([name, feederId])
+  @@index([feederId])
   @@map("areas")
 }

@@ -34,6 +34,7 @@ export type OutageReportMinAggregateOutputType = {
   customerId: string | null
   areaId: string | null
   technicianId: string | null
+  assignedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -48,6 +49,7 @@ export type OutageReportMaxAggregateOutputType = {
   customerId: string | null
   areaId: string | null
   technicianId: string | null
+  assignedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -62,6 +64,7 @@ export type OutageReportCountAggregateOutputType = {
   customerId: number
   areaId: number
   technicianId: number
+  assignedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -78,6 +81,7 @@ export type OutageReportMinAggregateInputType = {
   customerId?: true
   areaId?: true
   technicianId?: true
+  assignedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -92,6 +96,7 @@ export type OutageReportMaxAggregateInputType = {
   customerId?: true
   areaId?: true
   technicianId?: true
+  assignedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -106,6 +111,7 @@ export type OutageReportCountAggregateInputType = {
   customerId?: true
   areaId?: true
   technicianId?: true
+  assignedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -193,6 +199,7 @@ export type OutageReportGroupByOutputType = {
   customerId: string
   areaId: string
   technicianId: string | null
+  assignedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: OutageReportCountAggregateOutputType | null
@@ -228,6 +235,7 @@ export type OutageReportWhereInput = {
   customerId?: Prisma.StringFilter<"OutageReport"> | string
   areaId?: Prisma.StringFilter<"OutageReport"> | string
   technicianId?: Prisma.StringNullableFilter<"OutageReport"> | string | null
+  assignedAt?: Prisma.DateTimeNullableFilter<"OutageReport"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OutageReport"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OutageReport"> | Date | string
   customer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -246,6 +254,7 @@ export type OutageReportOrderByWithRelationInput = {
   customerId?: Prisma.SortOrder
   areaId?: Prisma.SortOrder
   technicianId?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   customer?: Prisma.UserOrderByWithRelationInput
@@ -267,6 +276,7 @@ export type OutageReportWhereUniqueInput = Prisma.AtLeast<{
   customerId?: Prisma.StringFilter<"OutageReport"> | string
   areaId?: Prisma.StringFilter<"OutageReport"> | string
   technicianId?: Prisma.StringNullableFilter<"OutageReport"> | string | null
+  assignedAt?: Prisma.DateTimeNullableFilter<"OutageReport"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OutageReport"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OutageReport"> | Date | string
   customer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -285,6 +295,7 @@ export type OutageReportOrderByWithAggregationInput = {
   customerId?: Prisma.SortOrder
   areaId?: Prisma.SortOrder
   technicianId?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.OutageReportCountOrderByAggregateInput
@@ -305,6 +316,7 @@ export type OutageReportScalarWhereWithAggregatesInput = {
   customerId?: Prisma.StringWithAggregatesFilter<"OutageReport"> | string
   areaId?: Prisma.StringWithAggregatesFilter<"OutageReport"> | string
   technicianId?: Prisma.StringNullableWithAggregatesFilter<"OutageReport"> | string | null
+  assignedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"OutageReport"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"OutageReport"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"OutageReport"> | Date | string
 }
@@ -316,6 +328,7 @@ export type OutageReportCreateInput = {
   isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.UserCreateNestedOneWithoutOutageReportsInput
@@ -334,6 +347,7 @@ export type OutageReportUncheckedCreateInput = {
   customerId: string
   areaId: string
   technicianId?: string | null
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOutageReportInput
@@ -346,6 +360,7 @@ export type OutageReportUpdateInput = {
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.UserUpdateOneRequiredWithoutOutageReportsNestedInput
@@ -364,6 +379,7 @@ export type OutageReportUncheckedUpdateInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   areaId?: Prisma.StringFieldUpdateOperationsInput | string
   technicianId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOutageReportNestedInput
@@ -379,6 +395,7 @@ export type OutageReportCreateManyInput = {
   customerId: string
   areaId: string
   technicianId?: string | null
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -390,6 +407,7 @@ export type OutageReportUpdateManyMutationInput = {
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -404,6 +422,7 @@ export type OutageReportUncheckedUpdateManyInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   areaId?: Prisma.StringFieldUpdateOperationsInput | string
   technicianId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -428,6 +447,7 @@ export type OutageReportCountOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   areaId?: Prisma.SortOrder
   technicianId?: Prisma.SortOrder
+  assignedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -442,6 +462,7 @@ export type OutageReportMaxOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   areaId?: Prisma.SortOrder
   technicianId?: Prisma.SortOrder
+  assignedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -456,6 +477,7 @@ export type OutageReportMinOrderByAggregateInput = {
   customerId?: Prisma.SortOrder
   areaId?: Prisma.SortOrder
   technicianId?: Prisma.SortOrder
+  assignedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -517,10 +539,6 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
 }
 
 export type OutageReportCreateNestedOneWithoutPaymentsInput = {
@@ -630,6 +648,7 @@ export type OutageReportCreateWithoutAreaInput = {
   isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.UserCreateNestedOneWithoutOutageReportsInput
@@ -646,6 +665,7 @@ export type OutageReportUncheckedCreateWithoutAreaInput = {
   resolvedAt?: Date | string | null
   customerId: string
   technicianId?: string | null
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOutageReportInput
@@ -690,6 +710,7 @@ export type OutageReportScalarWhereInput = {
   customerId?: Prisma.StringFilter<"OutageReport"> | string
   areaId?: Prisma.StringFilter<"OutageReport"> | string
   technicianId?: Prisma.StringNullableFilter<"OutageReport"> | string | null
+  assignedAt?: Prisma.DateTimeNullableFilter<"OutageReport"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OutageReport"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OutageReport"> | Date | string
 }
@@ -701,6 +722,7 @@ export type OutageReportCreateWithoutPaymentsInput = {
   isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.UserCreateNestedOneWithoutOutageReportsInput
@@ -718,6 +740,7 @@ export type OutageReportUncheckedCreateWithoutPaymentsInput = {
   customerId: string
   areaId: string
   technicianId?: string | null
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -745,6 +768,7 @@ export type OutageReportUpdateWithoutPaymentsInput = {
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.UserUpdateOneRequiredWithoutOutageReportsNestedInput
@@ -762,6 +786,7 @@ export type OutageReportUncheckedUpdateWithoutPaymentsInput = {
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   areaId?: Prisma.StringFieldUpdateOperationsInput | string
   technicianId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -773,6 +798,7 @@ export type OutageReportCreateWithoutCustomerInput = {
   isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   area: Prisma.AreaCreateNestedOneWithoutOutageReportsInput
@@ -789,6 +815,7 @@ export type OutageReportUncheckedCreateWithoutCustomerInput = {
   resolvedAt?: Date | string | null
   areaId: string
   technicianId?: string | null
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOutageReportInput
@@ -811,6 +838,7 @@ export type OutageReportCreateWithoutTechnicianInput = {
   isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   customer: Prisma.UserCreateNestedOneWithoutOutageReportsInput
@@ -827,6 +855,7 @@ export type OutageReportUncheckedCreateWithoutTechnicianInput = {
   resolvedAt?: Date | string | null
   customerId: string
   areaId: string
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOutageReportInput
@@ -883,6 +912,7 @@ export type OutageReportCreateManyAreaInput = {
   resolvedAt?: Date | string | null
   customerId: string
   technicianId?: string | null
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -894,6 +924,7 @@ export type OutageReportUpdateWithoutAreaInput = {
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.UserUpdateOneRequiredWithoutOutageReportsNestedInput
@@ -910,6 +941,7 @@ export type OutageReportUncheckedUpdateWithoutAreaInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   technicianId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOutageReportNestedInput
@@ -924,6 +956,7 @@ export type OutageReportUncheckedUpdateManyWithoutAreaInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   technicianId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -937,6 +970,7 @@ export type OutageReportCreateManyCustomerInput = {
   resolvedAt?: Date | string | null
   areaId: string
   technicianId?: string | null
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -950,6 +984,7 @@ export type OutageReportCreateManyTechnicianInput = {
   resolvedAt?: Date | string | null
   customerId: string
   areaId: string
+  assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -961,6 +996,7 @@ export type OutageReportUpdateWithoutCustomerInput = {
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   area?: Prisma.AreaUpdateOneRequiredWithoutOutageReportsNestedInput
@@ -977,6 +1013,7 @@ export type OutageReportUncheckedUpdateWithoutCustomerInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   areaId?: Prisma.StringFieldUpdateOperationsInput | string
   technicianId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOutageReportNestedInput
@@ -991,6 +1028,7 @@ export type OutageReportUncheckedUpdateManyWithoutCustomerInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   areaId?: Prisma.StringFieldUpdateOperationsInput | string
   technicianId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1002,6 +1040,7 @@ export type OutageReportUpdateWithoutTechnicianInput = {
   isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   customer?: Prisma.UserUpdateOneRequiredWithoutOutageReportsNestedInput
@@ -1018,6 +1057,7 @@ export type OutageReportUncheckedUpdateWithoutTechnicianInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   areaId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOutageReportNestedInput
@@ -1032,6 +1072,7 @@ export type OutageReportUncheckedUpdateManyWithoutTechnicianInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   areaId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1077,6 +1118,7 @@ export type OutageReportSelect<ExtArgs extends runtime.Types.Extensions.Internal
   customerId?: boolean
   areaId?: boolean
   technicianId?: boolean
+  assignedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1096,6 +1138,7 @@ export type OutageReportSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   customerId?: boolean
   areaId?: boolean
   technicianId?: boolean
+  assignedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1113,6 +1156,7 @@ export type OutageReportSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   customerId?: boolean
   areaId?: boolean
   technicianId?: boolean
+  assignedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1130,11 +1174,12 @@ export type OutageReportSelectScalar = {
   customerId?: boolean
   areaId?: boolean
   technicianId?: boolean
+  assignedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OutageReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "status" | "isPriority" | "reportedAt" | "resolvedAt" | "customerId" | "areaId" | "technicianId" | "createdAt" | "updatedAt", ExtArgs["result"]["outageReport"]>
+export type OutageReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "status" | "isPriority" | "reportedAt" | "resolvedAt" | "customerId" | "areaId" | "technicianId" | "assignedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["outageReport"]>
 export type OutageReportInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   area?: boolean | Prisma.AreaDefaultArgs<ExtArgs>
@@ -1171,6 +1216,7 @@ export type $OutageReportPayload<ExtArgs extends runtime.Types.Extensions.Intern
     customerId: string
     areaId: string
     technicianId: string | null
+    assignedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["outageReport"]>
@@ -1609,6 +1655,7 @@ export interface OutageReportFieldRefs {
   readonly customerId: Prisma.FieldRef<"OutageReport", 'String'>
   readonly areaId: Prisma.FieldRef<"OutageReport", 'String'>
   readonly technicianId: Prisma.FieldRef<"OutageReport", 'String'>
+  readonly assignedAt: Prisma.FieldRef<"OutageReport", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"OutageReport", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"OutageReport", 'DateTime'>
 }

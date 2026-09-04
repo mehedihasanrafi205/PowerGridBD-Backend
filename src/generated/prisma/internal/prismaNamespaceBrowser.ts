@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Area: 'Area',
+  AuditLog: 'AuditLog',
   Feeder: 'Feeder',
   OutageReport: 'OutageReport',
   Payment: 'Payment',
@@ -88,6 +89,19 @@ export const AreaScalarFieldEnum = {
 export type AreaScalarFieldEnum = (typeof AreaScalarFieldEnum)[keyof typeof AreaScalarFieldEnum]
 
 
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  actorId: 'actorId',
+  action: 'action',
+  entity: 'entity',
+  entityId: 'entityId',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
 export const FeederScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -109,6 +123,7 @@ export const OutageReportScalarFieldEnum = {
   customerId: 'customerId',
   areaId: 'areaId',
   technicianId: 'technicianId',
+  assignedAt: 'assignedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -225,14 +240,6 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -240,4 +247,12 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
