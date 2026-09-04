@@ -29,13 +29,14 @@ const getAllOutageReports = catchAsync(async (req: Request, res: Response) => {
   if (!req.user) {
     throw new AppError(httpStatus.UNAUTHORIZED, "You are not logged in");
   }
-  const result = await outageService.getAllOutageReports(req.user);
+  const result = await outageService.getAllOutageReports(req.user, req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Outage reports retrieved successfully",
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 
@@ -43,7 +44,11 @@ const assignTechnician = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params as { id: string };
   const { technicianId } = req.body;
 
-  const result = await outageService.assignTechnician(id, technicianId);
+  const result = await outageService.assignTechnician(
+    id,
+    technicianId,
+    req.user?.userId,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

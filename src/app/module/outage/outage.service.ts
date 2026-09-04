@@ -2,10 +2,18 @@ import { OutageStatus, UserRole } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import httpStatus from "http-status";
+import type { IQuery } from "../../interfaces";
+import { calculatePagination, buildMeta } from "../../utils/pagination";
+import { logAudit } from "../../utils/audit";
+import type {
+  IAssignTechnicianPayload,
+  ICreateOutageReportPayload,
+  IUpdateOutageStatusPayload,
+} from "./outage.interface";
 
 const createOutageReport = async (
   userId: string,
-  payload: { description: string; areaId: string },
+  payload: ICreateOutageReportPayload,
 ) => {
   const isAreaExist = await prisma.area.findUnique({
     where: { id: payload.areaId },
@@ -42,29 +50,76 @@ const createOutageReport = async (
   return outageReport;
 };
 
-const getAllOutageReports = async (user: {
-  userId: string;
-  role: UserRole;
-}) => {
-  let query = {};
-
-  if (user.role === UserRole.CUSTOMER) {
-    query = { customerId: user.userId };
-  } else if (user.role === UserRole.TECHNICIAN) {
-    query = { technicianId: user.userId };
-  }
-
-  const reports = await prisma.outageReport.findMany({
-    where: query,
-    include: {
-      area: true,
-      customer: { select: { id: true, name: true, phone: true } },
-      technician: { select: { id: true, name: true, phone: true } },
-    },
-    orderBy: { reportedAt: "desc" },
+const getAllOutageReports = async (
+  user: {
+    userId: string;
+    role: UserRole;
+  },
+  query: IQuery = {},
+) => {
+  const { page, limit, skip, sortBy, sortOrder } = calculatePagination(query, {
+    sortBy: "reportedAt",
   });
 
-  return reports;
+  const andConditions: any[] = [];
+
+  // Role scope: customers see own, technicians see assigned, admin/operator see all
+  if (user.role === UserRole.CUSTOMER) {
+    andConditions.push({ customerId: user.userId });
+  } else if (user.role === UserRole.TECHNICIAN) {
+    andConditions.push({ technicianId: user.userId });
+  }
+
+  if (query.searchTerm) {
+    const term = String(query.searchTerm);
+    andConditions.push({
+      OR: [
+        { description: { contains: term, mode: "insensitive" } },
+        { customer: { name: { contains: term, mode: "insensitive" } } },
+        { area: { name: { contains: term, mode: "insensitive" } } },
+      ],
+    });
+  }
+
+  if (query.status) {
+    andConditions.push({ status: query.status as OutageStatus });
+  }
+
+  if (query.areaId) {
+    andConditions.push({ areaId: String(query.areaId) });
+  }
+
+  if (query.isPriority !== undefined && query.isPriority !== "") {
+    andConditions.push({
+      isPriority: String(query.isPriority).toLowerCase() === "true",
+    });
+  }
+
+  if (query.from || query.to) {
+    const reportedAt: { gte?: Date; lte?: Date } = {};
+    if (query.from) reportedAt.gte = new Date(String(query.from));
+    if (query.to) reportedAt.lte = new Date(String(query.to));
+    andConditions.push({ reportedAt });
+  }
+
+  const where = andConditions.length > 0 ? { AND: andConditions } : {};
+
+  const [reports, total] = await Promise.all([
+    prisma.outageReport.findMany({
+      where,
+      include: {
+        area: true,
+        customer: { select: { id: true, name: true, phone: true } },
+        technician: { select: { id: true, name: true, phone: true } },
+      },
+      orderBy: { [sortBy]: sortOrder },
+      skip,
+      take: limit,
+    }),
+    prisma.outageReport.count({ where }),
+  ]);
+
+  return { data: reports, meta: buildMeta(total, page, limit) };
 };
 const getSingleOutageReport = async (
   user: { userId: string; role: UserRole },
@@ -117,7 +172,13 @@ const getSingleOutageReport = async (
   return outageReport;
 };
 
-const assignTechnician = async (id: string, technicianId: string) => {
+const assignTechnician = async (
+  id: string,
+  payload: IAssignTechnicianPayload | string,
+  actorId?: string,
+) => {
+  const technicianId =
+    typeof payload === "string" ? payload : payload.technicianId;
   const isOutageExist = await prisma.outageReport.findUnique({
     where: { id },
   });
@@ -126,7 +187,6 @@ const assignTechnician = async (id: string, technicianId: string) => {
     throw new AppError(httpStatus.NOT_FOUND, "Outage report not found");
   }
 
-  // টেকনিশিয়ান ভ্যালিড কি না চেক করা
   const technician = await prisma.user.findUnique({
     where: { id: technicianId },
   });
@@ -142,13 +202,22 @@ const assignTechnician = async (id: string, technicianId: string) => {
     where: { id },
     data: {
       technicianId,
-      status: OutageStatus.ASSIGNED, // টেকনিশিয়ান অ্যাসাইন করলেই স্ট্যাটাস স্বয়ংক্রিয়ভাবে ASSIGNED হয়ে যাবে
+      status: OutageStatus.ASSIGNED,
+      assignedAt: new Date(),
     },
     include: {
       area: true,
       customer: { select: { id: true, name: true, phone: true } },
       technician: { select: { id: true, name: true, phone: true } },
     },
+  });
+
+  await logAudit({
+    action: "OUTAGE_TECHNICIAN_ASSIGNED",
+    entity: "OutageReport",
+    entityId: id,
+    actorId,
+    metadata: { technicianId, previousTechnicianId: isOutageExist.technicianId },
   });
 
   return updatedReport;
@@ -192,6 +261,14 @@ const updateOutageStatus = async (
       customer: { select: { id: true, name: true, phone: true } },
       technician: { select: { id: true, name: true, phone: true } },
     },
+  });
+
+  await logAudit({
+    action: "OUTAGE_STATUS_CHANGED",
+    entity: "OutageReport",
+    entityId: id,
+    actorId: user.userId,
+    metadata: { from: isOutageExist.status, to: status },
   });
 
   return updatedReport;
