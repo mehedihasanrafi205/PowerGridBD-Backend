@@ -56,7 +56,7 @@ const initiatePayment = async (
   }
 
   const tranId = generateTranId();
-  const baseUrl = config.frontend_url;
+  const backendUrl = config.bak_url;
   const payment = await prisma.payment.create({
     data: {
       amount: payload.amount,
@@ -73,10 +73,10 @@ const initiatePayment = async (
     total_amount: payload.amount,
     currency: payload.currency ?? "BDT",
     tran_id: tranId,
-    success_url: `${baseUrl}/payment/success?tran_id=${tranId}`,
-    fail_url: `${baseUrl}/payment/fail?tran_id=${tranId}`,
-    cancel_url: `${baseUrl}/payment/cancel?tran_id=${tranId}`,
-    ipn_url: `${baseUrl}/api/v1/payment/ipn`,
+    success_url: `${backendUrl}/api/v1/payment/success?tran_id=${tranId}`,
+    fail_url: `${backendUrl}/api/v1/payment/fail?tran_id=${tranId}`,
+    cancel_url: `${backendUrl}/api/v1/payment/cancel?tran_id=${tranId}`,
+    ipn_url: `${backendUrl}/api/v1/payment/ipn`,
     cus_name: user.name,
     cus_email: user.email,
     cus_phone: user.phone ?? "N/A",
@@ -94,10 +94,7 @@ const initiatePayment = async (
   await prisma.payment.update({
     where: { id: payment.id },
     data: {
-      paymentDetails: {
-        sessionkey: sslResponse.sessionkey,
-        GatewayPageURL: sslResponse.GatewayPageURL,
-      },
+      paymentDetails: JSON.parse(JSON.stringify(sslResponse)),
     },
   });
 

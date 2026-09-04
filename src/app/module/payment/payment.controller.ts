@@ -5,6 +5,8 @@ import { sendResponse } from "../../utils/sendResponse";
 import { AppError } from "../../utils/AppError";
 import { paymentService } from "./payment.service";
 import config from "../../config";
+import { prisma } from "../../lib/prisma";
+import { PaymentStatus } from "../../../generated/prisma/enums";
 
 const initiatePayment = catchAsync(async (req: Request, res: Response) => {
   if (!req.user) {
@@ -29,36 +31,92 @@ const handleIPN = catchAsync(async (req: Request, res: Response) => {
 });
 
 const successCallback = catchAsync(async (req: Request, res: Response) => {
-  const { val_id, tran_id } = req.body;
+  const tranId = (req.query.tran_id as string) || (req.body.tran_id as string);
+  const valId = (req.query.val_id as string) || (req.body.val_id as string);
 
-  if (val_id) {
+  if (valId && tranId) {
     try {
-      await paymentService.validateTransaction(val_id);
+      const payment = await prisma.payment.findUnique({
+        where: { transactionId: tranId },
+      });
+
+      if (payment && payment.status === PaymentStatus.PENDING) {
+        await paymentService.handleIPN({
+          status: "VALID",
+          tran_id: tranId,
+          val_id: valId,
+          amount: payment.amount,
+        });
+      }
     } catch {
-      // Validation failed — still redirect user, they can retry later
+      // Validation failed — still redirect user
     }
   }
 
   const frontendUrl = config.frontend_url;
-  res.redirect(
-    `${frontendUrl}/payment/success?tran_id=${(tran_id as string) ?? ""}`,
-  );
+  res.redirect(`${frontendUrl}/payment/success?tran_id=${tranId ?? ""}`);
 });
 
 const failCallback = catchAsync(async (req: Request, res: Response) => {
-  const { tran_id } = req.body;
+  const tranId = (req.query.tran_id as string) || (req.body.tran_id as string);
+
+  if (tranId) {
+    try {
+      const payment = await prisma.payment.findUnique({
+        where: { transactionId: tranId },
+      });
+
+      if (payment && payment.status === PaymentStatus.PENDING) {
+        await prisma.payment.update({
+          where: { id: payment.id },
+          data: {
+            status: PaymentStatus.FAILED,
+            paymentDetails: {
+              ...((payment.paymentDetails as Record<string, unknown>) ?? {}),
+              failCallback: true,
+              failedAt: new Date().toISOString(),
+            },
+          },
+        });
+      }
+    } catch {
+      // Best effort — redirect user regardless
+    }
+  }
+
   const frontendUrl = config.frontend_url;
-  res.redirect(
-    `${frontendUrl}/payment/fail?tran_id=${(tran_id as string) ?? ""}`,
-  );
+  res.redirect(`${frontendUrl}/payment/fail?tran_id=${tranId ?? ""}`);
 });
 
 const cancelCallback = catchAsync(async (req: Request, res: Response) => {
-  const { tran_id } = req.body;
+  const tranId = (req.query.tran_id as string) || (req.body.tran_id as string);
+
+  if (tranId) {
+    try {
+      const payment = await prisma.payment.findUnique({
+        where: { transactionId: tranId },
+      });
+
+      if (payment && payment.status === PaymentStatus.PENDING) {
+        await prisma.payment.update({
+          where: { id: payment.id },
+          data: {
+            status: PaymentStatus.FAILED,
+            paymentDetails: {
+              ...((payment.paymentDetails as Record<string, unknown>) ?? {}),
+              cancelCallback: true,
+              cancelledAt: new Date().toISOString(),
+            },
+          },
+        });
+      }
+    } catch {
+      // Best effort — redirect user regardless
+    }
+  }
+
   const frontendUrl = config.frontend_url;
-  res.redirect(
-    `${frontendUrl}/payment/cancel?tran_id=${(tran_id as string) ?? ""}`,
-  );
+  res.redirect(`${frontendUrl}/payment/cancel?tran_id=${tranId ?? ""}`);
 });
 
 const getPaymentByTransactionId = catchAsync(
