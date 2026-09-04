@@ -157,6 +157,30 @@ const getUserById = async (id: string) => {
 };
 
 
+const STAFF_ROLES: UserRole[] = [
+  UserRole.ADMIN,
+  UserRole.POWER_OPERATOR,
+  UserRole.TECHNICIAN,
+];
+
+const ensureNotLastActiveAdmin = async (id: string) => {
+  const activeAdmins = await prisma.user.count({
+    where: {
+      role: UserRole.ADMIN,
+      status: UserStatus.ACTIVE,
+      isDeleted: false,
+      id: { not: id },
+    },
+  });
+
+  if (activeAdmins === 0) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Operation refused: this is the last active admin account",
+    );
+  }
+};
+
 const updateUserStatus = async (
   id: string,
   status: UserStatus,
@@ -165,6 +189,21 @@ const updateUserStatus = async (
   const user = await prisma.user.findUnique({ where: { id } });
   if (!user || user.isDeleted) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (user.status === status) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `User status is already ${status}`,
+    );
+  }
+
+  if (
+    user.role === UserRole.ADMIN &&
+    user.status === UserStatus.ACTIVE &&
+    status !== UserStatus.ACTIVE
+  ) {
+    await ensureNotLastActiveAdmin(id);
   }
 
   const updatedUser = await prisma.user.update({
@@ -191,6 +230,21 @@ const updateUserRole = async (id: string, role: UserRole, actorId?: string) => {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
 
+  if (user.role === role) {
+    throw new AppError(httpStatus.BAD_REQUEST, `User role is already ${role}`);
+  }
+
+  if (STAFF_ROLES.includes(role) && !user.emailVerified) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "User email must be verified before granting a staff role",
+    );
+  }
+
+  if (user.role === UserRole.ADMIN && role !== UserRole.ADMIN) {
+    await ensureNotLastActiveAdmin(id);
+  }
+
   const updatedUser = await prisma.user.update({
     where: { id },
     data: { role },
@@ -213,6 +267,10 @@ const softDeleteUser = async (id: string, actorId?: string) => {
   const user = await prisma.user.findUnique({ where: { id } });
   if (!user || user.isDeleted) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (user.role === UserRole.ADMIN) {
+    await ensureNotLastActiveAdmin(id);
   }
 
   const deletedUser = await prisma.user.update({
