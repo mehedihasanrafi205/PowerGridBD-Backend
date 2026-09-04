@@ -27,7 +27,13 @@ const updateScheduleValidationSchema = z.object({
   areaId: z.string().optional(),
 });
 
+const updateScheduleStatusValidationSchema = z.object({
+  status: z.nativeEnum(ScheduleStatus,  "Status is required",
+  ),
+});
+
 export const scheduleValidation = {
   createScheduleValidationSchema,
   updateScheduleValidationSchema,
+  updateScheduleStatusValidationSchema
 };

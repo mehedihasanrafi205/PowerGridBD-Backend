@@ -42,6 +42,20 @@ const getSingleSchedule = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateScheduleStatus = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
+  const { status } = req.body;
+
+  const result = await scheduleService.updateScheduleStatus(id, status);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Schedule status updated successfully",
+    data: result,
+  });
+});
+
 const deleteSchedule = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params as { id: string };
   const result = await scheduleService.deleteSchedule(id);
@@ -58,5 +72,6 @@ export const scheduleController = {
   createSchedule,
   getAllSchedules,
   getSingleSchedule,
+  updateScheduleStatus,
   deleteSchedule,
 };
