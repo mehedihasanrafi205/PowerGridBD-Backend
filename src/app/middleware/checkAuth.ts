@@ -51,21 +51,11 @@ export const auth = (...requiredRoles: UserRole[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED,verifiedToken.error);
     }
 
-    const { email, name, userId, role } = verifiedToken.data as JwtPayload;
-
-    if (requiredRoles.length && !requiredRoles.includes(role)) {
-      throw new AppError(
-        httpStatus.FORBIDDEN,
-        "Forbidden. You don't have permission to access this resource.",
-      );
-    }
+    const { email, name, userId } = verifiedToken.data as JwtPayload;
 
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
-        email,
-        name,
-        role,
       },
     });
 
@@ -73,15 +63,22 @@ export const auth = (...requiredRoles: UserRole[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED,"User not found. Please log in again.");
     }
 
+    if (requiredRoles.length && !requiredRoles.includes(user.role)) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "Forbidden. You don't have permission to access this resource.",
+      );
+    }
+
     if (user.status === "BLOCKED") {
       throw new AppError(httpStatus.FORBIDDEN,"Your account has been blocked. Please contact support.");
     }
 
     req.user = {
-      email,
-      name,
-      userId,
-      role,
+      email: user.email,
+      name: user.name,
+      userId: user.id,
+      role: user.role,
     };
 
     next();
