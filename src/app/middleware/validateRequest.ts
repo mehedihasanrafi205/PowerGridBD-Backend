@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import { AppError } from "../utils/AppError";
 
-export const validateRequest = (zodSchema: z.ZodObject) => {
+export const validateRequest = (zodSchema: z.ZodTypeAny) => {
   return catchAsync((req: Request, res: Response, next: NextFunction) => {
     const payload = req.body ?? {};
 
