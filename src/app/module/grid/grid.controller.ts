@@ -15,12 +15,13 @@ const createZone = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllZones = catchAsync(async (req: Request, res: Response) => {
-  const result = await gridService.getAllZones();
+  const result = await gridService.getAllZones(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Zones retrieved successfully",
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 const updateZone = catchAsync(async (req: Request, res: Response) => {
@@ -56,12 +57,13 @@ const createSubstation = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllSubstations = catchAsync(async (req: Request, res: Response) => {
-  const result = await gridService.getAllSubstations();
+  const result = await gridService.getAllSubstations(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Substations retrieved successfully",
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 const updateSubstation = catchAsync(async (req: Request, res: Response) => {
@@ -97,12 +99,13 @@ const createFeeder = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllFeeders = catchAsync(async (req: Request, res: Response) => {
-  const result = await gridService.getAllFeeders();
+  const result = await gridService.getAllFeeders(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Feeders retrieved successfully",
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 
@@ -139,12 +142,13 @@ const createArea = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllAreas = catchAsync(async (req: Request, res: Response) => {
-  const result = await gridService.getAllAreas();
+  const result = await gridService.getAllAreas(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Areas retrieved successfully",
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 

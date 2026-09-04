@@ -1,9 +1,21 @@
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import httpStatus from "http-status";
+import type { IQuery } from "../../interfaces";
+import { calculatePagination, buildMeta } from "../../utils/pagination";
+import type {
+  ICreateAreaPayload,
+  ICreateFeederPayload,
+  ICreateSubstationPayload,
+  ICreateZonePayload,
+  IUpdateAreaPayload,
+  IUpdateFeederPayload,
+  IUpdateSubstationPayload,
+  IUpdateZonePayload,
+} from "./grid.interface";
 
 // *zone
-const createZone = async (payload: { name: string; description?: string }) => {
+const createZone = async (payload: ICreateZonePayload) => {
   const isZoneExists = await prisma.zone.findUnique({
     where: { name: payload.name },
   });
@@ -22,24 +34,34 @@ const createZone = async (payload: { name: string; description?: string }) => {
   return zone;
 };
 
-const getAllZones = async () => {
-  const zones = await prisma.zone.findMany({
-    include: {
-      substations: {
-        include: {
-          feeders: true,
+const getAllZones = async (query: IQuery = {}) => {
+  const { page, limit, skip, sortBy, sortOrder } = calculatePagination(query);
+
+  const where =
+    query.searchTerm && String(query.searchTerm).length > 0
+      ? { name: { contains: String(query.searchTerm), mode: "insensitive" as const } }
+      : {};
+
+  const [zones, total] = await Promise.all([
+    prisma.zone.findMany({
+      where,
+      include: {
+        substations: {
+          include: {
+            feeders: true,
+          },
         },
       },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+      orderBy: { [sortBy]: sortOrder },
+      skip,
+      take: limit,
+    }),
+    prisma.zone.count({ where }),
+  ]);
 
-  return zones;
+  return { data: zones, meta: buildMeta(total, page, limit) };
 };
-const updateZone = async (
-  id: string,
-  payload: { name?: string; description?: string },
-) => {
+const updateZone = async (id: string, payload: IUpdateZonePayload) => {
   const isZoneExist = await prisma.zone.findUnique({
     where: { id },
   });
@@ -64,7 +86,7 @@ const deleteZone = async (id: string) => {
 
 // * Substation
 
-const createSubstation = async (payload: { name: string; zoneId: string }) => {
+const createSubstation = async (payload: ICreateSubstationPayload) => {
   const isZoneExist = await prisma.zone.findUnique({
     where: { id: payload.zoneId },
   });
@@ -82,21 +104,40 @@ const createSubstation = async (payload: { name: string; zoneId: string }) => {
 
   return substation;
 };
-const getAllSubstations = async () => {
-  const substations = await prisma.substation.findMany({
-    include: {
-      zone: true,
-      feeders: true,
-    },
-    orderBy: { createdAt: "desc" },
-  });
+const getAllSubstations = async (query: IQuery = {}) => {
+  const { page, limit, skip, sortBy, sortOrder } = calculatePagination(query);
 
-  return substations;
+  const andConditions: any[] = [];
+  if (query.searchTerm && String(query.searchTerm).length > 0) {
+    andConditions.push({
+      name: { contains: String(query.searchTerm), mode: "insensitive" },
+    });
+  }
+  if (query.zoneId) {
+    andConditions.push({ zoneId: String(query.zoneId) });
+  }
+  const where = andConditions.length > 0 ? { AND: andConditions } : {};
+
+  const [substations, total] = await Promise.all([
+    prisma.substation.findMany({
+      where,
+      include: {
+        zone: true,
+        feeders: true,
+      },
+      orderBy: { [sortBy]: sortOrder },
+      skip,
+      take: limit,
+    }),
+    prisma.substation.count({ where }),
+  ]);
+
+  return { data: substations, meta: buildMeta(total, page, limit) };
 };
 
 const updateSubstation = async (
   id: string,
-  payload: { name?: string; zoneId?: string },
+  payload: IUpdateSubstationPayload,
 ) => {
   const isExist = await prisma.substation.findUnique({ where: { id } });
   if (!isExist)
@@ -125,10 +166,7 @@ const deleteSubstation = async (id: string) => {
 
 // * Feeder
 
-const createFeeder = async (payload: {
-  name: string;
-  substationId: string;
-}) => {
+const createFeeder = async (payload: ICreateFeederPayload) => {
   const isSubstationExist = await prisma.substation.findUnique({
     where: { id: payload.substationId },
   });
@@ -151,26 +189,42 @@ const createFeeder = async (payload: {
   return feeder;
 };
 
-const getAllFeeders = async () => {
-  const feeders = await prisma.feeder.findMany({
-    include: {
-      substation: {
-        include: {
-          zone: true,
-        },
-      },
-      areas: true,
-    },
-    orderBy: { createdAt: "desc" },
-  });
+const getAllFeeders = async (query: IQuery = {}) => {
+  const { page, limit, skip, sortBy, sortOrder } = calculatePagination(query);
 
-  return feeders;
+  const andConditions: any[] = [];
+  if (query.searchTerm && String(query.searchTerm).length > 0) {
+    andConditions.push({
+      name: { contains: String(query.searchTerm), mode: "insensitive" },
+    });
+  }
+  if (query.substationId) {
+    andConditions.push({ substationId: String(query.substationId) });
+  }
+  const where = andConditions.length > 0 ? { AND: andConditions } : {};
+
+  const [feeders, total] = await Promise.all([
+    prisma.feeder.findMany({
+      where,
+      include: {
+        substation: {
+          include: {
+            zone: true,
+          },
+        },
+        areas: true,
+      },
+      orderBy: { [sortBy]: sortOrder },
+      skip,
+      take: limit,
+    }),
+    prisma.feeder.count({ where }),
+  ]);
+
+  return { data: feeders, meta: buildMeta(total, page, limit) };
 };
 
-const updateFeeder = async (
-  id: string,
-  payload: { name?: string; substationId?: string },
-) => {
+const updateFeeder = async (id: string, payload: IUpdateFeederPayload) => {
   const isExist = await prisma.feeder.findUnique({ where: { id } });
   if (!isExist) throw new AppError(httpStatus.NOT_FOUND, "Feeder not found");
 
@@ -196,7 +250,7 @@ const deleteFeeder = async (id: string) => {
 };
 
 // * Area
-const createArea = async (payload: { name: string; feederId: string }) => {
+const createArea = async (payload: ICreateAreaPayload) => {
   const isFeederExist = await prisma.feeder.findUnique({
     where: { id: payload.feederId },
   });
@@ -223,21 +277,37 @@ const createArea = async (payload: { name: string; feederId: string }) => {
   return area;
 };
 
-const getAllAreas = async () => {
-  const areas = await prisma.area.findMany({
-    include: {
-      feeder: true,
-    },
-    orderBy: { createdAt: "desc" },
-  });
+const getAllAreas = async (query: IQuery = {}) => {
+  const { page, limit, skip, sortBy, sortOrder } = calculatePagination(query);
 
-  return areas;
+  const andConditions: any[] = [];
+  if (query.searchTerm && String(query.searchTerm).length > 0) {
+    andConditions.push({
+      name: { contains: String(query.searchTerm), mode: "insensitive" },
+    });
+  }
+  if (query.feederId) {
+    andConditions.push({ feederId: String(query.feederId) });
+  }
+  const where = andConditions.length > 0 ? { AND: andConditions } : {};
+
+  const [areas, total] = await Promise.all([
+    prisma.area.findMany({
+      where,
+      include: {
+        feeder: true,
+      },
+      orderBy: { [sortBy]: sortOrder },
+      skip,
+      take: limit,
+    }),
+    prisma.area.count({ where }),
+  ]);
+
+  return { data: areas, meta: buildMeta(total, page, limit) };
 };
 
-const updateArea = async (
-  id: string,
-  payload: { name?: string; feederId?: string },
-) => {
+const updateArea = async (id: string, payload: IUpdateAreaPayload) => {
   const isExist = await prisma.area.findUnique({ where: { id } });
   if (!isExist) throw new AppError(httpStatus.NOT_FOUND, "Area not found");
 
