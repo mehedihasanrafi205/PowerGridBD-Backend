@@ -56,11 +56,11 @@ export interface SSLCommerzInitResponse {
 export async function initiatePayment(
   data: Omit<SSLCommerzInitRequest, "store_id" | "store_passwd">,
 ): Promise<SSLCommerzInitResponse> {
-  const payload: SSLCommerzInitRequest = {
+  const payload = {
     ...data,
     store_id: getStoreId(),
     store_passwd: getStorePasswd(),
-  };
+  } as SSLCommerzInitRequest;
 
   const body = new URLSearchParams(
     Object.entries(payload).reduce(
@@ -157,7 +157,44 @@ export async function validateOrder(
   return result;
 }
 
-// ─── Query by Transaction ID (GET) ─────────────────────────────────────
+// ─── Validate by Session Key (GET) ──────────────────────────────────────
+
+export async function validateBySessionKey(
+  sessionKey: string,
+): Promise<SSLCommerzValidationResponse> {
+  const params = new URLSearchParams({
+    sessionkey: sessionKey,
+    store_id: getStoreId(),
+    store_passwd: getStorePasswd(),
+    format: "json",
+    v: "1",
+  });
+
+  const res = await fetch(
+    `${getBaseUrl()}/validator/api/validationserverAPI.php?${params.toString()}`,
+    { method: "GET" },
+  );
+
+  if (!res.ok) {
+    throw new AppError(
+      httpStatus.BAD_GATEWAY,
+      `SSLCommerz validation API error: ${res.status} ${res.statusText}`,
+    );
+  }
+
+  const result = (await res.json()) as SSLCommerzValidationResponse;
+
+  if (result.status === "INVALID_TRANSACTION") {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "SSLCommerz: Invalid session key",
+    );
+  }
+
+  return result;
+}
+
+// ─── Query by Transaction ID (GET, fallback) ────────────────────────────
 
 export async function queryByTranId(
   tranId: string,

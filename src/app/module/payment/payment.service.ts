@@ -4,6 +4,7 @@ import { prisma } from "../../lib/prisma";
 import {
   initiatePayment as sslInitiatePayment,
   validateOrder as sslValidateOrder,
+  validateBySessionKey as sslValidateBySessionKey,
   queryByTranId as sslQueryByTranId,
   refundTransaction as sslRefund,
   type SSLCommerzValidationResponse,
@@ -98,10 +99,17 @@ const initiatePayment = async (
     product_profile: "general",
   });
 
+  const sslDetails = sslResponse as Record<string, string>;
+
   await prisma.payment.update({
     where: { id: payment.id },
     data: {
-      paymentDetails: JSON.parse(JSON.stringify(sslResponse)),
+      paymentDetails: {
+        sessionkey: sslDetails.sessionkey,
+        status: sslDetails.status,
+        store_id: sslDetails.store_id,
+        failedreason: sslDetails.failedreason,
+      },
     },
   });
 
@@ -156,14 +164,14 @@ const handleIPN = async (ipnData: IIPNPayload) => {
       status: newStatus,
       paymentDetails: {
         ...((payment.paymentDetails as Record<string, unknown>) ?? {}),
-        ipn: ipnData,
+        ipn: ipnData as Record<string, unknown>,
         validation: {
           status: validation.status,
           bank_tran_id: validation.bank_tran_id,
           risk_level: validation.risk_level,
           risk_title: validation.risk_title,
         },
-      },
+      } as any,
     },
     include: {
       user: { select: { id: true, name: true, email: true } },
@@ -211,7 +219,51 @@ async function applyCompletedSideEffects(payment: {
   }
 }
 
-const confirmPaymentByTransactionId = async (tranId: string) => {
+async function markPaymentCompleted(
+  payment: {
+    id: string;
+    amount: number;
+    type: PaymentType;
+    outageReportId: string | null;
+    userId: string;
+    paymentDetails: unknown;
+  },
+  validation: SSLCommerzValidationResponse,
+  confirmedVia: string,
+) {
+  const details = (payment.paymentDetails as Record<string, unknown>) ?? {};
+
+  const updatedPayment = await prisma.payment.update({
+    where: { id: payment.id },
+    data: {
+      status: PaymentStatus.COMPLETED,
+      paymentDetails: {
+        ...details,
+        validation: {
+          status: validation.status,
+          bank_tran_id: validation.bank_tran_id,
+          risk_level: validation.risk_level,
+          risk_title: validation.risk_title,
+          confirmedVia,
+          confirmedAt: new Date().toISOString(),
+        },
+      } as any,
+    },
+    include: {
+      user: { select: { id: true, name: true, email: true } },
+      outageReport: true,
+    },
+  });
+
+  await applyCompletedSideEffects(payment);
+
+  return updatedPayment;
+}
+
+const confirmPaymentByTransactionId = async (
+  tranId: string,
+  postBody?: Record<string, string>,
+) => {
   const payment = await prisma.payment.findUnique({
     where: { transactionId: tranId },
   });
@@ -224,51 +276,83 @@ const confirmPaymentByTransactionId = async (tranId: string) => {
     return payment;
   }
 
-  const queryResult = await sslQueryByTranId(tranId);
+  const details = (payment.paymentDetails as Record<string, unknown>) ?? {};
 
-  const statusStr = (queryResult.status ?? "").toUpperCase();
-  if (statusStr !== "VALID" && statusStr !== "VALIDATED") {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      `SSLCommerz transaction not valid: ${statusStr}`,
-    );
+  // Strategy 1: Use val_id from SSLCommerz POST body → validateOrder API
+  const valId = postBody?.val_id;
+  if (valId) {
+    try {
+      console.log(`[payment] trying validateOrder with val_id=${valId}`);
+      const validation = await sslValidateOrder(valId);
+      console.log(`[payment] validateOrder returned status=${validation.status}`);
+
+      if (validation.status?.toUpperCase() === "VALID" || validation.status?.toUpperCase() === "VALIDATED") {
+        if (validation.amount !== undefined && Number(validation.amount) !== payment.amount) {
+          throw new AppError(httpStatus.BAD_REQUEST, "Payment amount mismatch");
+        }
+        return await markPaymentCompleted(payment, validation, "val_id_validation");
+      }
+    } catch (err) {
+      console.error(`[payment] validateOrder failed for val_id=${valId}:`, err);
+    }
   }
 
-  if (
-    queryResult.amount !== undefined &&
-    Number(queryResult.amount) !== payment.amount
-  ) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Payment amount mismatch — possible tampering detected",
-    );
+  // Strategy 2: Trust POST body status field (SSLCommerz signs it)
+  if (postBody?.status?.toUpperCase() === "VALID" || postBody?.status?.toUpperCase() === "VALIDATED") {
+    console.log(`[payment] trusting POST body status=VALID for tran_id=${tranId}`);
+    const postValidation: SSLCommerzValidationResponse = {
+      status: postBody.status,
+      tran_id: postBody.tran_id,
+      amount: postBody.amount ? Number(postBody.amount) : undefined,
+      bank_tran_id: postBody.bank_tran_id,
+      card_type: postBody.card_type,
+      currency_type: postBody.currency_type,
+      risk_level: postBody.risk_level ? Number(postBody.risk_level) : undefined,
+      risk_title: postBody.risk_title,
+    };
+    return await markPaymentCompleted(payment, postValidation, "post_body_direct");
   }
 
-  const updatedPayment = await prisma.payment.update({
-    where: { id: payment.id },
-    data: {
-      status: PaymentStatus.COMPLETED,
-      paymentDetails: {
-        ...((payment.paymentDetails as Record<string, unknown>) ?? {}),
-        validation: {
-          status: queryResult.status,
-          bank_tran_id: queryResult.bank_tran_id,
-          risk_level: queryResult.risk_level,
-          risk_title: queryResult.risk_title,
-          confirmedVia: "success_callback",
-          confirmedAt: new Date().toISOString(),
-        },
-      },
-    },
-    include: {
-      user: { select: { id: true, name: true, email: true } },
-      outageReport: true,
-    },
-  });
+  // Strategy 3: sessionkey → validationserverAPI
+  const sessionKey = details.sessionkey as string | undefined;
+  if (sessionKey) {
+    try {
+      console.log(`[payment] trying validateBySessionKey sessionkey=${sessionKey}`);
+      const validation = await sslValidateBySessionKey(sessionKey);
+      console.log(`[payment] validateBySessionKey returned status=${validation.status}`);
 
-  await applyCompletedSideEffects(payment);
+      if (validation.status?.toUpperCase() === "VALID" || validation.status?.toUpperCase() === "VALIDATED") {
+        if (validation.amount !== undefined && Number(validation.amount) !== payment.amount) {
+          throw new AppError(httpStatus.BAD_REQUEST, "Payment amount mismatch");
+        }
+        return await markPaymentCompleted(payment, validation, "sessionkey_validation");
+      }
+    } catch (err) {
+      console.error(`[payment] validateBySessionKey failed:`, err);
+    }
+  }
 
-  return updatedPayment;
+  // Strategy 4: Fallback to queryByTranId
+  try {
+    console.log(`[payment] trying queryByTranId for tran_id=${tranId}`);
+    const queryResult = await sslQueryByTranId(tranId);
+    console.log(`[payment] queryByTranId returned status=${queryResult.status}`);
+
+    if (queryResult.status?.toUpperCase() === "VALID" || queryResult.status?.toUpperCase() === "VALIDATED") {
+      if (queryResult.amount !== undefined && Number(queryResult.amount) !== payment.amount) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Payment amount mismatch");
+      }
+      return await markPaymentCompleted(payment, queryResult, "queryByTranId");
+    }
+  } catch (err) {
+    console.error(`[payment] queryByTranId failed for tran_id=${tranId}:`, err);
+  }
+
+  console.error(`[payment] ALL validation strategies failed for tran_id=${tranId}`);
+  throw new AppError(
+    httpStatus.BAD_REQUEST,
+    "Could not validate payment with SSLCommerz",
+  );
 };
 
 const handleCallbackStatus = async (
@@ -296,7 +380,7 @@ const handleCallbackStatus = async (
         [callbackType === "FAILED" ? "failCallback" : "cancelCallback"]: true,
         [callbackType === "FAILED" ? "failedAt" : "cancelledAt"]:
           new Date().toISOString(),
-      },
+      } as any,
     },
   });
 

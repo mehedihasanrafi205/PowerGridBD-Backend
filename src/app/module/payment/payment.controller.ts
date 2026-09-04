@@ -29,14 +29,27 @@ const handleIPN = catchAsync(async (req: Request, res: Response) => {
 });
 
 const successCallback = catchAsync(async (req: Request, res: Response) => {
-  const tranId = (req.query.tran_id as string) || (req.body.tran_id as string);
+  const tranId =
+    (req.query.tran_id as string) ||
+    (req.body?.tran_id as string);
+
+  console.log(
+    `[payment] success callback — tran_id=${tranId}, method=${req.method}, body_keys=`,
+    Object.keys(req.body ?? {}),
+  );
 
   if (tranId) {
     try {
-      await paymentService.confirmPaymentByTransactionId(tranId);
-    } catch {
-      // Best-effort: redirect user regardless
+      await paymentService.confirmPaymentByTransactionId(
+        tranId,
+        req.body as Record<string, string> | undefined,
+      );
+      console.log(`[payment] confirmPayment OK for tran_id=${tranId}`);
+    } catch (err) {
+      console.error(`[payment] confirmPayment FAILED for tran_id=${tranId}:`, err);
     }
+  } else {
+    console.error("[payment] success callback — no tran_id found in query or body");
   }
 
   const frontendUrl = config.frontend_url;
@@ -44,13 +57,17 @@ const successCallback = catchAsync(async (req: Request, res: Response) => {
 });
 
 const failCallback = catchAsync(async (req: Request, res: Response) => {
-  const tranId = (req.query.tran_id as string) || (req.body.tran_id as string);
+  const tranId =
+    (req.query.tran_id as string) ||
+    (req.body?.tran_id as string);
+
+  console.log(`[payment] fail callback — tran_id=${tranId}`);
 
   if (tranId) {
     try {
       await paymentService.handleCallbackStatus(tranId, "FAILED");
-    } catch {
-      // Best-effort
+    } catch (err) {
+      console.error(`[payment] handleCallbackStatus FAILED for tran_id=${tranId}:`, err);
     }
   }
 
@@ -59,13 +76,17 @@ const failCallback = catchAsync(async (req: Request, res: Response) => {
 });
 
 const cancelCallback = catchAsync(async (req: Request, res: Response) => {
-  const tranId = (req.query.tran_id as string) || (req.body.tran_id as string);
+  const tranId =
+    (req.query.tran_id as string) ||
+    (req.body?.tran_id as string);
+
+  console.log(`[payment] cancel callback — tran_id=${tranId}`);
 
   if (tranId) {
     try {
       await paymentService.handleCallbackStatus(tranId, "CANCELLED");
-    } catch {
-      // Best-effort
+    } catch (err) {
+      console.error(`[payment] handleCallbackStatus FAILED for tran_id=${tranId}:`, err);
     }
   }
 
