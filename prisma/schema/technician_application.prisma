@@ -1,0 +1,24 @@
+model TechnicianApplication {
+  id          String            @id @default(uuid())
+  name        String
+  email       String
+  phone       String?
+  address     String?
+  experience  String?
+  bio         String?
+  status      ApplicationStatus @default(PENDING)
+  emailVerified Boolean         @default(false)
+  rejectionReason String?
+  reviewedBy  String?
+  reviewedAt  DateTime?
+
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([email])
+  @@map("technician_applications")
+}

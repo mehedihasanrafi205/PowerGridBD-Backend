@@ -82,3 +82,12 @@ export const PaymentType = {
 } as const
 
 export type PaymentType = (typeof PaymentType)[keyof typeof PaymentType]
+
+
+export const ApplicationStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ApplicationStatus = (typeof ApplicationStatus)[keyof typeof ApplicationStatus]

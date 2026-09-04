@@ -34,6 +34,7 @@ model User {
   assignedTasks OutageReport[] @relation("AssignedTechnician")
   payments      Payment[]
   auditLogs     AuditLog[]
+  technicianApplication TechnicianApplication?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -48,3 +48,9 @@ enum PaymentType {
   PRIORITY_RESTORATION
   SLA_SUBSCRIPTION
 }
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}

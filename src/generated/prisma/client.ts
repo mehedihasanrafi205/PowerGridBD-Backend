@@ -77,6 +77,11 @@ export type Schedule = Prisma.ScheduleModel
  */
 export type Substation = Prisma.SubstationModel
 /**
+ * Model TechnicianApplication
+ * 
+ */
+export type TechnicianApplication = Prisma.TechnicianApplicationModel
+/**
  * Model User
  * 
  */

@@ -404,6 +404,7 @@ export const ModelName = {
   Payment: 'Payment',
   Schedule: 'Schedule',
   Substation: 'Substation',
+  TechnicianApplication: 'TechnicianApplication',
   User: 'User',
   Zone: 'Zone'
 } as const
@@ -421,7 +422,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "area" | "auditLog" | "feeder" | "outageReport" | "payment" | "schedule" | "substation" | "user" | "zone"
+    modelProps: "area" | "auditLog" | "feeder" | "outageReport" | "payment" | "schedule" | "substation" | "technicianApplication" | "user" | "zone"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -943,6 +944,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TechnicianApplication: {
+      payload: Prisma.$TechnicianApplicationPayload<ExtArgs>
+      fields: Prisma.TechnicianApplicationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TechnicianApplicationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TechnicianApplicationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TechnicianApplicationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TechnicianApplicationPayload>
+        }
+        findFirst: {
+          args: Prisma.TechnicianApplicationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TechnicianApplicationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TechnicianApplicationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TechnicianApplicationPayload>
+        }
+        findMany: {
+          args: Prisma.TechnicianApplicationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TechnicianApplicationPayload>[]
+        }
+        create: {
+          args: Prisma.TechnicianApplicationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TechnicianApplicationPayload>
+        }
+        createMany: {
+          args: Prisma.TechnicianApplicationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TechnicianApplicationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TechnicianApplicationPayload>[]
+        }
+        delete: {
+          args: Prisma.TechnicianApplicationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TechnicianApplicationPayload>
+        }
+        update: {
+          args: Prisma.TechnicianApplicationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TechnicianApplicationPayload>
+        }
+        deleteMany: {
+          args: Prisma.TechnicianApplicationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TechnicianApplicationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TechnicianApplicationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TechnicianApplicationPayload>[]
+        }
+        upsert: {
+          args: Prisma.TechnicianApplicationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TechnicianApplicationPayload>
+        }
+        aggregate: {
+          args: Prisma.TechnicianApplicationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTechnicianApplication>
+        }
+        groupBy: {
+          args: Prisma.TechnicianApplicationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TechnicianApplicationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TechnicianApplicationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TechnicianApplicationCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -1230,6 +1305,27 @@ export const SubstationScalarFieldEnum = {
 export type SubstationScalarFieldEnum = (typeof SubstationScalarFieldEnum)[keyof typeof SubstationScalarFieldEnum]
 
 
+export const TechnicianApplicationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  address: 'address',
+  experience: 'experience',
+  bio: 'bio',
+  status: 'status',
+  emailVerified: 'emailVerified',
+  rejectionReason: 'rejectionReason',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TechnicianApplicationScalarFieldEnum = (typeof TechnicianApplicationScalarFieldEnum)[keyof typeof TechnicianApplicationScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1449,6 +1545,20 @@ export type ListEnumScheduleStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
 
 
 /**
+ * Reference to a field of type 'ApplicationStatus'
+ */
+export type EnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ApplicationStatus[]'
+ */
+export type ListEnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'AuthProvider'
  */
 export type EnumAuthProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuthProvider'>
@@ -1661,6 +1771,7 @@ export type GlobalOmitConfig = {
   payment?: Prisma.PaymentOmit
   schedule?: Prisma.ScheduleOmit
   substation?: Prisma.SubstationOmit
+  technicianApplication?: Prisma.TechnicianApplicationOmit
   user?: Prisma.UserOmit
   zone?: Prisma.ZoneOmit
 }

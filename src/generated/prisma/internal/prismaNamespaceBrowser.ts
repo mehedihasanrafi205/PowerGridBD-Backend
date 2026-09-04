@@ -58,6 +58,7 @@ export const ModelName = {
   Payment: 'Payment',
   Schedule: 'Schedule',
   Substation: 'Substation',
+  TechnicianApplication: 'TechnicianApplication',
   User: 'User',
   Zone: 'Zone'
 } as const
@@ -176,6 +177,27 @@ export const SubstationScalarFieldEnum = {
 } as const
 
 export type SubstationScalarFieldEnum = (typeof SubstationScalarFieldEnum)[keyof typeof SubstationScalarFieldEnum]
+
+
+export const TechnicianApplicationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  address: 'address',
+  experience: 'experience',
+  bio: 'bio',
+  status: 'status',
+  emailVerified: 'emailVerified',
+  rejectionReason: 'rejectionReason',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TechnicianApplicationScalarFieldEnum = (typeof TechnicianApplicationScalarFieldEnum)[keyof typeof TechnicianApplicationScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
