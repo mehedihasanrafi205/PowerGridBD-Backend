@@ -12,6 +12,7 @@ import { GridRoutes } from "./app/module/grid/grid.route";
 import { OutageRoutes } from "./app/module/outage/outage.route";
 import { ScheduleRoutes } from "./app/module/schedule/schedule.route";
 import { PaymentRoutes } from "./app/module/payment/payment.route";
+import { AnalyticsRoutes } from "./app/module/analytics/analytics.route";
 
 const app: Application = express();
 
@@ -37,6 +38,7 @@ app.use("/api/v1/grid", GridRoutes);
 app.use("/api/v1/outage", OutageRoutes);
 app.use("/api/v1/schedule", ScheduleRoutes);
 app.use("/api/v1/payment", PaymentRoutes);
+app.use("/api/v1/analytics", AnalyticsRoutes);
 
 // Basic route
 app.get("/", async (req: Request, res: Response) => {
