@@ -74,3 +74,11 @@ export const ScheduleStatus = {
 } as const
 
 export type ScheduleStatus = (typeof ScheduleStatus)[keyof typeof ScheduleStatus]
+
+
+export const PaymentType = {
+  PRIORITY_RESTORATION: 'PRIORITY_RESTORATION',
+  SLA_SUBSCRIPTION: 'SLA_SUBSCRIPTION'
+} as const
+
+export type PaymentType = (typeof PaymentType)[keyof typeof PaymentType]

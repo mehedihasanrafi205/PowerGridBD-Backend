@@ -3,6 +3,7 @@ model Payment {
   amount         Float
   transactionId  String        @unique
   gateway        String
+  type           PaymentType
   status         PaymentStatus @default(PENDING)
   paymentDetails Json?
 

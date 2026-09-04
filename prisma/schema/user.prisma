@@ -26,6 +26,9 @@ model User {
   imageUrl      String @default("")
   imagePublicId String @default("")
 
+  slaActive     Boolean   @default(false)
+  slaExpiryDate DateTime?
+
   // Relations
   outageReports OutageReport[] @relation("CustomerReports")
   assignedTasks OutageReport[] @relation("AssignedTechnician")

@@ -103,6 +103,7 @@ export const OutageReportScalarFieldEnum = {
   id: 'id',
   description: 'description',
   status: 'status',
+  isPriority: 'isPriority',
   reportedAt: 'reportedAt',
   resolvedAt: 'resolvedAt',
   customerId: 'customerId',
@@ -120,6 +121,7 @@ export const PaymentScalarFieldEnum = {
   amount: 'amount',
   transactionId: 'transactionId',
   gateway: 'gateway',
+  type: 'type',
   status: 'status',
   paymentDetails: 'paymentDetails',
   userId: 'userId',
@@ -179,6 +181,8 @@ export const UserScalarFieldEnum = {
   deletedAt: 'deletedAt',
   imageUrl: 'imageUrl',
   imagePublicId: 'imagePublicId',
+  slaActive: 'slaActive',
+  slaExpiryDate: 'slaExpiryDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

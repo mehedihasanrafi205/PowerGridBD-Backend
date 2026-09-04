@@ -43,3 +43,8 @@ enum ScheduleStatus {
   COMPLETED
   CANCELLED
 }
+
+enum PaymentType {
+  PRIORITY_RESTORATION
+  SLA_SUBSCRIPTION
+}

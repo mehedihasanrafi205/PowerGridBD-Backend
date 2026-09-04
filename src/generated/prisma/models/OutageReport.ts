@@ -28,6 +28,7 @@ export type OutageReportMinAggregateOutputType = {
   id: string | null
   description: string | null
   status: $Enums.OutageStatus | null
+  isPriority: boolean | null
   reportedAt: Date | null
   resolvedAt: Date | null
   customerId: string | null
@@ -41,6 +42,7 @@ export type OutageReportMaxAggregateOutputType = {
   id: string | null
   description: string | null
   status: $Enums.OutageStatus | null
+  isPriority: boolean | null
   reportedAt: Date | null
   resolvedAt: Date | null
   customerId: string | null
@@ -54,6 +56,7 @@ export type OutageReportCountAggregateOutputType = {
   id: number
   description: number
   status: number
+  isPriority: number
   reportedAt: number
   resolvedAt: number
   customerId: number
@@ -69,6 +72,7 @@ export type OutageReportMinAggregateInputType = {
   id?: true
   description?: true
   status?: true
+  isPriority?: true
   reportedAt?: true
   resolvedAt?: true
   customerId?: true
@@ -82,6 +86,7 @@ export type OutageReportMaxAggregateInputType = {
   id?: true
   description?: true
   status?: true
+  isPriority?: true
   reportedAt?: true
   resolvedAt?: true
   customerId?: true
@@ -95,6 +100,7 @@ export type OutageReportCountAggregateInputType = {
   id?: true
   description?: true
   status?: true
+  isPriority?: true
   reportedAt?: true
   resolvedAt?: true
   customerId?: true
@@ -181,6 +187,7 @@ export type OutageReportGroupByOutputType = {
   id: string
   description: string
   status: $Enums.OutageStatus
+  isPriority: boolean
   reportedAt: Date
   resolvedAt: Date | null
   customerId: string
@@ -215,6 +222,7 @@ export type OutageReportWhereInput = {
   id?: Prisma.StringFilter<"OutageReport"> | string
   description?: Prisma.StringFilter<"OutageReport"> | string
   status?: Prisma.EnumOutageStatusFilter<"OutageReport"> | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFilter<"OutageReport"> | boolean
   reportedAt?: Prisma.DateTimeFilter<"OutageReport"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"OutageReport"> | Date | string | null
   customerId?: Prisma.StringFilter<"OutageReport"> | string
@@ -232,6 +240,7 @@ export type OutageReportOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isPriority?: Prisma.SortOrder
   reportedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   customerId?: Prisma.SortOrder
@@ -252,6 +261,7 @@ export type OutageReportWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.OutageReportWhereInput | Prisma.OutageReportWhereInput[]
   description?: Prisma.StringFilter<"OutageReport"> | string
   status?: Prisma.EnumOutageStatusFilter<"OutageReport"> | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFilter<"OutageReport"> | boolean
   reportedAt?: Prisma.DateTimeFilter<"OutageReport"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"OutageReport"> | Date | string | null
   customerId?: Prisma.StringFilter<"OutageReport"> | string
@@ -269,6 +279,7 @@ export type OutageReportOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isPriority?: Prisma.SortOrder
   reportedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   customerId?: Prisma.SortOrder
@@ -288,6 +299,7 @@ export type OutageReportScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"OutageReport"> | string
   description?: Prisma.StringWithAggregatesFilter<"OutageReport"> | string
   status?: Prisma.EnumOutageStatusWithAggregatesFilter<"OutageReport"> | $Enums.OutageStatus
+  isPriority?: Prisma.BoolWithAggregatesFilter<"OutageReport"> | boolean
   reportedAt?: Prisma.DateTimeWithAggregatesFilter<"OutageReport"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"OutageReport"> | Date | string | null
   customerId?: Prisma.StringWithAggregatesFilter<"OutageReport"> | string
@@ -301,6 +313,7 @@ export type OutageReportCreateInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   createdAt?: Date | string
@@ -315,6 +328,7 @@ export type OutageReportUncheckedCreateInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   customerId: string
@@ -329,6 +343,7 @@ export type OutageReportUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -343,6 +358,7 @@ export type OutageReportUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -357,6 +373,7 @@ export type OutageReportCreateManyInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   customerId: string
@@ -370,6 +387,7 @@ export type OutageReportUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -380,6 +398,7 @@ export type OutageReportUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -403,6 +422,7 @@ export type OutageReportCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isPriority?: Prisma.SortOrder
   reportedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
@@ -416,6 +436,7 @@ export type OutageReportMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isPriority?: Prisma.SortOrder
   reportedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
@@ -429,6 +450,7 @@ export type OutageReportMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isPriority?: Prisma.SortOrder
   reportedAt?: Prisma.SortOrder
   resolvedAt?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
@@ -487,6 +509,10 @@ export type OutageReportUncheckedUpdateManyWithoutAreaNestedInput = {
 
 export type EnumOutageStatusFieldUpdateOperationsInput = {
   set?: $Enums.OutageStatus
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -601,6 +627,7 @@ export type OutageReportCreateWithoutAreaInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   createdAt?: Date | string
@@ -614,6 +641,7 @@ export type OutageReportUncheckedCreateWithoutAreaInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   customerId: string
@@ -656,6 +684,7 @@ export type OutageReportScalarWhereInput = {
   id?: Prisma.StringFilter<"OutageReport"> | string
   description?: Prisma.StringFilter<"OutageReport"> | string
   status?: Prisma.EnumOutageStatusFilter<"OutageReport"> | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFilter<"OutageReport"> | boolean
   reportedAt?: Prisma.DateTimeFilter<"OutageReport"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"OutageReport"> | Date | string | null
   customerId?: Prisma.StringFilter<"OutageReport"> | string
@@ -669,6 +698,7 @@ export type OutageReportCreateWithoutPaymentsInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   createdAt?: Date | string
@@ -682,6 +712,7 @@ export type OutageReportUncheckedCreateWithoutPaymentsInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   customerId: string
@@ -711,6 +742,7 @@ export type OutageReportUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -724,6 +756,7 @@ export type OutageReportUncheckedUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -737,6 +770,7 @@ export type OutageReportCreateWithoutCustomerInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   createdAt?: Date | string
@@ -750,6 +784,7 @@ export type OutageReportUncheckedCreateWithoutCustomerInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   areaId: string
@@ -773,6 +808,7 @@ export type OutageReportCreateWithoutTechnicianInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   createdAt?: Date | string
@@ -786,6 +822,7 @@ export type OutageReportUncheckedCreateWithoutTechnicianInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   customerId: string
@@ -841,6 +878,7 @@ export type OutageReportCreateManyAreaInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   customerId: string
@@ -853,6 +891,7 @@ export type OutageReportUpdateWithoutAreaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -866,6 +905,7 @@ export type OutageReportUncheckedUpdateWithoutAreaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -879,6 +919,7 @@ export type OutageReportUncheckedUpdateManyWithoutAreaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -891,6 +932,7 @@ export type OutageReportCreateManyCustomerInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   areaId: string
@@ -903,6 +945,7 @@ export type OutageReportCreateManyTechnicianInput = {
   id?: string
   description: string
   status?: $Enums.OutageStatus
+  isPriority?: boolean
   reportedAt?: Date | string
   resolvedAt?: Date | string | null
   customerId: string
@@ -915,6 +958,7 @@ export type OutageReportUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -928,6 +972,7 @@ export type OutageReportUncheckedUpdateWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   areaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -941,6 +986,7 @@ export type OutageReportUncheckedUpdateManyWithoutCustomerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   areaId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -953,6 +999,7 @@ export type OutageReportUpdateWithoutTechnicianInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -966,6 +1013,7 @@ export type OutageReportUncheckedUpdateWithoutTechnicianInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -979,6 +1027,7 @@ export type OutageReportUncheckedUpdateManyWithoutTechnicianInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOutageStatusFieldUpdateOperationsInput | $Enums.OutageStatus
+  isPriority?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1022,6 +1071,7 @@ export type OutageReportSelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   description?: boolean
   status?: boolean
+  isPriority?: boolean
   reportedAt?: boolean
   resolvedAt?: boolean
   customerId?: boolean
@@ -1040,6 +1090,7 @@ export type OutageReportSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   description?: boolean
   status?: boolean
+  isPriority?: boolean
   reportedAt?: boolean
   resolvedAt?: boolean
   customerId?: boolean
@@ -1056,6 +1107,7 @@ export type OutageReportSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   description?: boolean
   status?: boolean
+  isPriority?: boolean
   reportedAt?: boolean
   resolvedAt?: boolean
   customerId?: boolean
@@ -1072,6 +1124,7 @@ export type OutageReportSelectScalar = {
   id?: boolean
   description?: boolean
   status?: boolean
+  isPriority?: boolean
   reportedAt?: boolean
   resolvedAt?: boolean
   customerId?: boolean
@@ -1081,7 +1134,7 @@ export type OutageReportSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OutageReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "status" | "reportedAt" | "resolvedAt" | "customerId" | "areaId" | "technicianId" | "createdAt" | "updatedAt", ExtArgs["result"]["outageReport"]>
+export type OutageReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "status" | "isPriority" | "reportedAt" | "resolvedAt" | "customerId" | "areaId" | "technicianId" | "createdAt" | "updatedAt", ExtArgs["result"]["outageReport"]>
 export type OutageReportInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   area?: boolean | Prisma.AreaDefaultArgs<ExtArgs>
@@ -1112,6 +1165,7 @@ export type $OutageReportPayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: string
     description: string
     status: $Enums.OutageStatus
+    isPriority: boolean
     reportedAt: Date
     resolvedAt: Date | null
     customerId: string
@@ -1549,6 +1603,7 @@ export interface OutageReportFieldRefs {
   readonly id: Prisma.FieldRef<"OutageReport", 'String'>
   readonly description: Prisma.FieldRef<"OutageReport", 'String'>
   readonly status: Prisma.FieldRef<"OutageReport", 'OutageStatus'>
+  readonly isPriority: Prisma.FieldRef<"OutageReport", 'Boolean'>
   readonly reportedAt: Prisma.FieldRef<"OutageReport", 'DateTime'>
   readonly resolvedAt: Prisma.FieldRef<"OutageReport", 'DateTime'>
   readonly customerId: Prisma.FieldRef<"OutageReport", 'String'>

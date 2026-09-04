@@ -2,6 +2,7 @@ model OutageReport {
   id          String       @id @default(uuid())
   description String
   status      OutageStatus @default(PENDING)
+  isPriority  Boolean      @default(false)
   reportedAt  DateTime     @default(now())
   resolvedAt  DateTime?
 
