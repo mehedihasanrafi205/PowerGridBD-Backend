@@ -1,9 +1,10 @@
-import { ScheduleStatus, ScheduleType } from "../../../generated/prisma/enums";
+import { ScheduleStatus, ScheduleType, UserRole, UserStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import httpStatus from "http-status";
 import type { IQuery } from "../../interfaces";
 import { calculatePagination, buildMeta } from "../../utils/pagination";
+import { sendTemplatedEmail } from "../../utils/notify";
 import type { ICreateSchedulePayload } from "./schedule.interface";
 
 const createSchedule = async (
@@ -37,6 +38,54 @@ const createSchedule = async (
       createdBy: { select: { id: true, name: true, email: true } },
     },
   });
+
+  // Notify customers in the affected area(s). Best-effort and batched
+  // so a large subscriber base never blocks schedule creation.
+  try {
+    const areaConditions: any[] = [];
+    if (schedule.areaId) {
+      areaConditions.push({ areaId: schedule.areaId });
+    }
+    if (schedule.feederId) {
+      areaConditions.push({ area: { feederId: schedule.feederId } });
+    }
+
+    if (areaConditions.length > 0) {
+      const subscribers = await prisma.user.findMany({
+        where: {
+          OR: areaConditions,
+          isDeleted: false,
+          status: UserStatus.ACTIVE,
+          role: UserRole.CUSTOMER,
+        },
+        select: { name: true, email: true },
+      });
+
+      const BATCH_SIZE = 50;
+      for (let i = 0; i < subscribers.length; i += BATCH_SIZE) {
+        const batch = subscribers.slice(i, i + BATCH_SIZE);
+        await Promise.all(
+          batch.map((subscriber) =>
+            sendTemplatedEmail(
+              subscriber.email,
+              "Load Shedding Notice for Your Area - PowerGridBD",
+              "schedule-notice.ejs",
+              {
+                name: subscriber.name,
+                title: schedule.title,
+                type: schedule.type,
+                startTime: schedule.startTime.toLocaleString(),
+                endTime: schedule.endTime.toLocaleString(),
+                reason: schedule.reason,
+              },
+            ),
+          ),
+        );
+      }
+    }
+  } catch (notifyError) {
+    console.error("[notify] schedule notice fan-out failed:", notifyError);
+  }
 
   return schedule;
 };

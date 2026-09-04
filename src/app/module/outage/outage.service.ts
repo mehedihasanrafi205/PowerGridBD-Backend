@@ -5,6 +5,7 @@ import httpStatus from "http-status";
 import type { IQuery } from "../../interfaces";
 import { calculatePagination, buildMeta } from "../../utils/pagination";
 import { logAudit } from "../../utils/audit";
+import { sendTemplatedEmail } from "../../utils/notify";
 import type {
   IAssignTechnicianPayload,
   ICreateOutageReportPayload,
@@ -46,6 +47,18 @@ const createOutageReport = async (
       },
     },
   });
+
+  await sendTemplatedEmail(
+    outageReport.customer.email,
+    "Outage Report Received - PowerGridBD",
+    "outage-received.ejs",
+    {
+      name: outageReport.customer.name,
+      reportId: outageReport.id,
+      areaName: outageReport.area.name,
+      description: outageReport.description,
+    },
+  );
 
   return outageReport;
 };
@@ -207,10 +220,41 @@ const assignTechnician = async (
     },
     include: {
       area: true,
-      customer: { select: { id: true, name: true, phone: true } },
-      technician: { select: { id: true, name: true, phone: true } },
+      customer: { select: { id: true, name: true, email: true, phone: true } },
+      technician: {
+        select: { id: true, name: true, email: true, phone: true },
+      },
     },
   });
+
+  if (updatedReport.technician) {
+    await sendTemplatedEmail(
+      updatedReport.technician.email,
+      "New Outage Task Assigned - PowerGridBD",
+      "technician-assigned.ejs",
+      {
+        name: updatedReport.technician.name,
+        forTechnician: true,
+        reportId: updatedReport.id,
+        areaName: updatedReport.area.name,
+        description: updatedReport.description,
+        customerName: updatedReport.customer.name,
+        customerPhone: updatedReport.customer.phone ?? "N/A",
+      },
+    );
+  }
+
+  await sendTemplatedEmail(
+    updatedReport.customer.email,
+    "Technician Assigned to Your Outage Report - PowerGridBD",
+    "technician-assigned.ejs",
+    {
+      name: updatedReport.customer.name,
+      forTechnician: false,
+      reportId: updatedReport.id,
+      technicianName: updatedReport.technician?.name ?? "Field crew",
+    },
+  );
 
   await logAudit({
     action: "OUTAGE_TECHNICIAN_ASSIGNED",
@@ -258,10 +302,23 @@ const updateOutageStatus = async (
     },
     include: {
       area: true,
-      customer: { select: { id: true, name: true, phone: true } },
+      customer: { select: { id: true, name: true, email: true, phone: true } },
       technician: { select: { id: true, name: true, phone: true } },
     },
   });
+
+  if (status === OutageStatus.RESOLVED) {
+    await sendTemplatedEmail(
+      updatedReport.customer.email,
+      "Your Outage Has Been Resolved - PowerGridBD",
+      "outage-resolved.ejs",
+      {
+        name: updatedReport.customer.name,
+        reportId: updatedReport.id,
+        areaName: updatedReport.area.name,
+      },
+    );
+  }
 
   await logAudit({
     action: "OUTAGE_STATUS_CHANGED",
