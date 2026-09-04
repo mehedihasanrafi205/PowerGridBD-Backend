@@ -149,14 +149,23 @@ const verifyCustomerEmail = async (payload: IVerifyEmailPayload) => {
     year: new Date().getFullYear(),
   };
 
-  const html = await ejs.renderFile(templatePath, templateData);
+  // Best-effort: the account already exists at this point, so a mail
+  // failure must never fail email verification.
+  try {
+    const html = await ejs.renderFile(templatePath, templateData);
 
-  await transporter.sendMail({
-    from: config.email_sender,
-    to: createdUser.email,
-    subject: "Welcome to PowerGridBD - Account Created Successfully",
-    html,
-  });
+    await transporter.sendMail({
+      from: config.email_sender,
+      to: createdUser.email,
+      subject: "Welcome to PowerGridBD - Account Created Successfully",
+      html,
+    });
+  } catch (emailError) {
+    console.error(
+      "Failed to send welcome email after email verification:",
+      emailError,
+    );
+  }
 
   const jwtPayload = {
     userId: createdUser.id,
@@ -411,8 +420,10 @@ const forgotPassword = async (payload: IForgotPasswordPayload) => {
   const { email } = payload;
   const user = await prisma.user.findUnique({ where: { email } });
 
+  // Always respond successfully to avoid leaking account existence.
+  // An OTP email is only sent when the account actually exists.
   if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    return;
   }
 
   const otp = crypto.randomInt(100000, 1000000).toString();
