@@ -4,6 +4,9 @@ import httpStatus from "http-status";
 import { cloudinary } from "../../lib/cloudinary";
 import { UploadApiResponse } from "cloudinary";
 import { UserRole, UserStatus } from "../../../generated/prisma/enums";
+import type { IQuery } from "../../interfaces";
+import { calculatePagination, buildMeta } from "../../utils/pagination";
+import { logAudit } from "../../utils/audit";
 
 const uploadProfileImage = async (buffer: Buffer, userId: string) => {
   const currentUser = await prisma.user.findUnique({
@@ -95,19 +98,19 @@ const updateProfile = async (
 
 //!ADMIN 
 
-const getAllUsers = async (query: Record<string, unknown>) => {
-  const { page = 1, limit = 10, searchTerm, role, status } = query;
-  const pageNumber = Number(page);
-  const limitNumber = Number(limit);
-  const skip = (pageNumber - 1) * limitNumber;
+const getAllUsers = async (query: IQuery) => {
+  const { page, limit, skip, sortBy, sortOrder } = calculatePagination(query, {
+    sortBy: "createdAt",
+  });
+  const { searchTerm, role, status } = query;
 
   const andConditions: any[] = [{ isDeleted: false }];
 
   if (searchTerm) {
     andConditions.push({
       OR: [
-        { name: { contains: searchTerm as string, mode: "insensitive" } },
-        { email: { contains: searchTerm as string, mode: "insensitive" } },
+        { name: { contains: String(searchTerm), mode: "insensitive" } },
+        { email: { contains: String(searchTerm), mode: "insensitive" } },
       ],
     });
   }
@@ -122,23 +125,19 @@ const getAllUsers = async (query: Record<string, unknown>) => {
 
   const whereConditions = { AND: andConditions };
 
-  const users = await prisma.user.findMany({
-    where: whereConditions,
-    skip,
-    take: limitNumber,
-    orderBy: { createdAt: "desc" },
-    omit: { password: true },
-  });
-
-  const total = await prisma.user.count({ where: whereConditions });
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      where: whereConditions,
+      skip,
+      take: limit,
+      orderBy: { [sortBy]: sortOrder },
+      omit: { password: true },
+    }),
+    prisma.user.count({ where: whereConditions }),
+  ]);
 
   return {
-    meta: {
-      page: pageNumber,
-      limit: limitNumber,
-      total,
-      totalPages: Math.ceil(total / limitNumber),
-    },
+    meta: buildMeta(total, page, limit),
     data: users,
   };
 };
@@ -158,7 +157,11 @@ const getUserById = async (id: string) => {
 };
 
 
-const updateUserStatus = async (id: string, status: UserStatus) => {
+const updateUserStatus = async (
+  id: string,
+  status: UserStatus,
+  actorId?: string,
+) => {
   const user = await prisma.user.findUnique({ where: { id } });
   if (!user || user.isDeleted) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
@@ -170,11 +173,19 @@ const updateUserStatus = async (id: string, status: UserStatus) => {
     omit: { password: true },
   });
 
+  await logAudit({
+    action: "USER_STATUS_CHANGED",
+    entity: "User",
+    entityId: id,
+    actorId,
+    metadata: { from: user.status, to: status },
+  });
+
   return updatedUser;
 };
 
 
-const updateUserRole = async (id: string, role: UserRole) => {
+const updateUserRole = async (id: string, role: UserRole, actorId?: string) => {
   const user = await prisma.user.findUnique({ where: { id } });
   if (!user || user.isDeleted) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
@@ -186,11 +197,19 @@ const updateUserRole = async (id: string, role: UserRole) => {
     omit: { password: true },
   });
 
+  await logAudit({
+    action: "USER_ROLE_CHANGED",
+    entity: "User",
+    entityId: id,
+    actorId,
+    metadata: { from: user.role, to: role },
+  });
+
   return updatedUser;
 };
 
 
-const softDeleteUser = async (id: string) => {
+const softDeleteUser = async (id: string, actorId?: string) => {
   const user = await prisma.user.findUnique({ where: { id } });
   if (!user || user.isDeleted) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
@@ -200,6 +219,13 @@ const softDeleteUser = async (id: string) => {
     where: { id },
     data: { isDeleted: true, status: UserStatus.BLOCKED },
     omit: { password: true },
+  });
+
+  await logAudit({
+    action: "USER_SOFT_DELETED",
+    entity: "User",
+    entityId: id,
+    actorId,
   });
 
   return deletedUser;
