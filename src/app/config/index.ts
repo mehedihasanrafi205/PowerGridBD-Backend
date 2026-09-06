@@ -37,4 +37,6 @@ export default {
   sslc_store_id: process.env.SSLC_STORE_ID!,
   sslc_store_passwd: process.env.SSLC_STORE_PASSWORD!,
   sslc_is_live: process.env.SSLC_IS_LIVE === "true",
+  priority_restoration_price: Number(process.env.PRIORITY_RESTORATION_PRICE ?? 500),
+  sla_subscription_price: Number(process.env.SLA_SUBSCRIPTION_PRICE ?? 2000),
 };

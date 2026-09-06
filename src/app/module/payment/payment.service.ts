@@ -28,6 +28,19 @@ const initiatePayment = async (
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
 
+  // Prices are server-authoritative: the client-sent amount must match
+  // the configured product price to prevent underpayment.
+  const expectedAmount =
+    payload.paymentType === PaymentType.PRIORITY_RESTORATION
+      ? config.priority_restoration_price
+      : config.sla_subscription_price;
+  if (Number(payload.amount) !== expectedAmount) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Invalid amount for ${payload.paymentType}. Expected BDT ${expectedAmount}.`,
+    );
+  }
+
   if (payload.paymentType === PaymentType.PRIORITY_RESTORATION) {
     const report = await prisma.outageReport.findUnique({
       where: { id: payload.outageReportId! },
