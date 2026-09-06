@@ -205,10 +205,11 @@ Writes: 🟣🟡 · Reads: 🟤. Resources: `/zones`, `/substations`, `/feeders`
 
 | Method | Path | Access | Description |
 |---|---|---|---|
-| POST | `/` | 🟣🟡 | Create schedule (requires `feederId` or `areaId`) |
+| POST | `/` | 🟣🟡 | Create schedule (requires `feederId` or `areaId`; future start, `end > start`, no overlapping coverage) |
 | GET | `/` | 🟤 | List schedules (paginated, filtered) |
 | GET | `/:id` | 🟤 | Single schedule |
-| PATCH | `/:id/status` | 🟣🟡 | Update schedule status |
+| PATCH | `/:id` | 🟣🟡 | Update schedule (re-validates dates + conflicts; blocked on completed/cancelled) |
+| PATCH | `/:id/status` | 🟣🟡 | Update status (`SCHEDULED→ONGOING→COMPLETED`, `CANCELLED` terminal) |
 | DELETE | `/:id` | 🟣🟡 | Delete schedule |
 
 ### Payment — `/payment`

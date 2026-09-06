@@ -1155,6 +1155,35 @@
           "response": []
         },
         {
+          "name": "PATCH Update Schedule",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated title\",\n  \"reason\": \"Extended maintenance window\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/schedule/{{schedule_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "schedule",
+                "{{schedule_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Update Schedule Status",
           "request": {
             "method": "PATCH",
