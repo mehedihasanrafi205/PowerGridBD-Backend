@@ -6,6 +6,7 @@ import type { IQuery } from "../../interfaces";
 import { calculatePagination, buildMeta } from "../../utils/pagination";
 import { logAudit } from "../../utils/audit";
 import { sendTemplatedEmail } from "../../utils/notify";
+import { parseDateRangeFilter } from "../../utils/datetime";
 import type {
   IAssignTechnicianPayload,
   ICreateOutageReportPayload,
@@ -120,10 +121,9 @@ const getAllOutageReports = async (
   }
 
   if (query.from || query.to) {
-    const reportedAt: { gte?: Date; lte?: Date } = {};
-    if (query.from) reportedAt.gte = new Date(String(query.from));
-    if (query.to) reportedAt.lte = new Date(String(query.to));
-    andConditions.push({ reportedAt });
+    andConditions.push({
+      reportedAt: parseDateRangeFilter(query.from, query.to),
+    });
   }
 
   const where = andConditions.length > 0 ? { AND: andConditions } : {};
@@ -285,6 +285,14 @@ const assignTechnician = async (
   return updatedReport;
 };
 
+const OUTAGE_TRANSITIONS: Record<OutageStatus, OutageStatus[]> = {
+  [OutageStatus.PENDING]: [OutageStatus.ASSIGNED, OutageStatus.CANCELLED],
+  [OutageStatus.ASSIGNED]: [OutageStatus.IN_PROGRESS, OutageStatus.CANCELLED],
+  [OutageStatus.IN_PROGRESS]: [OutageStatus.RESOLVED, OutageStatus.CANCELLED],
+  [OutageStatus.RESOLVED]: [],
+  [OutageStatus.CANCELLED]: [],
+};
+
 const updateOutageStatus = async (
   user: { userId: string; role: UserRole },
   id: string,
@@ -305,6 +313,16 @@ const updateOutageStatus = async (
         "You are not authorized to update this outage report",
       );
     }
+  }
+
+  if (
+    isOutageExist.status !== status &&
+    !OUTAGE_TRANSITIONS[isOutageExist.status].includes(status)
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Invalid outage status transition from ${isOutageExist.status} to ${status}`,
+    );
   }
 
   let resolvedAt = isOutageExist.resolvedAt;
