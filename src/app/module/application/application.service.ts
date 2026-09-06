@@ -11,6 +11,7 @@ import { AppError } from "../../utils/AppError";
 import { logAudit } from "../../utils/audit";
 import type { IQuery } from "../../interfaces";
 import { calculatePagination, buildMeta } from "../../utils/pagination";
+import { subHours } from "date-fns";
 import {
   ApplicationStatus,
   UserRole,
@@ -353,8 +354,7 @@ const getMyApplicationStatus = async (email: string) => {
 };
 
 const purgeUnverifiedApplications = async (olderThanHours = 1) => {
-  const cutoff = new Date();
-  cutoff.setHours(cutoff.getHours() - olderThanHours);
+  const cutoff = subHours(new Date(), olderThanHours);
 
   const result = await prisma.technicianApplication.deleteMany({
     where: {

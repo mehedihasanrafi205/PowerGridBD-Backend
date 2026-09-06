@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import { addDays } from "date-fns";
 import { PaymentStatus, PaymentType } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import {
@@ -272,8 +273,7 @@ async function applyCompletedSideEffects(
   }
 
   if (payment.type === PaymentType.SLA_SUBSCRIPTION) {
-    const expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + 30);
+    const expiryDate = addDays(new Date(), 30);
     await db.user.update({
       where: { id: payment.userId },
       data: {

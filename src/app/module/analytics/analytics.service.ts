@@ -9,6 +9,8 @@ import {
 import { prisma } from "../../lib/prisma";
 import type { IQuery } from "../../interfaces";
 import { calculatePagination, buildMeta } from "../../utils/pagination";
+import { minutesBetween, toDayKey } from "../../utils/datetime";
+import { addDays, getHours, startOfDay, subDays } from "date-fns";
 
 const ACTIVE_OUTAGE_STATUSES: OutageStatus[] = [
   OutageStatus.PENDING,
@@ -156,9 +158,7 @@ const getPerformanceMetrics = async () => {
   const mttrMinutes =
     resolved.length > 0
       ? resolved.reduce(
-          (sum, r) =>
-            sum +
-            (r.resolvedAt!.getTime() - r.reportedAt.getTime()) / 60000,
+          (sum, r) => sum + minutesBetween(r.reportedAt, r.resolvedAt!),
           0,
         ) / resolved.length
       : 0;
@@ -166,8 +166,7 @@ const getPerformanceMetrics = async () => {
   const avgAssignmentMinutes =
     assigned.length > 0
       ? assigned.reduce(
-          (sum, r) =>
-            sum + (r.assignedAt!.getTime() - r.createdAt.getTime()) / 60000,
+          (sum, r) => sum + minutesBetween(r.createdAt, r.assignedAt!),
           0,
         ) / assigned.length
       : 0;
@@ -346,9 +345,8 @@ const getFinancialAnalytics = async () => {
 // ─── 5. Historical trends & reporting ─────────────────────────────────
 
 const getTrendsAnalytics = async (days = 30) => {
-  const since = new Date();
-  since.setDate(since.getDate() - days);
-  since.setHours(0, 0, 0, 0);
+  // Server-local day boundaries (see timezone policy in utils/datetime.ts).
+  const since = startOfDay(subDays(new Date(), days - 1));
 
   const [reports, schedules] = await Promise.all([
     prisma.outageReport.findMany({
@@ -363,18 +361,16 @@ const getTrendsAnalytics = async (days = 30) => {
 
   const buckets = new Map<string, number>();
   for (let i = 0; i < days; i++) {
-    const d = new Date(since);
-    d.setDate(d.getDate() + i);
-    buckets.set(d.toISOString().slice(0, 10), 0);
+    buckets.set(toDayKey(addDays(since, i)), 0);
   }
   for (const r of reports) {
-    const key = r.createdAt.toISOString().slice(0, 10);
+    const key = toDayKey(r.createdAt);
     buckets.set(key, (buckets.get(key) ?? 0) + 1);
   }
 
   const hourly = new Array<number>(24).fill(0);
   for (const s of schedules) {
-    hourly[s.startTime.getHours()] += 1;
+    hourly[getHours(s.startTime)] += 1;
   }
 
   return {
@@ -454,9 +450,7 @@ const getTechnicianSummary = async (userId: string) => {
   const avgResolutionMinutes =
     resolved.length > 0
       ? resolved.reduce(
-          (sum, r) =>
-            sum +
-            (r.resolvedAt!.getTime() - r.assignedAt!.getTime()) / 60000,
+          (sum, r) => sum + minutesBetween(r.assignedAt!, r.resolvedAt!),
           0,
         ) / resolved.length
       : 0;
