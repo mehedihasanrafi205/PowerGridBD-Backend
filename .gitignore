@@ -9,3 +9,4 @@ dist
 .env
 AGENTS.md
 .vscode
+skills-lock.json
