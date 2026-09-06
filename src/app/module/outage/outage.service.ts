@@ -24,11 +24,22 @@ const createOutageReport = async (
     throw new AppError(httpStatus.NOT_FOUND, "Area not found");
   }
 
+  // Active SLA subscribers get priority handling on every new report.
+  const subscriber = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { slaActive: true, slaExpiryDate: true },
+  });
+  const hasActiveSla =
+    !!subscriber?.slaActive &&
+    !!subscriber.slaExpiryDate &&
+    subscriber.slaExpiryDate > new Date();
+
   const outageReport = await prisma.outageReport.create({
     data: {
       description: payload.description,
       areaId: payload.areaId,
       customerId: userId,
+      isPriority: hasActiveSla,
     },
     include: {
       area: {
@@ -117,6 +128,13 @@ const getAllOutageReports = async (
 
   const where = andConditions.length > 0 ? { AND: andConditions } : {};
 
+  // Staff work queues always surface priority reports first; customers
+  // keep a plain chronological view of their own reports.
+  const orderBy =
+    user.role === UserRole.CUSTOMER
+      ? { [sortBy]: sortOrder }
+      : [{ isPriority: "desc" as const }, { [sortBy]: sortOrder }];
+
   const [reports, total] = await Promise.all([
     prisma.outageReport.findMany({
       where,
@@ -125,7 +143,7 @@ const getAllOutageReports = async (
         customer: { select: { id: true, name: true, phone: true } },
         technician: { select: { id: true, name: true, phone: true } },
       },
-      orderBy: { [sortBy]: sortOrder },
+      orderBy,
       skip,
       take: limit,
     }),
