@@ -5,7 +5,127 @@ import httpStatus from "http-status";
 import type { IQuery } from "../../interfaces";
 import { calculatePagination, buildMeta } from "../../utils/pagination";
 import { sendTemplatedEmail } from "../../utils/notify";
-import type { ICreateSchedulePayload } from "./schedule.interface";
+import {
+  formatDateTime,
+  parseDateRangeFilter,
+  parseDateTime,
+  rangesOverlap,
+} from "../../utils/datetime";
+import type {
+  ICreateSchedulePayload,
+  IUpdateSchedulePayload,
+} from "./schedule.interface";
+
+const IMMUTABLE_SCHEDULE_STATUSES: ScheduleStatus[] = [
+  ScheduleStatus.COMPLETED,
+  ScheduleStatus.CANCELLED,
+];
+
+const SCHEDULE_TRANSITIONS: Record<ScheduleStatus, ScheduleStatus[]> = {
+  [ScheduleStatus.SCHEDULED]: [ScheduleStatus.ONGOING, ScheduleStatus.CANCELLED],
+  [ScheduleStatus.ONGOING]: [ScheduleStatus.COMPLETED, ScheduleStatus.CANCELLED],
+  [ScheduleStatus.COMPLETED]: [],
+  [ScheduleStatus.CANCELLED]: [],
+};
+
+const assertValidScheduleTransition = (
+  from: ScheduleStatus,
+  to: ScheduleStatus,
+) => {
+  if (from === to) return;
+  if (!SCHEDULE_TRANSITIONS[from].includes(to)) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Invalid schedule status transition from ${from} to ${to}`,
+    );
+  }
+};
+
+interface IScheduleWindow {
+  feederId?: string | null;
+  areaId?: string | null;
+  startTime: Date;
+  endTime: Date;
+}
+
+/** Feeder ids a schedule window covers (direct + via its area). */
+const coveredFeederIds = async (
+  feederId?: string | null,
+  areaId?: string | null,
+): Promise<Set<string>> => {
+  const ids = new Set<string>();
+  if (feederId) ids.add(feederId);
+  if (areaId) {
+    const area = await prisma.area.findUnique({
+      where: { id: areaId },
+      select: { feederId: true },
+    });
+    if (area) ids.add(area.feederId);
+  }
+  return ids;
+};
+
+/**
+ * Reject overlapping coverage: same feeder, same area, or an area
+ * schedule overlapping a feeder schedule that covers that area (and vice versa).
+ */
+const assertNoScheduleConflict = async (
+  window: IScheduleWindow,
+  excludeId?: string,
+) => {
+  const feeders = await coveredFeederIds(window.feederId, window.areaId);
+
+  const orConditions: any[] = [];
+  if (feeders.size > 0) {
+    orConditions.push({ feederId: { in: [...feeders] } });
+    orConditions.push({ area: { feederId: { in: [...feeders] } } });
+  }
+  if (window.areaId) orConditions.push({ areaId: window.areaId });
+  if (orConditions.length === 0) return;
+
+  const candidates = await prisma.schedule.findMany({
+    where: {
+      ...(excludeId ? { id: { not: excludeId } } : {}),
+      OR: orConditions,
+      status: { in: [ScheduleStatus.SCHEDULED, ScheduleStatus.ONGOING] },
+    },
+    select: {
+      title: true,
+      feederId: true,
+      areaId: true,
+      startTime: true,
+      endTime: true,
+      area: { select: { feederId: true } },
+    },
+  });
+
+  for (const candidate of candidates) {
+    const candidateFeeders = new Set<string>();
+    if (candidate.feederId) candidateFeeders.add(candidate.feederId);
+    if (candidate.area?.feederId) candidateFeeders.add(candidate.area.feederId);
+
+    const sameArea =
+      !!window.areaId && candidate.areaId === window.areaId;
+    const sharedFeeder = [...feeders].some((id) =>
+      candidateFeeders.has(id),
+    );
+
+    if (
+      (sameArea || sharedFeeder) &&
+      rangesOverlap(
+        window.startTime,
+        window.endTime,
+        candidate.startTime,
+        candidate.endTime,
+      )
+    ) {
+      throw new AppError(
+        httpStatus.CONFLICT,
+        `Schedule conflicts with existing schedule "${candidate.title}" covering the same feeder/area`,
+      );
+    }
+  }
+};
 
 const createSchedule = async (
   userId: string,
@@ -25,11 +145,35 @@ const createSchedule = async (
     if (!area) throw new AppError(httpStatus.NOT_FOUND, "Area not found");
   }
 
+  const startTime = parseDateTime(payload.startTime, "startTime");
+  const endTime = parseDateTime(payload.endTime, "endTime");
+
+  if (endTime <= startTime) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "End time must be after start time",
+    );
+  }
+
+  if (startTime <= new Date()) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Schedule start time must be in the future",
+    );
+  }
+
+  await assertNoScheduleConflict({
+    feederId: payload.feederId,
+    areaId: payload.areaId,
+    startTime,
+    endTime,
+  });
+
   const schedule = await prisma.schedule.create({
     data: {
       ...payload,
-      startTime: new Date(payload.startTime),
-      endTime: new Date(payload.endTime),
+      startTime,
+      endTime,
       createdById: userId,
     },
     include: {
@@ -74,8 +218,8 @@ const createSchedule = async (
                 name: subscriber.name,
                 title: schedule.title,
                 type: schedule.type,
-                startTime: schedule.startTime.toLocaleString(),
-                endTime: schedule.endTime.toLocaleString(),
+                startTime: formatDateTime(schedule.startTime),
+                endTime: formatDateTime(schedule.endTime),
                 reason: schedule.reason,
               },
             ),
@@ -124,10 +268,9 @@ const getAllSchedules = async (query: IQuery = {}) => {
   }
 
   if (query.from || query.to) {
-    const startTime: { gte?: Date; lte?: Date } = {};
-    if (query.from) startTime.gte = new Date(String(query.from));
-    if (query.to) startTime.lte = new Date(String(query.to));
-    andConditions.push({ startTime });
+    andConditions.push({
+      startTime: parseDateRangeFilter(query.from, query.to),
+    });
   }
 
   const where = andConditions.length > 0 ? { AND: andConditions } : {};
@@ -166,11 +309,83 @@ const getSingleSchedule = async (id: string) => {
 
   return schedule;
 };
+const updateSchedule = async (id: string, payload: IUpdateSchedulePayload) => {
+  const existing = await prisma.schedule.findUnique({ where: { id } });
+  if (!existing) {
+    throw new AppError(httpStatus.NOT_FOUND, "Schedule not found");
+  }
+
+  if (IMMUTABLE_SCHEDULE_STATUSES.includes(existing.status)) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Cannot update a ${existing.status} schedule`,
+    );
+  }
+
+  if (payload.feederId) {
+    const feeder = await prisma.feeder.findUnique({
+      where: { id: payload.feederId },
+    });
+    if (!feeder) throw new AppError(httpStatus.NOT_FOUND, "Feeder not found");
+  }
+
+  if (payload.areaId) {
+    const area = await prisma.area.findUnique({
+      where: { id: payload.areaId },
+    });
+    if (!area) throw new AppError(httpStatus.NOT_FOUND, "Area not found");
+  }
+
+  const startTime = payload.startTime
+    ? parseDateTime(payload.startTime, "startTime")
+    : existing.startTime;
+  const endTime = payload.endTime
+    ? parseDateTime(payload.endTime, "endTime")
+    : existing.endTime;
+
+  if (endTime <= startTime) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "End time must be after start time",
+    );
+  }
+
+  const feederId = payload.feederId ?? existing.feederId;
+  const areaId = payload.areaId ?? existing.areaId;
+
+  await assertNoScheduleConflict({ feederId, areaId, startTime, endTime }, id);
+
+  const updatedSchedule = await prisma.schedule.update({
+    where: { id },
+    data: {
+      ...(payload.title !== undefined ? { title: payload.title } : {}),
+      ...(payload.description !== undefined
+        ? { description: payload.description }
+        : {}),
+      ...(payload.reason !== undefined ? { reason: payload.reason } : {}),
+      ...(payload.type !== undefined ? { type: payload.type } : {}),
+      ...(payload.feederId !== undefined ? { feederId: payload.feederId } : {}),
+      ...(payload.areaId !== undefined ? { areaId: payload.areaId } : {}),
+      startTime,
+      endTime,
+    },
+    include: {
+      feeder: true,
+      area: true,
+      createdBy: { select: { id: true, name: true } },
+    },
+  });
+
+  return updatedSchedule;
+};
+
 const updateScheduleStatus = async (id: string, status: ScheduleStatus) => {
   const schedule = await prisma.schedule.findUnique({ where: { id } });
   if (!schedule) {
     throw new AppError(httpStatus.NOT_FOUND, "Schedule not found");
   }
+
+  assertValidScheduleTransition(schedule.status, status);
 
   const updatedSchedule = await prisma.schedule.update({
     where: { id },
@@ -198,6 +413,7 @@ export const scheduleService = {
   createSchedule,
   getAllSchedules,
   getSingleSchedule,
+  updateSchedule,
   updateScheduleStatus,
   deleteSchedule,
 };

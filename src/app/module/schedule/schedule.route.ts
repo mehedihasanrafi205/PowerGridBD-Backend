@@ -37,6 +37,13 @@ router.get(
 );
 
 router.patch(
+  "/:id",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  validateRequest(scheduleValidation.updateScheduleValidationSchema),
+  scheduleController.updateSchedule,
+);
+
+router.patch(
   "/:id/status",
   auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
   validateRequest(scheduleValidation.updateScheduleStatusValidationSchema),
