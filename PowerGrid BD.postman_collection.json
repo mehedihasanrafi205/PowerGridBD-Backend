@@ -1426,7 +1426,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"amount\": 3000,\n  \"currency\": \"BDT\",\n  \"paymentType\": \"SLA_SUBSCRIPTION\"\n}",
+              "raw": "{\n  \"amount\": 2000,\n  \"currency\": \"BDT\",\n  \"paymentType\": \"SLA_SUBSCRIPTION\"\n}",
               "options": {
                 "raw": {
                   "language": "json"

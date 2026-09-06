@@ -121,9 +121,9 @@ Shared code: `src/app/config` (central env access), `src/app/lib` (prisma, redis
 
 Native-`fetch` integration in `src/app/lib/sslcommerz.ts` — **no third-party payment SDK**. Sandbox base `https://sandbox.sslcommerz.com`, live `https://securepay.sslcommerz.com` (toggled by `SSLC_IS_LIVE`).
 
-Two payment types (`PaymentType`):
-- **`PRIORITY_RESTORATION`** — linked to one of the customer's own outage reports; on success the report becomes `isPriority: true`.
-- **`SLA_SUBSCRIPTION`** — standalone; on success the user gets `slaActive: true` with a 30-day `slaExpiryDate`.
+Two payment types (`PaymentType`) with server-enforced prices (`PRIORITY_RESTORATION_PRICE` / `SLA_SUBSCRIPTION_PRICE` in BDT — client-sent amounts must match exactly):
+- **`PRIORITY_RESTORATION`** — linked to one of the customer's own outage reports; on success the report becomes `isPriority: true` and jumps to the top of every staff work queue (operator/technician lists sort priority first).
+- **`SLA_SUBSCRIPTION`** — standalone 30-day commercial coverage (`slaActive: true` + `slaExpiryDate`); every new outage the subscriber reports is automatically flagged priority, with a 7-day expiry warning email and auto-deactivation at expiry.
 
 How confirmation works:
 1. `POST /payment` creates a `PENDING` payment, opens an SSLCommerz session, and returns `{ transactionId, gatewayUrl }`.
