@@ -22,7 +22,7 @@ import type {
   IVerifyApplicationEmailPayload,
 } from "./application.interface";
 
-const OTP_TTL_SECONDS = 60 * 60; // 1 hour
+const OTP_TTL_SECONDS = 60 * 15; // 15 minutes
 
 const otpKeyFor = (email: string) => `technician-application-otp:${email}`;
 

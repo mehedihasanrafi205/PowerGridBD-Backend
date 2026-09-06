@@ -93,7 +93,7 @@
         <p class="otp-code"><%= otp %></p>
       </div>
 
-      <p class="expiry-note">This OTP is valid for <strong>15 minutes</strong>. Do not share this code with anyone.</p>
+      <p class="expiry-note">This OTP is valid for <strong><%= expirationMinutes || 15 %> minutes</strong>. Do not share this code with anyone.</p>
     </div>
     <div class="email-footer">
       <p>&copy; <%= new Date().getFullYear() %> PowerGridBD. All rights reserved.</p>

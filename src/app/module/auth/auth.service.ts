@@ -52,7 +52,7 @@ const registerCustomer = async (payload: IRegisterCustomerPayload) => {
 
   const otpKey = `customer-registration-otp:${email}`;
   const otpValue = crypto.randomInt(100000, 1000000).toString();
-  const expirationSeconds = 60 * 5; // 5 minutes
+  const expirationSeconds = 60 * 15; // 15 minutes
 
   await redisClient.set(otpKey, otpValue, {
     expiration: { type: "EX", value: expirationSeconds },
@@ -429,7 +429,7 @@ const forgotPassword = async (payload: IForgotPasswordPayload) => {
 
   const otp = crypto.randomInt(100000, 1000000).toString();
   const key = `forgot-password-otp:${email}`;
-  const expirationSeconds = 60 * 5;
+  const expirationSeconds = 60 * 15; // 15 minutes
 
   await redisClient.set(key, otp, {
     expiration: { type: "EX", value: expirationSeconds },
@@ -442,7 +442,7 @@ const forgotPassword = async (payload: IForgotPasswordPayload) => {
   const templateData = {
     name: user.name,
     otp,
-    expirationMinutes: 5,
+    expirationMinutes: expirationSeconds / 60,
     year: new Date().getFullYear(),
   };
   const html = await ejs.renderFile(templatePath, templateData);
