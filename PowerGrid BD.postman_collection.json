@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "fdea4322-c45d-4964-96d7-6b05f14955b5",
+    "_postman_id": "86ff6c12-575e-408d-b7d7-c449caee7112",
     "name": "PowerGrid BD",
+    "description": "PowerGridBD Backend API — 50 endpoints across Auth, User, Grid, Schedule, Outage, and Payment modules.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "45887971",
-    "description": "PowerGridBD Backend API — 50 endpoints across Auth, User, Grid, Schedule, Outage, and Payment modules."
+    "_exporter_id": "45887971"
   },
   "item": [
     {
@@ -382,7 +382,7 @@
                 {
                   "key": "profileImage",
                   "type": "file",
-                  "src": ""
+                  "value": ""
                 }
               ]
             },
@@ -446,7 +446,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/v1/user",
+              "raw": "{{base_url}}/api/v1/user?page=1&limit=10&searchTerm=&role=&status=&sortBy=createdAt&sortOrder=desc",
               "host": [
                 "{{base_url}}"
               ],
@@ -454,6 +454,36 @@
                 "api",
                 "v1",
                 "user"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "searchTerm",
+                  "value": ""
+                },
+                {
+                  "key": "role",
+                  "value": ""
+                },
+                {
+                  "key": "status",
+                  "value": ""
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
               ]
             }
           },
@@ -627,7 +657,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/grid/zones",
+                  "raw": "{{base_url}}/api/v1/grid/zones?page=1&limit=10&searchTerm=&sortBy=createdAt&sortOrder=desc",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -636,6 +666,28 @@
                     "v1",
                     "grid",
                     "zones"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "searchTerm",
+                      "value": ""
+                    },
+                    {
+                      "key": "sortBy",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    }
                   ]
                 }
               },
@@ -742,7 +794,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/grid/substations",
+                  "raw": "{{base_url}}/api/v1/grid/substations?page=1&limit=10&searchTerm=&zoneId={{zone_id}}&sortBy=createdAt&sortOrder=desc",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -751,6 +803,32 @@
                     "v1",
                     "grid",
                     "substations"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "searchTerm",
+                      "value": ""
+                    },
+                    {
+                      "key": "zoneId",
+                      "value": "{{zone_id}}"
+                    },
+                    {
+                      "key": "sortBy",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    }
                   ]
                 }
               },
@@ -857,7 +935,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/grid/feeders",
+                  "raw": "{{base_url}}/api/v1/grid/feeders?page=1&limit=10&searchTerm=&substationId={{substation_id}}&sortBy=createdAt&sortOrder=desc",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -866,6 +944,32 @@
                     "v1",
                     "grid",
                     "feeders"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "searchTerm",
+                      "value": ""
+                    },
+                    {
+                      "key": "substationId",
+                      "value": "{{substation_id}}"
+                    },
+                    {
+                      "key": "sortBy",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    }
                   ]
                 }
               },
@@ -972,7 +1076,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/grid/areas",
+                  "raw": "{{base_url}}/api/v1/grid/areas?page=1&limit=10&searchTerm=&feederId={{feeder_id}}&sortBy=createdAt&sortOrder=desc",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -981,6 +1085,32 @@
                     "v1",
                     "grid",
                     "areas"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "searchTerm",
+                      "value": ""
+                    },
+                    {
+                      "key": "feederId",
+                      "value": "{{feeder_id}}"
+                    },
+                    {
+                      "key": "sortBy",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    }
                   ]
                 }
               },
@@ -1121,7 +1251,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/schedule",
+              "raw": "{{base_url}}/api/v1/schedule?page=1&limit=10&searchTerm=&status=&type=&feederId={{feeder_id}}&areaId={{area_id}}&from=&to=&sortBy=startTime&sortOrder=desc",
               "host": [
                 "{{base_url}}"
               ],
@@ -1129,6 +1259,52 @@
                 "api",
                 "v1",
                 "schedule"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "searchTerm",
+                  "value": ""
+                },
+                {
+                  "key": "status",
+                  "value": ""
+                },
+                {
+                  "key": "type",
+                  "value": ""
+                },
+                {
+                  "key": "feederId",
+                  "value": "{{feeder_id}}"
+                },
+                {
+                  "key": "areaId",
+                  "value": "{{area_id}}"
+                },
+                {
+                  "key": "from",
+                  "value": ""
+                },
+                {
+                  "key": "to",
+                  "value": ""
+                },
+                {
+                  "key": "sortBy",
+                  "value": "startTime"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
               ]
             }
           },
@@ -1282,7 +1458,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/outage",
+              "raw": "{{base_url}}/api/v1/outage?page=1&limit=10&searchTerm=&status=&areaId={{area_id}}&isPriority=&from=&to=&sortBy=reportedAt&sortOrder=desc",
               "host": [
                 "{{base_url}}"
               ],
@@ -1290,6 +1466,48 @@
                 "api",
                 "v1",
                 "outage"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "searchTerm",
+                  "value": ""
+                },
+                {
+                  "key": "status",
+                  "value": ""
+                },
+                {
+                  "key": "areaId",
+                  "value": "{{area_id}}"
+                },
+                {
+                  "key": "isPriority",
+                  "value": ""
+                },
+                {
+                  "key": "from",
+                  "value": ""
+                },
+                {
+                  "key": "to",
+                  "value": ""
+                },
+                {
+                  "key": "sortBy",
+                  "value": "reportedAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
               ]
             }
           },
@@ -1691,7 +1909,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/payment/my-payments?page=1&limit=10",
+              "raw": "{{base_url}}/api/v1/payment/my-payments?page=1&limit=10&status=&type=",
               "host": [
                 "{{base_url}}"
               ],
@@ -1709,6 +1927,14 @@
                 {
                   "key": "limit",
                   "value": "10"
+                },
+                {
+                  "key": "status",
+                  "value": ""
+                },
+                {
+                  "key": "type",
+                  "value": ""
                 }
               ]
             }
@@ -1906,7 +2132,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/analytics/audit-logs?page=1&limit=20",
+              "raw": "{{base_url}}/api/v1/analytics/audit-logs?page=1&limit=20&entity=&action=",
               "host": [
                 "{{base_url}}"
               ],
@@ -1924,6 +2150,14 @@
                 {
                   "key": "limit",
                   "value": "20"
+                },
+                {
+                  "key": "entity",
+                  "value": ""
+                },
+                {
+                  "key": "action",
+                  "value": ""
                 }
               ]
             }
@@ -2053,7 +2287,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/applications?page=1&limit=10",
+              "raw": "{{base_url}}/api/v1/applications?page=1&limit=10&searchTerm=&status=&sortBy=createdAt&sortOrder=desc",
               "host": [
                 "{{base_url}}"
               ],
@@ -2070,6 +2304,22 @@
                 {
                   "key": "limit",
                   "value": "10"
+                },
+                {
+                  "key": "searchTerm",
+                  "value": ""
+                },
+                {
+                  "key": "status",
+                  "value": ""
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
                 }
               ]
             }
