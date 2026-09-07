@@ -90,7 +90,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"rahim@example.com\",\n  \"password\": \"P@ssw0rd123\"\n}",
+              "raw": "{\n  \"email\": \"customer@powergrid.bd\",\n  \"password\": \"Customer@12345\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -124,7 +124,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@powergrid.bd\",\n  \"password\": \"Admin@12345\"\n}",
+              "raw": "{\n  \"email\": \"superadmin@powergrid.bd\",\n  \"password\": \"Admin@12345\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -158,7 +158,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"operator@powergrid.bd\",\n  \"password\": \"Operator@123\"\n}",
+              "raw": "{\n  \"email\": \"operator@powergrid.bd\",\n  \"password\": \"Operator@12345\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
