@@ -95,6 +95,16 @@ const getAllOutageReports = async (
     andConditions.push({ technicianId: user.userId });
   }
 
+  // Admin/Operator can filter by customerId
+  if (query.customerId) {
+    andConditions.push({ customerId: String(query.customerId) });
+  }
+
+  // Technician filter (for admin/operator to see specific technician's queue)
+  if (query.technicianId) {
+    andConditions.push({ technicianId: String(query.technicianId) });
+  }
+
   if (query.searchTerm) {
     const term = String(query.searchTerm);
     andConditions.push({
@@ -102,16 +112,54 @@ const getAllOutageReports = async (
         { description: { contains: term, mode: "insensitive" } },
         { customer: { name: { contains: term, mode: "insensitive" } } },
         { area: { name: { contains: term, mode: "insensitive" } } },
+        { technician: { name: { contains: term, mode: "insensitive" } } },
       ],
     });
   }
 
+  // Support multiple statuses as array or comma-separated string
   if (query.status) {
-    andConditions.push({ status: query.status as OutageStatus });
+    const statuses = Array.isArray(query.status)
+      ? query.status
+      : String(query.status)
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+    if (statuses.length > 0) {
+      andConditions.push({
+        status: { in: statuses as OutageStatus[] },
+      });
+    }
   }
 
+  // Support multiple area IDs as array or comma-separated string
   if (query.areaId) {
-    andConditions.push({ areaId: String(query.areaId) });
+    const areaIds = Array.isArray(query.areaId)
+      ? query.areaId
+      : String(query.areaId)
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+    if (areaIds.length > 0) {
+      andConditions.push({ areaId: { in: areaIds } });
+    }
+  }
+
+  // Feeder filter (through area -> feeder relation)
+  if (query.feederId) {
+    andConditions.push({ area: { feederId: String(query.feederId) } });
+  }
+
+  // Substation filter (through area -> feeder -> substation)
+  if (query.substationId) {
+    andConditions.push({ area: { feeder: { substationId: String(query.substationId) } } });
+  }
+
+  // Zone filter (through area -> feeder -> substation -> zone)
+  if (query.zoneId) {
+    andConditions.push({
+      area: { feeder: { substation: { zoneId: String(query.zoneId) } } },
+    });
   }
 
   if (query.isPriority !== undefined && query.isPriority !== "") {
@@ -120,9 +168,24 @@ const getAllOutageReports = async (
     });
   }
 
+  // Date range on reportedAt
   if (query.from || query.to) {
     andConditions.push({
       reportedAt: parseDateRangeFilter(query.from, query.to),
+    });
+  }
+
+  // Date range on assignedAt
+  if (query.assignedFrom || query.assignedTo) {
+    andConditions.push({
+      assignedAt: parseDateRangeFilter(query.assignedFrom, query.assignedTo),
+    });
+  }
+
+  // Date range on resolvedAt
+  if (query.resolvedFrom || query.resolvedTo) {
+    andConditions.push({
+      resolvedAt: parseDateRangeFilter(query.resolvedFrom, query.resolvedTo),
     });
   }
 
@@ -139,9 +202,19 @@ const getAllOutageReports = async (
     prisma.outageReport.findMany({
       where,
       include: {
-        area: true,
-        customer: { select: { id: true, name: true, phone: true } },
-        technician: { select: { id: true, name: true, phone: true } },
+        area: {
+          include: {
+            feeder: {
+              include: {
+                substation: {
+                  include: { zone: true },
+                },
+              },
+            },
+          },
+        },
+        customer: { select: { id: true, name: true, phone: true, email: true } },
+        technician: { select: { id: true, name: true, phone: true, email: true } },
       },
       orderBy,
       skip,

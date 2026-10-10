@@ -23,6 +23,7 @@ router.get(
     UserRole.TECHNICIAN,
     UserRole.CUSTOMER,
   ),
+  validateRequest(outageValidation.getAllOutageReportsQueryValidationSchema),
   outageController.getAllOutageReports,
 );
 router.get(
