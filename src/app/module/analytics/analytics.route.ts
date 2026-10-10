@@ -18,6 +18,12 @@ router.get(
 );
 
 router.get(
+  "/technician-workload",
+  auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
+  analyticsController.getTechnicianWorkload,
+);
+
+router.get(
   "/geographical",
   auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
   analyticsController.getGeographicalAnalytics,

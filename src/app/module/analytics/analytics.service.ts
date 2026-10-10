@@ -207,6 +207,96 @@ const getPerformanceMetrics = async () => {
   };
 };
 
+const getTechnicianWorkload = async () => {
+  const [workloadActive, workloadTotal, techUsers] = await Promise.all([
+    prisma.outageReport.groupBy({
+      by: ["technicianId"],
+      where: {
+        technicianId: { not: null },
+        status: { in: [OutageStatus.ASSIGNED, OutageStatus.IN_PROGRESS] },
+      },
+      _count: { _all: true },
+    }),
+    prisma.outageReport.groupBy({
+      by: ["technicianId"],
+      where: { technicianId: { not: null } },
+      _count: { _all: true },
+    }),
+    prisma.user.findMany({
+      where: { role: UserRole.TECHNICIAN, isDeleted: false, status: UserStatus.ACTIVE },
+      select: { id: true, name: true },
+    }),
+  ]);
+
+  const activeByTech = new Map(
+    workloadActive.map((g) => [g.technicianId as string, g._count._all]),
+  );
+  const totalByTech = new Map(
+    workloadTotal.map((g) => [g.technicianId as string, g._count._all]),
+  );
+  const nameById = new Map(techUsers.map((u) => [u.id, u.name]));
+
+  // Get resolved and cancelled counts per technician for fix rate
+  const resolvedByTech = await prisma.outageReport.groupBy({
+    by: ["technicianId"],
+    where: { technicianId: { not: null }, status: OutageStatus.RESOLVED },
+    _count: { _all: true },
+  });
+  const cancelledByTech = await prisma.outageReport.groupBy({
+    by: ["technicianId"],
+    where: { technicianId: { not: null }, status: OutageStatus.CANCELLED },
+    _count: { _all: true },
+  });
+  const resolvedMap = new Map(resolvedByTech.map((g) => [g.technicianId as string, g._count._all]));
+  const cancelledMap = new Map(cancelledByTech.map((g) => [g.technicianId as string, g._count._all]));
+
+  // Get average resolution time per technician
+  const resolvedReports = await prisma.outageReport.findMany({
+    where: {
+      technicianId: { not: null },
+      status: OutageStatus.RESOLVED,
+      resolvedAt: { not: null },
+      assignedAt: { not: null },
+    },
+    select: { technicianId: true, assignedAt: true, resolvedAt: true },
+  });
+  const resolutionMinutesByTech = new Map<string, number[]>();
+  for (const r of resolvedReports) {
+    if (r.technicianId && r.assignedAt && r.resolvedAt) {
+      const minutes = minutesBetween(r.assignedAt, r.resolvedAt);
+      const arr = resolutionMinutesByTech.get(r.technicianId) ?? [];
+      arr.push(minutes);
+      resolutionMinutesByTech.set(r.technicianId, arr);
+    }
+  }
+
+  const technicianWorkload = techUsers.map((tech) => {
+    const assignedCount = totalByTech.get(tech.id) ?? 0;
+    const activeCount = activeByTech.get(tech.id) ?? 0;
+    const resolvedCount = resolvedMap.get(tech.id) ?? 0;
+    const cancelledCount = cancelledMap.get(tech.id) ?? 0;
+    const decided = resolvedCount + cancelledCount;
+    const firstTimeFixRate = decided > 0 ? resolvedCount / decided : 0;
+
+    const resolutionMinutes = resolutionMinutesByTech.get(tech.id) ?? [];
+    const avgResolutionMinutes =
+      resolutionMinutes.length > 0
+        ? resolutionMinutes.reduce((sum, m) => sum + m, 0) / resolutionMinutes.length
+        : 0;
+
+    return {
+      technicianId: tech.id,
+      technicianName: tech.name,
+      assignedCount,
+      resolvedCount,
+      avgResolutionTime: Math.round((avgResolutionMinutes / 60) * 100) / 100,
+      firstTimeFixRate: Math.round(firstTimeFixRate * 10000) / 10000,
+    };
+  });
+
+  return { technicianWorkload };
+};
+
 // ─── 3. Geographical & zonal analytics ────────────────────────────────
 
 const getGeographicalAnalytics = async () => {
@@ -455,11 +545,29 @@ const getTechnicianSummary = async (userId: string) => {
         ) / resolved.length
       : 0;
 
+  // Calculate first-time fix rate
+  const [resolvedCount, cancelledCount] = await Promise.all([
+    prisma.outageReport.count({
+      where: { technicianId: userId, status: OutageStatus.RESOLVED },
+    }),
+    prisma.outageReport.count({
+      where: { technicianId: userId, status: OutageStatus.CANCELLED },
+    }),
+  ]);
+  const decided = resolvedCount + cancelledCount;
+  const firstTimeFixRate = decided > 0 ? resolvedCount / decided : 0;
+
+  // Map backend statuses to frontend expected fields
+  const assignedCount = tasksByStatus[OutageStatus.ASSIGNED] ?? 0;
+  const ongoingCount = tasksByStatus[OutageStatus.IN_PROGRESS] ?? 0;
+  const resolvedCountFromStatus = tasksByStatus[OutageStatus.RESOLVED] ?? 0;
+
   return {
-    totalTasks,
-    tasksByStatus,
-    avgResolutionMinutes: Math.round(avgResolutionMinutes * 100) / 100,
-    resolvedTasks: resolved.length,
+    assignedCount,
+    ongoingCount,
+    resolvedCount: resolvedCountFromStatus,
+    avgResolutionTime: Math.round((avgResolutionMinutes / 60) * 100) / 100,
+    firstTimeFixRate: Math.round(firstTimeFixRate * 10000) / 10000,
   };
 };
 
@@ -500,6 +608,7 @@ const getAuditLogs = async (query: IQuery = {}) => {
 export const analyticsService = {
   getOperationalMetrics,
   getPerformanceMetrics,
+  getTechnicianWorkload,
   getGeographicalAnalytics,
   getFinancialAnalytics,
   getTrendsAnalytics,

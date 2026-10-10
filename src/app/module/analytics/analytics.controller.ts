@@ -27,6 +27,17 @@ const getPerformanceMetrics = catchAsync(async (_req: Request, res: Response) =>
   });
 });
 
+const getTechnicianWorkload = catchAsync(async (_req: Request, res: Response) => {
+  const result = await analyticsService.getTechnicianWorkload();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Technician workload retrieved successfully",
+    data: result,
+  });
+});
+
 const getGeographicalAnalytics = catchAsync(
   async (_req: Request, res: Response) => {
     const result = await analyticsService.getGeographicalAnalytics();
@@ -110,6 +121,7 @@ const getAuditLogs = catchAsync(async (req: Request, res: Response) => {
 export const analyticsController = {
   getOperationalMetrics,
   getPerformanceMetrics,
+  getTechnicianWorkload,
   getGeographicalAnalytics,
   getFinancialAnalytics,
   getTrendsAnalytics,
