@@ -143,6 +143,30 @@ const getAllUsers = async (query: IQuery) => {
   };
 };
 
+const getTechnicians = async (query: IQuery) => {
+  const { page, limit, skip } = calculatePagination(query, { limit: 100 });
+  const where = {
+    role: UserRole.TECHNICIAN,
+    status: UserStatus.ACTIVE,
+    isDeleted: false,
+  };
+
+  const [technicians, total] = await Promise.all([
+    prisma.user.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { name: "asc" },
+      select: { id: true, name: true },
+    }),
+    prisma.user.count({ where }),
+  ]);
+
+  return {
+    meta: buildMeta(total, page, limit),
+    data: technicians,
+  };
+};
 
 const getUserById = async (id: string) => {
   const user = await prisma.user.findUnique({
@@ -334,6 +358,7 @@ export const userService = {
   uploadProfileImage,
   updateProfile,
   getAllUsers,
+  getTechnicians,
   getUserById,
   updateUserStatus,
   updateUserRole,

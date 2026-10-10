@@ -4,6 +4,7 @@ export interface IPaymentInitPayload {
   amount: number;
   currency?: string;
   outageReportId?: string;
+  planId?: string;
   paymentType: PaymentType;
 }
 

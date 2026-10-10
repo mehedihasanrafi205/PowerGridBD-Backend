@@ -89,6 +89,7 @@ const initiatePayment = async (
       status: PaymentStatus.PENDING,
       userId,
       outageReportId: payload.outageReportId,
+      planId: payload.planId,
     },
   });
 
@@ -198,7 +199,12 @@ const handleIPN = async (ipnData: IIPNPayload) => {
         },
       });
 
-      await applyCompletedSideEffects(payment, tx);
+      await applyCompletedSideEffects({
+        ...payment,
+        planId: payment.planId,
+      },
+      tx
+    );
 
       await tx.auditLog.create({
         data: {
@@ -253,7 +259,7 @@ const validateTransaction = async (
   return sslValidateOrder(valId);
 };
 
-type SideEffectDb = Pick<typeof prisma, "outageReport" | "user">;
+type SideEffectDb = Pick<typeof prisma, "outageReport" | "user" | "slaPlan">;
 
 async function applyCompletedSideEffects(
   payment: {
@@ -262,6 +268,7 @@ async function applyCompletedSideEffects(
     outageReportId: string | null;
     userId: string;
     amount: number;
+    planId: string | null;
   },
   db: SideEffectDb = prisma,
 ) {
@@ -272,8 +279,12 @@ async function applyCompletedSideEffects(
     });
   }
 
-  if (payment.type === PaymentType.SLA_SUBSCRIPTION) {
-    const expiryDate = addDays(new Date(), 30);
+  if (payment.type === PaymentType.SLA_SUBSCRIPTION && payment.planId) {
+    const plan = await db.slaPlan.findUnique({
+      where: { id: payment.planId },
+    });
+    const durationDays = plan?.durationDays ?? 30;
+    const expiryDate = addDays(new Date(), durationDays);
     await db.user.update({
       where: { id: payment.userId },
       data: {
@@ -340,6 +351,7 @@ async function markPaymentCompleted(
     transactionId: string;
     outageReportId: string | null;
     userId: string;
+    planId: string | null;
     paymentDetails: unknown;
   },
   validation: SSLCommerzValidationResponse,
@@ -370,7 +382,12 @@ async function markPaymentCompleted(
       },
     });
 
-    await applyCompletedSideEffects(payment, tx);
+    await applyCompletedSideEffects({
+        ...payment,
+        planId: payment.planId,
+      },
+      tx
+    );
 
     await tx.auditLog.create({
       data: {

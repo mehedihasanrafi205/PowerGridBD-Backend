@@ -11,6 +11,8 @@ import type { IQuery } from "../../interfaces";
 import { calculatePagination, buildMeta } from "../../utils/pagination";
 import { minutesBetween, toDayKey } from "../../utils/datetime";
 import { addDays, getHours, startOfDay, subDays } from "date-fns";
+import httpStatus from "http-status";
+import { AppError } from "../../utils/AppError";
 
 const ACTIVE_OUTAGE_STATUSES: OutageStatus[] = [
   OutageStatus.PENDING,
@@ -605,6 +607,130 @@ const getAuditLogs = async (query: IQuery = {}) => {
   return { data: logs, meta: buildMeta(total, page, limit) };
 };
 
+  const getSlaPlans = async () => {
+  const plans = await prisma.slaPlan.findMany({
+    where: { isActive: true },
+    orderBy: { tier: "asc" },
+  });
+
+  return plans.map((plan) => {
+    return {
+      id: plan.id,
+      name: plan.name,
+      description: plan.description,
+      tier: plan.tier,
+      price: Number(plan.price),
+      durationDays: plan.durationDays,
+      features: plan.features,
+      isActive: plan.isActive,
+      createdAt: plan.createdAt.toISOString(),
+      updatedAt: plan.updatedAt.toISOString(),
+    };
+  });
+};
+
+const getSlaPlanById = async (planId: string) => {
+  const plan = await prisma.slaPlan.findUnique({
+    where: { id: planId },
+  });
+
+  if (!plan) {
+    throw new AppError(httpStatus.NOT_FOUND, "SLA plan not found");
+  }
+
+  return {
+    id: plan.id,
+    name: plan.name,
+    description: plan.description,
+    tier: plan.tier,
+    price: Number(plan.price),
+    durationDays: plan.durationDays,
+    features: plan.features,
+    isActive: plan.isActive,
+    createdAt: plan.createdAt.toISOString(),
+    updatedAt: plan.updatedAt.toISOString(),
+  };
+};
+
+const subscribeToSla = async (
+  userId: string,
+  planId: string,
+) => {
+  const plan = await prisma.slaPlan.findUnique({
+    where: { id: planId, isActive: true },
+  });
+
+  if (!plan) {
+    throw new AppError(httpStatus.NOT_FOUND, "SLA plan not found or inactive");
+  }
+
+  // Check if user already has an active subscription
+  const existingSubscription = await prisma.slaSubscription.findUnique({
+    where: { userId },
+  });
+
+  if (existingSubscription?.isActive) {
+    throw new AppError(
+      httpStatus.CONFLICT,
+      "You already have an active SLA subscription. Please wait for it to expire or contact support.",
+    );
+  }
+
+  // Import payment service to avoid circular dependency
+  const { paymentService } = await import("../payment/payment.service.js");
+  const { PaymentType } = await import("../../../generated/prisma/enums.js");
+
+  // Initiate payment via SSLCommerz
+  const paymentResult = await paymentService.initiatePayment(userId, {
+    amount: Number(plan.price),
+    currency: "BDT",
+    paymentType: PaymentType.SLA_SUBSCRIPTION,
+    planId: plan.id,
+  });
+
+  return {
+    paymentUrl: paymentResult.gatewayUrl,
+    transactionId: paymentResult.transactionId,
+    plan: {
+      id: plan.id,
+      name: plan.name,
+      tier: plan.tier,
+      price: Number(plan.price),
+      durationDays: plan.durationDays,
+    },
+  };
+};
+
+const getMySlaSubscription = async (userId: string) => {
+  const subscription = await prisma.slaSubscription.findUnique({
+    where: { userId },
+    include: { plan: true },
+  });
+
+  if (!subscription || !subscription.isActive) {
+    return null;
+  }
+
+  return {
+    id: subscription.id,
+    userId: subscription.userId,
+    planId: subscription.planId,
+    startDate: subscription.startDate.toISOString(),
+    endDate: subscription.endDate.toISOString(),
+    isActive: subscription.isActive,
+    paymentId: subscription.paymentId,
+    createdAt: subscription.createdAt.toISOString(),
+    updatedAt: subscription.updatedAt.toISOString(),
+    plan: {
+      id: subscription.plan.id,
+      name: subscription.plan.name,
+      tier: subscription.plan.tier,
+      price: Number(subscription.plan.price),
+      durationDays: subscription.plan.durationDays,
+    },
+  };
+};
+
 export const analyticsService = {
   getOperationalMetrics,
   getPerformanceMetrics,
@@ -614,5 +740,9 @@ export const analyticsService = {
   getTrendsAnalytics,
   getCustomerSummary,
   getTechnicianSummary,
+  getSlaPlans,
+  getSlaPlanById,
+  subscribeToSla,
+  getMySlaSubscription,
   getAuditLogs,
-};
+}

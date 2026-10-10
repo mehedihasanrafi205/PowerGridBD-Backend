@@ -43,6 +43,7 @@ export type PaymentMinAggregateOutputType = {
   status: $Enums.PaymentStatus | null
   userId: string | null
   outageReportId: string | null
+  planId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +57,7 @@ export type PaymentMaxAggregateOutputType = {
   status: $Enums.PaymentStatus | null
   userId: string | null
   outageReportId: string | null
+  planId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -70,6 +72,7 @@ export type PaymentCountAggregateOutputType = {
   paymentDetails: number
   userId: number
   outageReportId: number
+  planId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -93,6 +96,7 @@ export type PaymentMinAggregateInputType = {
   status?: true
   userId?: true
   outageReportId?: true
+  planId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -106,6 +110,7 @@ export type PaymentMaxAggregateInputType = {
   status?: true
   userId?: true
   outageReportId?: true
+  planId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -120,6 +125,7 @@ export type PaymentCountAggregateInputType = {
   paymentDetails?: true
   userId?: true
   outageReportId?: true
+  planId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -221,6 +227,7 @@ export type PaymentGroupByOutputType = {
   paymentDetails: runtime.JsonValue | null
   userId: string
   outageReportId: string | null
+  planId: string | null
   createdAt: Date
   updatedAt: Date
   _count: PaymentCountAggregateOutputType | null
@@ -258,10 +265,12 @@ export type PaymentWhereInput = {
   paymentDetails?: Prisma.JsonNullableFilter<"Payment">
   userId?: Prisma.StringFilter<"Payment"> | string
   outageReportId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  planId?: Prisma.StringNullableFilter<"Payment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   outageReport?: Prisma.XOR<Prisma.OutageReportNullableScalarRelationFilter, Prisma.OutageReportWhereInput> | null
+  plan?: Prisma.XOR<Prisma.SlaPlanNullableScalarRelationFilter, Prisma.SlaPlanWhereInput> | null
 }
 
 export type PaymentOrderByWithRelationInput = {
@@ -274,10 +283,12 @@ export type PaymentOrderByWithRelationInput = {
   paymentDetails?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   outageReportId?: Prisma.SortOrderInput | Prisma.SortOrder
+  planId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   outageReport?: Prisma.OutageReportOrderByWithRelationInput
+  plan?: Prisma.SlaPlanOrderByWithRelationInput
 }
 
 export type PaymentWhereUniqueInput = Prisma.AtLeast<{
@@ -293,10 +304,12 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   paymentDetails?: Prisma.JsonNullableFilter<"Payment">
   userId?: Prisma.StringFilter<"Payment"> | string
   outageReportId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  planId?: Prisma.StringNullableFilter<"Payment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   outageReport?: Prisma.XOR<Prisma.OutageReportNullableScalarRelationFilter, Prisma.OutageReportWhereInput> | null
+  plan?: Prisma.XOR<Prisma.SlaPlanNullableScalarRelationFilter, Prisma.SlaPlanWhereInput> | null
 }, "id" | "transactionId">
 
 export type PaymentOrderByWithAggregationInput = {
@@ -309,6 +322,7 @@ export type PaymentOrderByWithAggregationInput = {
   paymentDetails?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   outageReportId?: Prisma.SortOrderInput | Prisma.SortOrder
+  planId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PaymentCountOrderByAggregateInput
@@ -331,6 +345,7 @@ export type PaymentScalarWhereWithAggregatesInput = {
   paymentDetails?: Prisma.JsonNullableWithAggregatesFilter<"Payment">
   userId?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   outageReportId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  planId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
 }
@@ -347,6 +362,7 @@ export type PaymentCreateInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPaymentsInput
   outageReport?: Prisma.OutageReportCreateNestedOneWithoutPaymentsInput
+  plan?: Prisma.SlaPlanCreateNestedOneWithoutPaymentsInput
 }
 
 export type PaymentUncheckedCreateInput = {
@@ -359,6 +375,7 @@ export type PaymentUncheckedCreateInput = {
   paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   userId: string
   outageReportId?: string | null
+  planId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -375,6 +392,7 @@ export type PaymentUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
   outageReport?: Prisma.OutageReportUpdateOneWithoutPaymentsNestedInput
+  plan?: Prisma.SlaPlanUpdateOneWithoutPaymentsNestedInput
 }
 
 export type PaymentUncheckedUpdateInput = {
@@ -387,6 +405,7 @@ export type PaymentUncheckedUpdateInput = {
   paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   outageReportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -401,6 +420,7 @@ export type PaymentCreateManyInput = {
   paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   userId: string
   outageReportId?: string | null
+  planId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -427,6 +447,7 @@ export type PaymentUncheckedUpdateManyInput = {
   paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   outageReportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -451,6 +472,7 @@ export type PaymentCountOrderByAggregateInput = {
   paymentDetails?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   outageReportId?: Prisma.SortOrder
+  planId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -468,6 +490,7 @@ export type PaymentMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   outageReportId?: Prisma.SortOrder
+  planId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -481,6 +504,7 @@ export type PaymentMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   outageReportId?: Prisma.SortOrder
+  planId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -547,6 +571,48 @@ export type EnumPaymentStatusFieldUpdateOperationsInput = {
   set?: $Enums.PaymentStatus
 }
 
+export type PaymentCreateNestedManyWithoutPlanInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutPlanInput, Prisma.PaymentUncheckedCreateWithoutPlanInput> | Prisma.PaymentCreateWithoutPlanInput[] | Prisma.PaymentUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutPlanInput | Prisma.PaymentCreateOrConnectWithoutPlanInput[]
+  createMany?: Prisma.PaymentCreateManyPlanInputEnvelope
+  connect?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+}
+
+export type PaymentUncheckedCreateNestedManyWithoutPlanInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutPlanInput, Prisma.PaymentUncheckedCreateWithoutPlanInput> | Prisma.PaymentCreateWithoutPlanInput[] | Prisma.PaymentUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutPlanInput | Prisma.PaymentCreateOrConnectWithoutPlanInput[]
+  createMany?: Prisma.PaymentCreateManyPlanInputEnvelope
+  connect?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+}
+
+export type PaymentUpdateManyWithoutPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutPlanInput, Prisma.PaymentUncheckedCreateWithoutPlanInput> | Prisma.PaymentCreateWithoutPlanInput[] | Prisma.PaymentUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutPlanInput | Prisma.PaymentCreateOrConnectWithoutPlanInput[]
+  upsert?: Prisma.PaymentUpsertWithWhereUniqueWithoutPlanInput | Prisma.PaymentUpsertWithWhereUniqueWithoutPlanInput[]
+  createMany?: Prisma.PaymentCreateManyPlanInputEnvelope
+  set?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  disconnect?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  delete?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  connect?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  update?: Prisma.PaymentUpdateWithWhereUniqueWithoutPlanInput | Prisma.PaymentUpdateWithWhereUniqueWithoutPlanInput[]
+  updateMany?: Prisma.PaymentUpdateManyWithWhereWithoutPlanInput | Prisma.PaymentUpdateManyWithWhereWithoutPlanInput[]
+  deleteMany?: Prisma.PaymentScalarWhereInput | Prisma.PaymentScalarWhereInput[]
+}
+
+export type PaymentUncheckedUpdateManyWithoutPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutPlanInput, Prisma.PaymentUncheckedCreateWithoutPlanInput> | Prisma.PaymentCreateWithoutPlanInput[] | Prisma.PaymentUncheckedCreateWithoutPlanInput[]
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutPlanInput | Prisma.PaymentCreateOrConnectWithoutPlanInput[]
+  upsert?: Prisma.PaymentUpsertWithWhereUniqueWithoutPlanInput | Prisma.PaymentUpsertWithWhereUniqueWithoutPlanInput[]
+  createMany?: Prisma.PaymentCreateManyPlanInputEnvelope
+  set?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  disconnect?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  delete?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  connect?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  update?: Prisma.PaymentUpdateWithWhereUniqueWithoutPlanInput | Prisma.PaymentUpdateWithWhereUniqueWithoutPlanInput[]
+  updateMany?: Prisma.PaymentUpdateManyWithWhereWithoutPlanInput | Prisma.PaymentUpdateManyWithWhereWithoutPlanInput[]
+  deleteMany?: Prisma.PaymentScalarWhereInput | Prisma.PaymentScalarWhereInput[]
+}
+
 export type PaymentCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.PaymentCreateWithoutUserInput, Prisma.PaymentUncheckedCreateWithoutUserInput> | Prisma.PaymentCreateWithoutUserInput[] | Prisma.PaymentUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutUserInput | Prisma.PaymentCreateOrConnectWithoutUserInput[]
@@ -600,6 +666,7 @@ export type PaymentCreateWithoutOutageReportInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutPaymentsInput
+  plan?: Prisma.SlaPlanCreateNestedOneWithoutPaymentsInput
 }
 
 export type PaymentUncheckedCreateWithoutOutageReportInput = {
@@ -611,6 +678,7 @@ export type PaymentUncheckedCreateWithoutOutageReportInput = {
   status?: $Enums.PaymentStatus
   paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   userId: string
+  planId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -654,8 +722,63 @@ export type PaymentScalarWhereInput = {
   paymentDetails?: Prisma.JsonNullableFilter<"Payment">
   userId?: Prisma.StringFilter<"Payment"> | string
   outageReportId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  planId?: Prisma.StringNullableFilter<"Payment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
+}
+
+export type PaymentCreateWithoutPlanInput = {
+  id?: string
+  amount: number
+  transactionId: string
+  gateway: string
+  type: $Enums.PaymentType
+  status?: $Enums.PaymentStatus
+  paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutPaymentsInput
+  outageReport?: Prisma.OutageReportCreateNestedOneWithoutPaymentsInput
+}
+
+export type PaymentUncheckedCreateWithoutPlanInput = {
+  id?: string
+  amount: number
+  transactionId: string
+  gateway: string
+  type: $Enums.PaymentType
+  status?: $Enums.PaymentStatus
+  paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  userId: string
+  outageReportId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PaymentCreateOrConnectWithoutPlanInput = {
+  where: Prisma.PaymentWhereUniqueInput
+  create: Prisma.XOR<Prisma.PaymentCreateWithoutPlanInput, Prisma.PaymentUncheckedCreateWithoutPlanInput>
+}
+
+export type PaymentCreateManyPlanInputEnvelope = {
+  data: Prisma.PaymentCreateManyPlanInput | Prisma.PaymentCreateManyPlanInput[]
+  skipDuplicates?: boolean
+}
+
+export type PaymentUpsertWithWhereUniqueWithoutPlanInput = {
+  where: Prisma.PaymentWhereUniqueInput
+  update: Prisma.XOR<Prisma.PaymentUpdateWithoutPlanInput, Prisma.PaymentUncheckedUpdateWithoutPlanInput>
+  create: Prisma.XOR<Prisma.PaymentCreateWithoutPlanInput, Prisma.PaymentUncheckedCreateWithoutPlanInput>
+}
+
+export type PaymentUpdateWithWhereUniqueWithoutPlanInput = {
+  where: Prisma.PaymentWhereUniqueInput
+  data: Prisma.XOR<Prisma.PaymentUpdateWithoutPlanInput, Prisma.PaymentUncheckedUpdateWithoutPlanInput>
+}
+
+export type PaymentUpdateManyWithWhereWithoutPlanInput = {
+  where: Prisma.PaymentScalarWhereInput
+  data: Prisma.XOR<Prisma.PaymentUpdateManyMutationInput, Prisma.PaymentUncheckedUpdateManyWithoutPlanInput>
 }
 
 export type PaymentCreateWithoutUserInput = {
@@ -669,6 +792,7 @@ export type PaymentCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   outageReport?: Prisma.OutageReportCreateNestedOneWithoutPaymentsInput
+  plan?: Prisma.SlaPlanCreateNestedOneWithoutPaymentsInput
 }
 
 export type PaymentUncheckedCreateWithoutUserInput = {
@@ -680,6 +804,7 @@ export type PaymentUncheckedCreateWithoutUserInput = {
   status?: $Enums.PaymentStatus
   paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   outageReportId?: string | null
+  planId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -719,6 +844,7 @@ export type PaymentCreateManyOutageReportInput = {
   status?: $Enums.PaymentStatus
   paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   userId: string
+  planId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -734,6 +860,7 @@ export type PaymentUpdateWithoutOutageReportInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
+  plan?: Prisma.SlaPlanUpdateOneWithoutPaymentsNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutOutageReportInput = {
@@ -745,6 +872,7 @@ export type PaymentUncheckedUpdateWithoutOutageReportInput = {
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -758,6 +886,63 @@ export type PaymentUncheckedUpdateManyWithoutOutageReportInput = {
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PaymentCreateManyPlanInput = {
+  id?: string
+  amount: number
+  transactionId: string
+  gateway: string
+  type: $Enums.PaymentType
+  status?: $Enums.PaymentStatus
+  paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  userId: string
+  outageReportId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PaymentUpdateWithoutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  transactionId?: Prisma.StringFieldUpdateOperationsInput | string
+  gateway?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
+  outageReport?: Prisma.OutageReportUpdateOneWithoutPaymentsNestedInput
+}
+
+export type PaymentUncheckedUpdateWithoutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  transactionId?: Prisma.StringFieldUpdateOperationsInput | string
+  gateway?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  outageReportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PaymentUncheckedUpdateManyWithoutPlanInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  transactionId?: Prisma.StringFieldUpdateOperationsInput | string
+  gateway?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  outageReportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -771,6 +956,7 @@ export type PaymentCreateManyUserInput = {
   status?: $Enums.PaymentStatus
   paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   outageReportId?: string | null
+  planId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -786,6 +972,7 @@ export type PaymentUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outageReport?: Prisma.OutageReportUpdateOneWithoutPaymentsNestedInput
+  plan?: Prisma.SlaPlanUpdateOneWithoutPaymentsNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutUserInput = {
@@ -797,6 +984,7 @@ export type PaymentUncheckedUpdateWithoutUserInput = {
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   outageReportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -810,6 +998,7 @@ export type PaymentUncheckedUpdateManyWithoutUserInput = {
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
   paymentDetails?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   outageReportId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  planId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -826,10 +1015,12 @@ export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   paymentDetails?: boolean
   userId?: boolean
   outageReportId?: boolean
+  planId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   outageReport?: boolean | Prisma.Payment$outageReportArgs<ExtArgs>
+  plan?: boolean | Prisma.Payment$planArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
 
 export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -842,10 +1033,12 @@ export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   paymentDetails?: boolean
   userId?: boolean
   outageReportId?: boolean
+  planId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   outageReport?: boolean | Prisma.Payment$outageReportArgs<ExtArgs>
+  plan?: boolean | Prisma.Payment$planArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
 
 export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -858,10 +1051,12 @@ export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   paymentDetails?: boolean
   userId?: boolean
   outageReportId?: boolean
+  planId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   outageReport?: boolean | Prisma.Payment$outageReportArgs<ExtArgs>
+  plan?: boolean | Prisma.Payment$planArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
 
 export type PaymentSelectScalar = {
@@ -874,22 +1069,26 @@ export type PaymentSelectScalar = {
   paymentDetails?: boolean
   userId?: boolean
   outageReportId?: boolean
+  planId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "amount" | "transactionId" | "gateway" | "type" | "status" | "paymentDetails" | "userId" | "outageReportId" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
+export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "amount" | "transactionId" | "gateway" | "type" | "status" | "paymentDetails" | "userId" | "outageReportId" | "planId" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
 export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   outageReport?: boolean | Prisma.Payment$outageReportArgs<ExtArgs>
+  plan?: boolean | Prisma.Payment$planArgs<ExtArgs>
 }
 export type PaymentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   outageReport?: boolean | Prisma.Payment$outageReportArgs<ExtArgs>
+  plan?: boolean | Prisma.Payment$planArgs<ExtArgs>
 }
 export type PaymentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   outageReport?: boolean | Prisma.Payment$outageReportArgs<ExtArgs>
+  plan?: boolean | Prisma.Payment$planArgs<ExtArgs>
 }
 
 export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -897,6 +1096,7 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     outageReport: Prisma.$OutageReportPayload<ExtArgs> | null
+    plan: Prisma.$SlaPlanPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -908,6 +1108,7 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     paymentDetails: runtime.JsonValue | null
     userId: string
     outageReportId: string | null
+    planId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["payment"]>
@@ -1306,6 +1507,7 @@ export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   outageReport<T extends Prisma.Payment$outageReportArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$outageReportArgs<ExtArgs>>): Prisma.Prisma__OutageReportClient<runtime.Types.Result.GetResult<Prisma.$OutageReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  plan<T extends Prisma.Payment$planArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$planArgs<ExtArgs>>): Prisma.Prisma__SlaPlanClient<runtime.Types.Result.GetResult<Prisma.$SlaPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1344,6 +1546,7 @@ export interface PaymentFieldRefs {
   readonly paymentDetails: Prisma.FieldRef<"Payment", 'Json'>
   readonly userId: Prisma.FieldRef<"Payment", 'String'>
   readonly outageReportId: Prisma.FieldRef<"Payment", 'String'>
+  readonly planId: Prisma.FieldRef<"Payment", 'String'>
   readonly createdAt: Prisma.FieldRef<"Payment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Payment", 'DateTime'>
 }
@@ -1763,6 +1966,25 @@ export type Payment$outageReportArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   include?: Prisma.OutageReportInclude<ExtArgs> | null
   where?: Prisma.OutageReportWhereInput
+}
+
+/**
+ * Payment.plan
+ */
+export type Payment$planArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SlaPlan
+   */
+  select?: Prisma.SlaPlanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SlaPlan
+   */
+  omit?: Prisma.SlaPlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SlaPlanInclude<ExtArgs> | null
+  where?: Prisma.SlaPlanWhereInput
 }
 
 /**

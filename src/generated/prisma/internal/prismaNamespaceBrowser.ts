@@ -57,6 +57,8 @@ export const ModelName = {
   OutageReport: 'OutageReport',
   Payment: 'Payment',
   Schedule: 'Schedule',
+  SlaPlan: 'SlaPlan',
+  SlaSubscription: 'SlaSubscription',
   Substation: 'Substation',
   TechnicianApplication: 'TechnicianApplication',
   User: 'User',
@@ -142,6 +144,7 @@ export const PaymentScalarFieldEnum = {
   paymentDetails: 'paymentDetails',
   userId: 'userId',
   outageReportId: 'outageReportId',
+  planId: 'planId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -166,6 +169,37 @@ export const ScheduleScalarFieldEnum = {
 } as const
 
 export type ScheduleScalarFieldEnum = (typeof ScheduleScalarFieldEnum)[keyof typeof ScheduleScalarFieldEnum]
+
+
+export const SlaPlanScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  tier: 'tier',
+  price: 'price',
+  durationDays: 'durationDays',
+  features: 'features',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SlaPlanScalarFieldEnum = (typeof SlaPlanScalarFieldEnum)[keyof typeof SlaPlanScalarFieldEnum]
+
+
+export const SlaSubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  planId: 'planId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  isActive: 'isActive',
+  paymentId: 'paymentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SlaSubscriptionScalarFieldEnum = (typeof SlaSubscriptionScalarFieldEnum)[keyof typeof SlaSubscriptionScalarFieldEnum]
 
 
 export const SubstationScalarFieldEnum = {

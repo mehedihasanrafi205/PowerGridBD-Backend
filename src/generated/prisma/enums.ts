@@ -91,3 +91,13 @@ export const ApplicationStatus = {
 } as const
 
 export type ApplicationStatus = (typeof ApplicationStatus)[keyof typeof ApplicationStatus]
+
+
+export const SlaPlanTier = {
+  BASIC: 'BASIC',
+  STANDARD: 'STANDARD',
+  PREMIUM: 'PREMIUM',
+  ENTERPRISE: 'ENTERPRISE'
+} as const
+
+export type SlaPlanTier = (typeof SlaPlanTier)[keyof typeof SlaPlanTier]

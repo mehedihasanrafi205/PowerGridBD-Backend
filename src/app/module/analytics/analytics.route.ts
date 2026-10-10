@@ -2,6 +2,8 @@ import { Router } from "express";
 import { analyticsController } from "./analytics.controller";
 import { auth } from "../../middleware/checkAuth";
 import { UserRole } from "../../../generated/prisma/enums";
+import { validateRequest } from "../../middleware/validateRequest";
+import { analyticsValidation } from "./analytics.validation";
 
 const router = Router();
 
@@ -21,6 +23,30 @@ router.get(
   "/technician-workload",
   auth(UserRole.ADMIN, UserRole.POWER_OPERATOR),
   analyticsController.getTechnicianWorkload,
+);
+
+// SLA Routes
+router.get(
+  "/sla-plans",
+  analyticsController.getSlaPlans,
+);
+
+router.get(
+  "/sla-plans/:id",
+  analyticsController.getSlaPlanById,
+);
+
+router.post(
+  "/sla-subscribe",
+  auth(UserRole.CUSTOMER),
+  validateRequest(analyticsValidation.slaSubscribePayloadSchema),
+  analyticsController.subscribeToSla,
+);
+
+router.get(
+  "/my-sla",
+  auth(UserRole.CUSTOMER),
+  analyticsController.getMySlaSubscription,
 );
 
 router.get(

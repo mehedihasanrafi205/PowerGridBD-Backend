@@ -403,6 +403,8 @@ export const ModelName = {
   OutageReport: 'OutageReport',
   Payment: 'Payment',
   Schedule: 'Schedule',
+  SlaPlan: 'SlaPlan',
+  SlaSubscription: 'SlaSubscription',
   Substation: 'Substation',
   TechnicianApplication: 'TechnicianApplication',
   User: 'User',
@@ -422,7 +424,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "area" | "auditLog" | "feeder" | "outageReport" | "payment" | "schedule" | "substation" | "technicianApplication" | "user" | "zone"
+    modelProps: "area" | "auditLog" | "feeder" | "outageReport" | "payment" | "schedule" | "slaPlan" | "slaSubscription" | "substation" | "technicianApplication" | "user" | "zone"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -870,6 +872,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SlaPlan: {
+      payload: Prisma.$SlaPlanPayload<ExtArgs>
+      fields: Prisma.SlaPlanFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SlaPlanFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaPlanPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SlaPlanFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaPlanPayload>
+        }
+        findFirst: {
+          args: Prisma.SlaPlanFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaPlanPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SlaPlanFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaPlanPayload>
+        }
+        findMany: {
+          args: Prisma.SlaPlanFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaPlanPayload>[]
+        }
+        create: {
+          args: Prisma.SlaPlanCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaPlanPayload>
+        }
+        createMany: {
+          args: Prisma.SlaPlanCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SlaPlanCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaPlanPayload>[]
+        }
+        delete: {
+          args: Prisma.SlaPlanDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaPlanPayload>
+        }
+        update: {
+          args: Prisma.SlaPlanUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaPlanPayload>
+        }
+        deleteMany: {
+          args: Prisma.SlaPlanDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SlaPlanUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SlaPlanUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaPlanPayload>[]
+        }
+        upsert: {
+          args: Prisma.SlaPlanUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaPlanPayload>
+        }
+        aggregate: {
+          args: Prisma.SlaPlanAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSlaPlan>
+        }
+        groupBy: {
+          args: Prisma.SlaPlanGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SlaPlanGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SlaPlanCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SlaPlanCountAggregateOutputType> | number
+        }
+      }
+    }
+    SlaSubscription: {
+      payload: Prisma.$SlaSubscriptionPayload<ExtArgs>
+      fields: Prisma.SlaSubscriptionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SlaSubscriptionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaSubscriptionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SlaSubscriptionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaSubscriptionPayload>
+        }
+        findFirst: {
+          args: Prisma.SlaSubscriptionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaSubscriptionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SlaSubscriptionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaSubscriptionPayload>
+        }
+        findMany: {
+          args: Prisma.SlaSubscriptionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaSubscriptionPayload>[]
+        }
+        create: {
+          args: Prisma.SlaSubscriptionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaSubscriptionPayload>
+        }
+        createMany: {
+          args: Prisma.SlaSubscriptionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SlaSubscriptionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaSubscriptionPayload>[]
+        }
+        delete: {
+          args: Prisma.SlaSubscriptionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaSubscriptionPayload>
+        }
+        update: {
+          args: Prisma.SlaSubscriptionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaSubscriptionPayload>
+        }
+        deleteMany: {
+          args: Prisma.SlaSubscriptionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SlaSubscriptionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SlaSubscriptionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaSubscriptionPayload>[]
+        }
+        upsert: {
+          args: Prisma.SlaSubscriptionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlaSubscriptionPayload>
+        }
+        aggregate: {
+          args: Prisma.SlaSubscriptionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSlaSubscription>
+        }
+        groupBy: {
+          args: Prisma.SlaSubscriptionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SlaSubscriptionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SlaSubscriptionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SlaSubscriptionCountAggregateOutputType> | number
+        }
+      }
+    }
     Substation: {
       payload: Prisma.$SubstationPayload<ExtArgs>
       fields: Prisma.SubstationFieldRefs
@@ -1268,6 +1418,7 @@ export const PaymentScalarFieldEnum = {
   paymentDetails: 'paymentDetails',
   userId: 'userId',
   outageReportId: 'outageReportId',
+  planId: 'planId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1292,6 +1443,37 @@ export const ScheduleScalarFieldEnum = {
 } as const
 
 export type ScheduleScalarFieldEnum = (typeof ScheduleScalarFieldEnum)[keyof typeof ScheduleScalarFieldEnum]
+
+
+export const SlaPlanScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  tier: 'tier',
+  price: 'price',
+  durationDays: 'durationDays',
+  features: 'features',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SlaPlanScalarFieldEnum = (typeof SlaPlanScalarFieldEnum)[keyof typeof SlaPlanScalarFieldEnum]
+
+
+export const SlaSubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  planId: 'planId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  isActive: 'isActive',
+  paymentId: 'paymentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SlaSubscriptionScalarFieldEnum = (typeof SlaSubscriptionScalarFieldEnum)[keyof typeof SlaSubscriptionScalarFieldEnum]
 
 
 export const SubstationScalarFieldEnum = {
@@ -1546,6 +1728,48 @@ export type ListEnumScheduleStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
 
 
 /**
+ * Reference to a field of type 'SlaPlanTier'
+ */
+export type EnumSlaPlanTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SlaPlanTier'>
+    
+
+
+/**
+ * Reference to a field of type 'SlaPlanTier[]'
+ */
+export type ListEnumSlaPlanTierFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SlaPlanTier[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'ApplicationStatus'
  */
 export type EnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus'>
@@ -1598,20 +1822,6 @@ export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'UserStatus[]'
  */
 export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 /**
@@ -1771,6 +1981,8 @@ export type GlobalOmitConfig = {
   outageReport?: Prisma.OutageReportOmit
   payment?: Prisma.PaymentOmit
   schedule?: Prisma.ScheduleOmit
+  slaPlan?: Prisma.SlaPlanOmit
+  slaSubscription?: Prisma.SlaSubscriptionOmit
   substation?: Prisma.SubstationOmit
   technicianApplication?: Prisma.TechnicianApplicationOmit
   user?: Prisma.UserOmit

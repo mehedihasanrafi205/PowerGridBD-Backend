@@ -70,6 +70,16 @@ export type Payment = Prisma.PaymentModel
  */
 export type Schedule = Prisma.ScheduleModel
 /**
+ * Model SlaPlan
+ * 
+ */
+export type SlaPlan = Prisma.SlaPlanModel
+/**
+ * Model SlaSubscription
+ * 
+ */
+export type SlaSubscription = Prisma.SlaSubscriptionModel
+/**
  * Model Substation
  * 
  */

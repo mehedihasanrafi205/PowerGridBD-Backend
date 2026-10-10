@@ -13,7 +13,12 @@ export const auditLogsQuerySchema = z.object({
   action: z.string().optional(),
 });
 
+export const slaSubscribePayloadSchema = z.object({
+  planId: z.string().uuid("Invalid plan ID"),
+});
+
 export const analyticsValidation = {
   trendsQuerySchema,
   auditLogsQuerySchema,
+  slaSubscribePayloadSchema,
 };

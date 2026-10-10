@@ -1,0 +1,40 @@
+enum SlaPlanTier {
+  BASIC
+  STANDARD
+  PREMIUM
+  ENTERPRISE
+}
+
+model SlaPlan {
+  id          String       @id @default(uuid())
+  name        String
+  description String
+  tier        SlaPlanTier
+  price       Decimal      @db.Decimal(10, 2)
+  durationDays Int
+  features    String[]
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  subscriptions SlaSubscription[]
+  payments      Payment[]
+
+  @@map("sla_plans")
+}
+
+model SlaSubscription {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId    String
+  plan      SlaPlan  @relation(fields: [planId], references: [id], onDelete: Cascade)
+  startDate DateTime @default(now())
+  endDate   DateTime
+  isActive  Boolean  @default(true)
+  paymentId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sla_subscriptions")
+}

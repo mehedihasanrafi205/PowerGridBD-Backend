@@ -51,7 +51,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Preflight for all routes
 
 app.use(requestLogger);
 
