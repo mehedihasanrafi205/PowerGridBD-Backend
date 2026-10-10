@@ -17,12 +17,41 @@ import { ApplicationRoutes } from "./app/module/application/application.route";
 
 const app: Application = express();
 
-app.use(
-  cors({
-    origin: config.frontend_url,
-    credentials: true,
-  }),
-);
+// CORS configuration with support for multiple origins
+const allowedOrigins = [
+  config.frontend_url, // Production frontend (e.g., https://powergridbd.vercel.app)
+  "http://localhost:3000", // Local development
+  "http://localhost:3001", // Alternative local port
+].filter(Boolean);
+
+// Regex to match Vercel preview deployments (e.g., powergridbd-git-main-username.vercel.app)
+const vercelPreviewRegex = /^https:\/\/powergridbd-.*\.vercel\.app$/;
+
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Check exact matches
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    // Check Vercel preview deployments
+    if (vercelPreviewRegex.test(origin)) {
+      return callback(null, true);
+    }
+    
+    // Reject other origins
+    callback(new Error("Not allowed by CORS"), false);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Preflight for all routes
 
 app.use(requestLogger);
 
