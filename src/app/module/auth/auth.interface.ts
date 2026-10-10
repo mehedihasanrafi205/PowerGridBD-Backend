@@ -35,8 +35,16 @@ export interface IForgotPasswordPayload {
   email: string;
 }
 
+export interface IForgotPasswordPayload {
+  email: string;
+}
+
 export interface IResetPasswordPayload {
   email: string;
   newPassword: string;
   otp: string;
+}
+
+export interface ILogoutPayload {
+  refreshToken: string;
 }

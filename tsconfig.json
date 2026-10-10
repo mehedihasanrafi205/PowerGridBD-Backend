@@ -3,7 +3,7 @@
         "module": "nodenext",
         "moduleResolution": "nodenext",
         "target": "es2023",
-        "rootDir": "./",
+        "rootDir": "./src",
         "outDir": "./dist",
         "strict": true,
         "esModuleInterop": true,
@@ -12,6 +12,6 @@
         "types": ["node"],
         "ignoreDeprecations": "5.0"
     },
-    "include": ["src", "prisma.config.ts"],
+    "include": ["src/**/*", "prisma.config.ts"],
     "exclude": ["node_modules", "dist"]
 }

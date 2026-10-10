@@ -4,7 +4,17 @@ import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { AppError } from "../../utils/AppError";
 import type { IRequestUser } from "./auth.interface";
-import { AuthService } from "./auth.service";
+import {
+  registerCustomer,
+  verifyCustomerEmail,
+  loginUser,
+  getMe,
+  refreshToken,
+  googleLogin,
+  forgotPassword,
+  resetPassword,
+  logout,
+} from "./auth.service";
 
 const registerCustomer = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -154,14 +164,30 @@ const forgotPassword = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const resetPassword = catchAsync(async (req: Request, res: Response) => {
-  const payload = req.body;
-  await AuthService.resetPassword(payload);
+const logout = catchAsync(async (req: Request, res: Response) => {
+  const refreshToken = req.cookies.refreshToken;
+  
+  if (!refreshToken) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "Refresh token is missing");
+  }
+
+  await AuthService.logout({ refreshToken });
+
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "none",
+  });
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "none",
+  });
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Password reset successfully",
+    message: "Logged out successfully",
     data: null,
   });
 });
@@ -175,4 +201,5 @@ export const AuthController = {
   googleLogin,
   forgotPassword,
   resetPassword,
+  logout,
 };

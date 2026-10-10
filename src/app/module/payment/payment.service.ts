@@ -73,11 +73,19 @@ const initiatePayment = async (
   }
 
   const tranId = generateTranId();
-  const backendUrl = config.bak_url || config.frontend_url;
+  const frontendUrl = config.frontend_url;
+  const backendUrl = config.bak_url;
+  
+  if (!frontendUrl) {
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "FRONTEND_URL must be set in environment variables",
+    );
+  }
   if (!backendUrl) {
     throw new AppError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      "APP_URL or FRONTEND_URL must be set in environment variables",
+      "BACKEND_URL must be set in environment variables",
     );
   }
   const payment = await prisma.payment.create({
@@ -97,9 +105,9 @@ const initiatePayment = async (
     total_amount: payload.amount,
     currency: payload.currency ?? "BDT",
     tran_id: tranId,
-    success_url: `${backendUrl}/api/v1/payment/success?tran_id=${tranId}`,
-    fail_url: `${backendUrl}/api/v1/payment/fail?tran_id=${tranId}`,
-    cancel_url: `${backendUrl}/api/v1/payment/cancel?tran_id=${tranId}`,
+    success_url: `${frontendUrl}/payment/success?tran_id=${tranId}`,
+    fail_url: `${frontendUrl}/payment/fail?tran_id=${tranId}`,
+    cancel_url: `${frontendUrl}/payment/cancel?tran_id=${tranId}`,
     ipn_url: `${backendUrl}/api/v1/payment/ipn`,
     cus_name: user.name,
     cus_email: user.email,

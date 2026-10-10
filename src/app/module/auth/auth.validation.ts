@@ -58,6 +58,10 @@ const ResetPasswordZodSchema = z.object({
     .length(6, "OTP must be 6 digits long"),
 });
 
+const LogoutZodSchema = z.object({
+  refreshToken: z.string().optional(),
+});
+
 export const authValidation = {
   CustomerRegistrationZodSchema,
   EmailVerifyZodSchema,
@@ -65,4 +69,5 @@ export const authValidation = {
   GoogleLoginZodSchema,
   ForgotPasswordZodSchema,
   ResetPasswordZodSchema,
+  LogoutZodSchema,
 };

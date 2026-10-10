@@ -58,4 +58,15 @@ router.post(
   AuthController.resetPassword,
 );
 
+router.post(
+  "/logout",
+  auth(
+    UserRole.CUSTOMER,
+    UserRole.TECHNICIAN,
+    UserRole.POWER_OPERATOR,
+    UserRole.ADMIN,
+  ),
+  AuthController.logout,
+);
+
 export const AuthRoutes = router;

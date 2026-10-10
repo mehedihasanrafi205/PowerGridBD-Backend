@@ -490,6 +490,21 @@ const resetPassword = async (payload: IResetPasswordPayload) => {
   );
 };
 
+};
+
+const logout = async (payload: ILogoutPayload) => {
+  const { refreshToken } = payload;
+  
+  // Add the refresh token to the blacklist (in Redis)
+  if (refreshToken) {
+    await redisClient.set(`blacklisted-refresh-token:${refreshToken}`, "true", {
+      expiration: { type: "EX", value: 60 * 60 * 24 * 7 }, // 7 days
+    });
+  }
+  
+  return { success: true, message: "Logged out successfully" };
+};
+
 export const AuthService = {
   registerCustomer,
   verifyCustomerEmail,
@@ -499,4 +514,5 @@ export const AuthService = {
   googleLogin,
   forgotPassword,
   resetPassword,
+  logout,
 };

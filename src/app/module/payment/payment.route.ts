@@ -14,12 +14,16 @@ router.post(
   paymentController.initiatePayment,
 );
 
+router.get("/ipn", paymentController.handleIPN);
 router.post("/ipn", paymentController.handleIPN);
 
+router.get("/success", paymentController.successCallback);
 router.post("/success", paymentController.successCallback);
 
+router.get("/fail", paymentController.failCallback);
 router.post("/fail", paymentController.failCallback);
 
+router.get("/cancel", paymentController.cancelCallback);
 router.post("/cancel", paymentController.cancelCallback);
 
 router.get(
