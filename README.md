@@ -4,7 +4,14 @@ A production-grade REST API for a **load-shedding and power-outage management sy
 
 > Backend only. Pairs with a separate frontend client (see `FRONTEND_URL`).
 
-**Live Backend URL:** https://powergridbd-backend.vercel.app
+### 🔗 Project Links
+
+| Resource | URL |
+|---|---|
+| **Live Frontend** | [https://powergridbd.vercel.app](https://powergridbd.vercel.app/) |
+| **Frontend Repository** | [mehedihasanrafi205/PowerGridBD](https://github.com/mehedihasanrafi205/PowerGridBD) |
+| **Live Backend API** | [https://powergridbd-backend.vercel.app](https://powergridbd-backend.vercel.app/) |
+| **Backend Repository** | [mehedihasanrafi205/PowerGridBD-Backend](https://github.com/mehedihasanrafi205/PowerGridBD-Backend) |
 
 ---
 
